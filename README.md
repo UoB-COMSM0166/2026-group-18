@@ -38,10 +38,7 @@ GROUP PHOTO.
 ## Drawing App
 
 DRAWING APP FROM JAN.27TH'S LAB
-[Uploading inde[p5.js](https://github.com/user-attachments/files/24891407/p5.js)[style.css](https://github.com/user-attachments/files/24891411/style.css)
-[sketch.js](https://github.com/user-attachments/files/24891410/sketch.js)
-[p5.sound.min.js](https://github.com/user-attachments/files/24891408/p5.sound.min.js)
-x.html…]()
+[click to run](https://uob-comsm0166.github.io/2026-group-18/)
 
 
 ## Project Report

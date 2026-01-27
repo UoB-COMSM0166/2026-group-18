@@ -29,11 +29,17 @@ GROUP PHOTO.
 ![1ea16c65c7c97f326304811ae963f9b3](https://github.com/user-attachments/assets/4f3012f3-9d78-4dff-8d98-3e032d17ac7d)
 
 
-- Group member 1, Benyu Zhu, benyuzhu"outlook.com, role
+- Group member 1, Benyu Zhu, benyuzhu@outlook.com, role
 - Group member 2, Yutong Liu, yutong11x@outlook.com, role
 - Group member 3, Lin Zhu, zhulinuk2025@gmail.com, role
 - Group member 4, Zhaohang He, zhaohanghe89@gmail.com, role
 - Group member 5, Bo Sun, bowillrich@gmail.com, role
+
+## Drawing App
+
+DRAWING APP FROM JAN.27TH'S LAB
+[rainball_drawing_2026_01_27_16_26_36.zip](https://github.com/user-attachments/files/24891368/rainball_drawing_2026_01_27_16_26_36.zip)
+
 
 ## Project Report
 

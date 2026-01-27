@@ -13,6 +13,10 @@ You will be developing your game using [P5.js](https://p5js.org) a javascript li
 - [P5.js tutorials](https://p5js.org/tutorials/) 
 - [Coding Train P5.js](https://thecodingtrain.com/tracks/code-programming-with-p5-js) course - go here for enthusiastic video tutorials from Dan Shiffman (recommended!)
 
+## Research & Inspiration
+- Game inspiration list: see [docs/inspiration.md](docs/inspiration.md).
+- We use this list to discuss candidate mechanics and rank options by suitability/interest.
+
 ## Your Game (change to title of your game)
 
 STRAPLINE. Add an exciting one sentence description of your game here.

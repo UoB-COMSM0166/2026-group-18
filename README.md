@@ -13,9 +13,10 @@ You will be developing your game using [P5.js](https://p5js.org) a javascript li
 - [P5.js tutorials](https://p5js.org/tutorials/) 
 - [Coding Train P5.js](https://thecodingtrain.com/tracks/code-programming-with-p5-js) course - go here for enthusiastic video tutorials from Dan Shiffman (recommended!)
 
-## Research & Inspiration
+## Project Management
+- Kanban board (GitHub Projects): see the **Projects** tab in this repository.
+- Team process (workflow, DoD, WIP): see [docs/process.md](docs/process.md).
 - Game inspiration list: see [docs/inspiration.md](docs/inspiration.md).
-- We use this list to discuss candidate mechanics and rank options by suitability/interest.
 
 ## Your Game (change to title of your game)
 

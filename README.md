@@ -14,9 +14,18 @@ You will be developing your game using [P5.js](https://p5js.org) a javascript li
 - [Coding Train P5.js](https://thecodingtrain.com/tracks/code-programming-with-p5-js) course - go here for enthusiastic video tutorials from Dan Shiffman (recommended!)
 
 ## Project Management
-- Kanban board (GitHub Projects): see the **Projects** tab in this repository.
+
+- We use Kanban board (GitHub Projects) a visual workflow system that limits work-in-progress to help teams deliver work continuously and transparently : see the **Projects** tab in this repository.
+
+### Week 1 Deliverables
+
 - Team process (workflow, DoD, WIP): see [docs/process.md](docs/process.md).
 - Game inspiration list: see [docs/inspiration.md](docs/inspiration.md).
+
+### Week 2 Deliverables
+
+- Drawing app (p5.js paint): [click to run](https://uob-comsm0166.github.io/2026-group-18/).
+- Two candidate ideas: see docs/ideas.md.
 
 ## Your Game (change to title of your game)
 
@@ -39,11 +48,6 @@ GROUP PHOTO.
 - Group member 3, Lin Zhu, zhulinuk2025@gmail.com, role
 - Group member 4, Zhaohang He, zhaohanghe89@gmail.com, role
 - Group member 5, Bo Sun, bowillrich@gmail.com, role
-
-## Drawing App
-
-DRAWING APP FROM JAN.27TH'S LAB
-[click to run](https://uob-comsm0166.github.io/2026-group-18/)
 
 
 ## Project Report

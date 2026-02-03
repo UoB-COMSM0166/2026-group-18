@@ -1,7 +1,7 @@
 # Two Candidate Game Ideas
 
 ## Idea 1 - Stress Tiers Precision Dodge Platformer (inspired by Rage Game)
-**Discription:** A hard, learnable “precision dodge platformer” with repeatable enemy patterns, **but** the player’s **Stress** level dynamically changes the movement feel in predictable tiers, pushing a risk–reward loop where staying calm literally improves control.
+**Description:** A hard, learnable “precision dodge platformer” with repeatable enemy patterns, **but** the player’s **Stress** level dynamically changes the movement feel in predictable tiers, pushing a risk–reward loop where staying calm literally improves control.
 
 **Core loop:** Short levels with deterministic hazards/enemy patterns → plan micro-routes → execute precisely → instant death on hit/out-of-bounds → fast retry.               Stress increases on death and decreases on clear / collecting “calming beans”.               Stress is capped and split into three fixed tiers (Calm / Tense / Rage) to keep behaviour learnable and fair.
 
@@ -31,7 +31,7 @@
 ---
 
 ## Idea 2 - Two-Phase World Toggle Puzzle Platformer (inspired by TermiStone)
-**Discription:** A mechanism-driven puzzle platformer, **but** the level has two switchable phases (World A / World B) where the same space contains different rules, creating an “observe → switch → execute” rhythm.
+**Description:** A mechanism-driven puzzle platformer, **but** the level has two switchable phases (World A / World B) where the same space contains different rules, creating an “observe → switch → execute” rhythm.
 
 **Core loop:** Read the environment → switch phase → traverse using the new rule set → combine rules as levels progress.
 

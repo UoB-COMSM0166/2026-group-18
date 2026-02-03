@@ -27,6 +27,33 @@ You will be developing your game using [P5.js](https://p5js.org) a javascript li
 - Drawing app (p5.js paint): [click to run](https://uob-comsm0166.github.io/2026-group-18/).
 - Two candidate ideas: see [docs/ideas.md](docs/ideas.md).
 
+## Base Game Reference (Source Project)
+
+This project uses an existing TurboWarp / Scratch game as a technical reference and modification base.
+
+Original format: .sb3 (Scratch/TurboWarp project file)  
+Extracted structure: project.json  
+Purpose: coursework modification and system analysis
+
+Original author: <startercat>
+Original source: <https://startercat.itch.io/rage-game>
+
+We only use this base project for academic modification purposes and clearly separate original and modified work in this repository.
+We analyse and reference the original sb3 project structure, but our implementation and extensions are developed in p5.js.
+
+
+## Repository Structures
+
+/docs — p5.js implementation and playable web version  
+/project/original — original TurboWarp (.sb3) source project used as reference  
+/docs/*.md — process and design documentation
+
+## How to Run
+
+Open docs/index.html in a web browser to run the p5.js version of the game.
+
+Alternatively, use the GitHub Pages deployment link provided above.
+
 ## Your Game (change to title of your game)
 
 STRAPLINE. Add an exciting one sentence description of your game here.

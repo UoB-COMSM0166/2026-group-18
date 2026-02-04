@@ -1,26 +1,21 @@
+let game;
+
+function preload() {
+  game = new Game();
+  game.preload();
+}
+
 function setup() {
-  createCanvas(900, 600);
-  background(0);
-  colorMode(HSB, 360, 100, 100, 100);
-  noStroke();
+  // 用开始界面图片决定画布大小（和原游戏一致）
+  createCanvas(1024, 1024);
+  game.setup();
 }
 
 function draw() {
-  if (mouseIsPressed) {
-    const d = dist(mouseX, mouseY, pmouseX, pmouseY);
-    if (d < 1) return;
-
-    const h = random(0, 360);
-    const s = 90;
-    const b = 100;
-    const a = 70;
-    fill(h, s, b, a);
-
-    const size = random(8, 28);
-    circle(mouseX, mouseY, size);
-  }
+  game.update();
+  game.draw();
 }
 
 function keyPressed() {
-  if (key === "c" || key === "C") background(0);
+  game.onKeyPressed(keyCode);
 }

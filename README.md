@@ -64,6 +64,13 @@ LINK. Add a link here to your deployed game, you can also make the image above l
 
 VIDEO. Include a demo video of your game here (you don't have to wait until the end, you can insert a work in progress video)
 
+## Plan Update
+
+After evaluating our initial reference game build, we found it is not suitable as a modification base: the exported version relies on hashed assets, tightly coupled scene logic, and non-modular effects, which makes controlled extension and refactoring impractical.
+
+To stay aligned with the course objective (modifying an existing game), we will instead select a similar game that is originally developed in p5.js. We will use that project as the base and continue adding new and interesting gameplay mechanics on top of it.
+
+
 ## Your Group
 
 GROUP PHOTO.
@@ -135,3 +142,4 @@ You can delete this section in your own repo, it's just here for information. in
 - **Documentation** of code (5% of report grade)
   - Organise your code so that it could easily be picked up by another team in the future and developed further.
   - Is your repo clearly organised? Is code well commented throughout?
+

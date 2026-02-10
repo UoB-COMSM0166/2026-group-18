@@ -27,6 +27,11 @@ You will be developing your game using [P5.js](https://p5js.org) a javascript li
 - Drawing app (p5.js paint): [click to run](https://uob-comsm0166.github.io/2026-group-18/).
 - Two candidate ideas: see [docs/ideas.md](docs/ideas.md).
 
+### Week 3 Videos about two ideas.
+
+- Watch Week 3 videos here:
+  👉 [docs/video_links.md](docs/video_links.md)
+
 ## Base Game Reference (Source Project)
 
 This project uses an existing TurboWarp / Scratch game as a technical reference and modification base.

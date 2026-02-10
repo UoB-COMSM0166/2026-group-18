@@ -32,16 +32,16 @@ You will be developing your game using [P5.js](https://p5js.org) a javascript li
 - Watch Week 3 videos here:
   👉 [docs/video_links.md](docs/video_links.md)
 
-### Week 4 Requirements\
+### Week 4 Requirements
 
-stakeholders :
--player(new, challenger) 
--group members(Provide requirements ,design ,code)
--teacher(Who mark the game)
--GitHub(Users, testers, original developer)
-epics:
--Combat & Variety (User stories: different sessions, levels, enemies )
--Progression & Goals (User stories: have score in every play, and record)
+stakeholders :  
+	player(new, challenger)  
+	group members(Provide requirements ,design ,code)  
+	teacher(Who mark the game)  
+	GitHub(Users, testers, original developer)  
+epics:  
+	Combat & Variety (User stories: different sessions, levels, enemies )  
+	Progression & Goals (User stories: have score in every play, and record)  
 
 ## Base Game Reference (Source Project)
 

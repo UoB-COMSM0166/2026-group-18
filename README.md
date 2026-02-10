@@ -35,14 +35,14 @@ You will be developing your game using [P5.js](https://p5js.org) a javascript li
 ### Week 4 Requirements\
 
 stakeholders :
-	player(new, challenger) 
-	group members(Provide requirements ,design ,code)
-	teacher(Who mark the game)
-	GitHub(Users, testers, original developer)
+-player(new, challenger) 
+-group members(Provide requirements ,design ,code)
+-teacher(Who mark the game)
+-GitHub(Users, testers, original developer)
 epics:
-	Combat & Variety (User stories: different sessions, levels, enemies )
-	Progression & Goals (User stories: have score in every play, and record)
-.
+-Combat & Variety (User stories: different sessions, levels, enemies )
+-Progression & Goals (User stories: have score in every play, and record)
+
 ## Base Game Reference (Source Project)
 
 This project uses an existing TurboWarp / Scratch game as a technical reference and modification base.

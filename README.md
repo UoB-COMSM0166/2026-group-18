@@ -42,6 +42,14 @@ stakeholders :
 epics:  
 	Combat & Variety (User stories: different sessions, levels, enemies )  
 	Progression & Goals (User stories: have score in every play, and record)  
+discussion:
+    Pros
+	•	Clear requirements and testable features
+	•	Improves gameplay depth and replay value
+	•	Easy to implement step-by-step
+	Cons	
+	•	Adds development complexity
+	•	Requires balancing difficulty carefully
 
 ## Base Game Reference (Source Project)
 

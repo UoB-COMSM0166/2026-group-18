@@ -34,7 +34,7 @@ We switched our primary reference to a p5.js Asteroids project to align with the
 
 **Week 4 Deliverables**
 - Requirements (stakeholders, epics, user stories + AC, reflection): see [docs/requirements.md](docs/requirements.md).
-- OO design (UML class + sequence diagrams): see [docs/design/](docs/design/).
+- OO design (UML class + sequence diagrams): see [docs/design/](docs/design.md).
 
 
 ## Repository Structures

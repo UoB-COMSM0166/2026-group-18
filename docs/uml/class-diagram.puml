@@ -1,0 +1,110 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+' ========= Core controller =========
+class Game {
+  - ship: Ship
+  - asteroids: List<Asteroid>
+  - projectiles: List<Projectile>
+  - pickups: List<Pickup>
+  - stress: StressMeter
+  - collision: CollisionSystem
+  - telemetry: Telemetry
+  + update(dt)
+  + render()
+  + reset()
+}
+
+' ========= Systems / services =========
+class CollisionSystem {
+  + shipHitsAsteroid(ship: Ship, a: Asteroid): boolean
+  + shipHitsPickup(ship: Ship, p: Pickup): boolean
+  + projectileHitsAsteroid(pr: Projectile, a: Asteroid): boolean
+}
+
+class StressMeter {
+  - value: number
+  - tier: number  ' 0/1/2
+  + add(amount: number)
+  + reduce(amount: number)
+  + getTier(): number
+  - recalcTier()
+}
+
+class Telemetry {
+  + recordCollision()
+  + recordPickup()
+  + recordStress(value: number)
+}
+
+' ========= Entities =========
+abstract class Entity {
+  - pos
+  - vel
+  - radius: number
+  + update(dt)
+  + render()
+  + wrap()
+}
+
+class Ship {
+  - heading: number
+  - baseTurnRate: number
+  - baseThrust: number
+  - turnRate: number
+  - thrustPower: number
+  + applyStress(tier: number)
+  + fireLaser(): Laser
+  + launchMissile(): Missile
+  + update(dt)
+  + render()
+}
+
+class Asteroid {
+  - sizeTier: number
+  + split(): List<Asteroid>
+  + update(dt)
+  + render()
+}
+
+abstract class Projectile {
+  - ttl: number
+  - damage: number
+  + update(dt)
+  + render()
+  + onHit(target: Entity)
+}
+
+class Laser
+class Missile
+
+abstract class Pickup {
+  + applyTo(game: Game)
+  + update(dt)
+  + render()
+}
+
+class DeStressPickup {
+  - reduceAmount: number
+  + applyTo(game: Game)
+}
+
+' ========= Inheritance =========
+Entity <|-- Ship
+Entity <|-- Asteroid
+Entity <|-- Projectile
+Projectile <|-- Laser
+Projectile <|-- Missile
+Entity <|-- Pickup
+Pickup <|-- DeStressPickup
+
+' ========= Relationships =========
+Game o-- Ship : 1
+Game o-- Asteroid : 0..*
+Game o-- Projectile : 0..*
+Game o-- Pickup : 0..*
+Game o-- StressMeter : 1
+Game o-- CollisionSystem : 1
+Game o-- Telemetry : 1
+
+@enduml

@@ -29,35 +29,17 @@ We use Kanban board (GitHub Projects) a visual workflow system that limits work-
   👉 [docs/video_links.md](docs/video_links.md)
 - The reason we choose this game final: [docs/final-idea.md](docs/final-idea.md)
 
-**Plan Update**
-After evaluating our initial reference game build, we found it is not suitable as a modification base: the exported version relies on hashed assets, tightly coupled scene logic, and non-modular effects, which makes controlled extension and refactoring impractical.
-To stay aligned with the course objective (modifying an existing game), we will instead select a similar game that is originally developed in p5.js. We will use that project as the base and continue adding new and interesting gameplay mechanics on top of it.
+**Plan Update:**
+We switched our primary reference to a p5.js Asteroids project to align with the module’s required tech stack (p5.js) and ensure a feasible, testable MVP. Previous inspirations remain design references only (pacing, difficulty, patterns).
 
-**Week 4 Requirements**
-stakeholders :  
-	player(new, challenger)  
-	group members(Provide requirements ,design ,code)  
-	teacher(Who mark the game)  
-	GitHub(Users, testers, original developer)  
-epics:  
-	Combat & Variety (User stories: different sessions, levels, enemies )  
-	Progression & Goals (User stories: have score in every play, and record)  
-discussion:
-
-Pros
-- Clear requirements and testable features
-- Improves gameplay depth and replay value
-- Easy to implement step-by-step
-
-Cons
-- Adds development complexity
-- Requires balancing difficulty carefully
+**Week 4 Deliverables**
+- Requirements (stakeholders, epics, user stories + AC, reflection): see [docs/requirements.md](docs/requirements.md).
+- OO design (UML class + sequence diagrams): see [docs/design/](docs/design/).
 
 
 ## Repository Structures
 
 /docs — p5.js implementation and playable web version  
-/project/original — original TurboWarp (.sb3) source project used as reference  
 /docs/*.md — process and design documentation
 
 
@@ -69,7 +51,11 @@ Alternatively, use the GitHub Pages deployment link provided above.
 
 ## Your Game (change to title of your game)
 
-STRAPLINE. Add an exciting one sentence description of your game here.
+Asteroids-style arcade shooter with a Stress mechanic: collisions raise stress, degrading handling in predictable tiers; pickups reduce stress.
+
+- Play the game: https://uob-comsm0166.github.io/2026-group-18/
+- Demo video: (link)
+- Final idea: [docs/final-idea.md](docs/final-idea.md)
 
 IMAGE. Add an image of your game here, keep this updated with a snapshot of your latest development.
 

@@ -1,8 +1,11 @@
-# Final Idea (Candidate)
+## Final Idea — Stress / Handling Degradation (Asteroids twist)
 
-A classic Asteroids-style arcade shooter, **but** the player can activate a **Time-Dilation Pulse** that slows down everything except ship rotation (short cooldown, limited energy). This changes the core decision-making from pure reflex to planning: players choose when to slow time to thread through dense asteroid fields or line up precision shots. The MVP is a single arena with asteroids that split, basic scoring, and one special ability with clear UI feedback.  
+A classic Asteroids-style arena shooter, **but** every collision increases a **Stress meter** that degrades ship handling in *predictable tiers* (e.g., reduced rotation rate and increased drift). Players can collect **de-stress pickups** to recover control, turning the core loop into a risk-management problem (play aggressively for score vs stay safe to keep precision).  
+
 **Main engineering challenges:** 
-1) deterministic, time-based movement and collision handling under dynamic time scaling;
-2) a clean game-state + event system (spawning, cooldown/energy, difficulty ramp) that remains testable and data-driven.
-     
-**Evaluation:** run a short playtest (2–3 users) and record attempts/time-to-survive/ability-usage to tune cooldown and difficulty.
+1) a data-driven **stress state machine** (3 fixed tiers, capped values) with clearly communicated UI feedback;
+2) deterministic, time-based movement and **balancing with telemetry** (track survival time, collision rate, stress-over-time, and pickup usage) to tune tier parameters and difficulty.
+
+**MVP scope:** one arena, 3 stress tiers, stress UI, one de-stress pickup type, and baseline asteroid splitting/scoring. 
+
+**Optional AI extension (stretch):** add a single enemy type with a simple **FSM** (e.g., patrol → chase → disengage) using steering behaviour, to increase pressure under high stress without overwhelming scope.

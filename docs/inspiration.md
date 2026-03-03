@@ -1,5 +1,14 @@
 # Game Inspiration List (Platformer / Puzzle Platformer)
 
+## ASTEROIDS-GAME
+- Repo: https://github.com/arturbien/ASTEROIDS-GAME
+- Live demo: https://arturbien.github.io/ASTEROIDS-GAME/
+- Why it’s great:
+  - Clear core loop (thrust/rotate/shoot + avoid collisions), easy to scope into a strong MVP.
+  - Natural engineering challenges: time-based movement, collision detection, spawning difficulty curve, and game state management.
+- Suitability (p5.js 2D): High
+- Notes: Controls in this reference include arrows + space/ctrl. (We will adapt controls as needed.)
+
 ## 1) Rage Game (Option one)
 - Link: https://www.newgrounds.com/portal/view/1012371
 - Core loop: skill-avoid / precision platforming where patterns are learnable; repeated attempts improve routing + execution.

@@ -99,10 +99,18 @@ var laserBeams;
 var explosions;
 var missiles;
 var crashed;
+let stress = 0;
+let stressTier = 0;
+let stressCooldown = 0;
+let collisionCooldown = 0;
+const MAX_STRESS = 100;
 
 function resetGame() {
   score = 0;
   crashed = false;
+  stress = 0;
+  stressTier = 0;
+  stressCooldown = 0;
   ship = new Ship();
   jet = new Jet(ship.pos);
   asteroids = [];
@@ -123,14 +131,24 @@ function setup() {
 
 function draw() { 
   if(started){
+    if (collisionCooldown > 0) {
+      collisionCooldown--;
+    }
     background(0, 160);
     // stars.show();
     for (var i = 0; i < asteroids.length; i++) {
       asteroids[i].update();
       asteroids[i].show();
-      if (!crashed && ship.hit(asteroids[i])) {
-        crashed = true;
-        explosions.push(new Explosion(true, ship.pos));
+      if (!crashed && collisionCooldown === 0 && ship.hit(asteroids[i])) {
+        if (stress >= 70) {
+          crashed = true;
+          explosions.push(new Explosion(true, ship.pos));
+        } else {
+          stress += 20;
+          stress = constrain(stress, 0, 100);
+          stressCooldown = 120;
+        }
+        collisionCooldown = 60;   // about 1 second of invulnerability
       }
     }
     for (var j = 0; j < laserBeams.length; j++) {
@@ -181,11 +199,57 @@ function draw() {
     ship.update();
     ship.show();
     $('#score').text(score);
+    if(started){
+      updateStress();
+      drawStressBar();
+    }
     if (explosions.length == 0 && crashed &&
        missiles.length == 0 && laserBeams.length == 0){
       gameOver();
     }
   }
+}
+
+function updateStress(){
+
+    if (stressCooldown > 0) {
+      stressCooldown--;
+    } else {
+      stress -= 0.03;
+    }
+    stress = constrain(stress,0,MAX_STRESS);
+
+    if(stress < 30) stressTier = 0;
+    else if(stress < 60) stressTier = 1;
+    else if(stress < 90) stressTier = 2;
+    else stressTier = 3;
+}
+
+function drawStressBar(){
+
+    push();
+
+    let barWidth = 200;
+    let barHeight = 20;
+    let x = width - barWidth - 20;
+    let y = 20;
+
+    noStroke();
+    fill(40);
+    rect(x,y,barWidth,barHeight);
+
+    let col;
+
+    if(stressTier === 0) col = color(0,255,0);
+    else if(stressTier === 1) col = color(255,200,0);
+    else col = color(255,0,0);
+
+    fill(col);
+
+    let currentWidth = map(stress,0,MAX_STRESS,0,barWidth);
+    rect(x,y,currentWidth,barHeight);
+
+    pop();
 }
 
 function Stars (pos) {
@@ -550,7 +614,13 @@ function Ship() {
   }
   
   this.turn = function(angle) {
-  	this.heading += this.rotation;
+  	let multiplier = 1;
+
+    if(stressTier === 1) multiplier = 0.8;
+    if(stressTier === 2) multiplier = 0.6;
+    if(stressTier === 3) multiplier = 0.4;
+
+  	this.heading += this.rotation * multiplier;
     if (Math.abs(this.heading) >= TWO_PI) {
       if (this.heading > 0) {
       	this.heading -= TWO_PI;

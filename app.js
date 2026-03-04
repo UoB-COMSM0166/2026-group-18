@@ -85,6 +85,7 @@ function game(){
     document.getElementById("wrapper").style.display = "none";
     document.getElementById("bg-image").style.display = "none";
     
+    gameStartTime = millis();
     started = true;
 }
 
@@ -98,27 +99,41 @@ var asteroids;
 var laserBeams;
 var explosions;
 var missiles;
+var enemies;
+var enemyBullets;
+var enemyMissiles;
 var crashed;
+let level = 1;
 let stress = 0;
 let stressTier = 0;
 let stressCooldown = 0;
 let collisionCooldown = 0;
+let enemySpawnTimer = 0;
+let gameStartTime;
+let systemAsteroidSpawnTimer = 0;
 const MAX_STRESS = 100;
 
 function resetGame() {
   score = 0;
   crashed = false;
+  level = 1;
   stress = 0;
   stressTier = 0;
   stressCooldown = 0;
+  collisionCooldown = 0;
+  enemySpawnTimer = frameCount;
+  systemAsteroidSpawnTimer = frameCount;
   ship = new Ship();
   jet = new Jet(ship.pos);
   asteroids = [];
   laserBeams = [];
   explosions = [];
   missiles = [];
+  enemies = [];
+  enemyBullets = [];
+  enemyMissiles = [];
   for (var i = 0; i < 5; i++) {
-  	asteroids.push(new Asteroid());
+  	asteroids.push(new Asteroid(undefined, undefined, undefined, true));
   }
   stars = new Stars();
 }
@@ -135,6 +150,9 @@ function draw() {
       collisionCooldown--;
     }
     background(0, 160);
+    updateLevel();
+    maintainAsteroids();
+    spawnEnemies();
     // stars.show();
     for (var i = 0; i < asteroids.length; i++) {
       asteroids[i].update();
@@ -167,6 +185,19 @@ function draw() {
           break;
         }
       }
+      if (flag == false) {
+        for (var m = enemies.length - 1; m > -1; m--) {
+          if (laserBeams[j] && laserBeams[j].hit(enemies[m])) {
+            score += enemies[m].type == "A" ? 400 : 700;
+            explosions.push(new Explosion(true, enemies[m].pos));
+            enemies.splice(m,1);
+            laserBeams.splice(j,1);
+            j--;
+            flag = true;
+            break;
+          }
+        }
+      }
       if (flag == false && laserBeams[j].edges()) {
         laserBeams.splice(j,1);
         j--;
@@ -194,18 +225,120 @@ function draw() {
 
       }
     }
+    for (var e = enemies.length - 1; e > -1; e--) {
+      enemies[e].update();
+      enemies[e].show();
+      enemies[e].shoot();
+    }
+    for (var b = enemyBullets.length - 1; b > -1; b--) {
+      enemyBullets[b].update();
+      enemyBullets[b].show();
+      if (!crashed && collisionCooldown === 0 && enemyBullets[b].hitShip()) {
+        stress += 12;
+        stress = constrain(stress, 0, MAX_STRESS);
+        stressCooldown = 120;
+        collisionCooldown = 15;
+        enemyBullets.splice(b,1);
+      } else if (enemyBullets[b] && enemyBullets[b].edges()) {
+        enemyBullets.splice(b,1);
+      }
+    }
+    for (var n = enemyMissiles.length - 1; n > -1; n--) {
+      enemyMissiles[n].update();
+      enemyMissiles[n].show();
+      if (enemyMissiles[n].dead) {
+        enemyMissiles.splice(n,1);
+      } else if (enemyMissiles[n].hitShip()) {
+        explosions.push(new Explosion(true, enemyMissiles[n].pos, true));
+        enemyMissiles.splice(n,1);
+        if (!crashed) {
+          crashed = true;
+          explosions.push(new Explosion(true, ship.pos));
+        }
+      } else if (enemyMissiles[n] && enemyMissiles[n].edges()) {
+        enemyMissiles.splice(n,1);
+      }
+    }
     jet.update();
     jet.show();
     ship.update();
     ship.show();
-    $('#score').text(score);
+    drawLevelLabel();
+    $('#score').text(score + " | L" + level);
     if(started){
       updateStress();
       drawStressBar();
     }
     if (explosions.length == 0 && crashed &&
-       missiles.length == 0 && laserBeams.length == 0){
+       missiles.length == 0 && laserBeams.length == 0 &&
+       enemyMissiles.length == 0){
       gameOver();
+    }
+  }
+}
+
+function updateLevel() {
+  var previousLevel = level;
+  var elapsed = (millis() - gameStartTime) / 1000;
+  if (elapsed < 90) {
+    level = 1;
+  } else if (elapsed < 180) {
+    level = 2;
+  } else {
+    level = 3;
+  }
+  if (level != previousLevel) {
+    enemySpawnTimer = frameCount;
+  }
+}
+
+function maintainAsteroids() {
+  if (crashed) {
+    return;
+  }
+  var target = 5;
+  if (level == 2) {
+    target = 7;
+  } else if (level == 3) {
+    target = 9;
+  }
+  var systemAsteroids = 0;
+  for (var i = 0; i < asteroids.length; i++) {
+    if (asteroids[i].isSystemSpawn == true) {
+      systemAsteroids++;
+    }
+  }
+  if (systemAsteroids < target && frameCount - systemAsteroidSpawnTimer >= 120) {
+    asteroids.push(new Asteroid(undefined, undefined, undefined, true));
+    systemAsteroidSpawnTimer = frameCount;
+  }
+}
+
+function drawLevelLabel() {
+  push();
+  fill(255);
+  noStroke();
+  textSize(18);
+  textAlign(LEFT, TOP);
+  text("Level " + level, 20, 20);
+  pop();
+}
+
+function spawnEnemies() {
+  if (level < 2 || crashed) {
+    return;
+  }
+  if (frameCount - enemySpawnTimer < 600) {
+    return;
+  }
+  enemySpawnTimer = frameCount;
+  if (level == 2) {
+    enemies.push(new Enemy("A"));
+  } else if (level == 3 && enemies.length < 3) {
+    if (random() < 0.5) {
+      enemies.push(new Enemy("A"));
+    } else {
+      enemies.push(new Enemy("B"));
     }
   }
 }
@@ -433,7 +566,8 @@ function Laser(pos, heading) {
     }
   }
 }
-function Asteroid(r, pos, vel) {
+function Asteroid(r, pos, vel, systemSpawn) {
+  this.isSystemSpawn = systemSpawn || false;
   this.col = [Math.floor(random(255)),Math.floor(random(255)),Math.floor(random(255))];
   if (pos) {
     this.pos = pos.copy();
@@ -503,10 +637,10 @@ function Asteroid(r, pos, vel) {
     newVelOne.rotate(PI/4)
     newVelTwo.rotate(-PI/4)
     if (newR > 10) {
-      asteroids.push(new Asteroid(newR, newPos, newVelOne));
-      asteroids.push(new Asteroid(newR, newPos, newVelTwo));
+      asteroids.push(new Asteroid(newR, newPos, newVelOne, false));
+      asteroids.push(new Asteroid(newR, newPos, newVelTwo, false));
     } else if (random() < 0.4){
-      asteroids.push(new Asteroid());
+      asteroids.push(new Asteroid(undefined, undefined, undefined, false));
     }	
   }
   this.edges = function () {
@@ -519,6 +653,159 @@ function Asteroid(r, pos, vel) {
     } else if (this.pos.y>height+this.r) {
     	this.pos.y = 0-this.r;
     }
+  }
+}
+
+function getEnemySpawnPos() {
+  if (random() < 0.5) {
+    if (random() < 0.5) {
+      return createVector(-30, random(height));
+    } else {
+      return createVector(width + 30, random(height));
+    }
+  } else {
+    if (random() < 0.5) {
+      return createVector(random(width), -30);
+    } else {
+      return createVector(random(width), height + 30);
+    }
+  }
+}
+
+function Enemy(type) {
+  this.type = type;
+  this.pos = getEnemySpawnPos();
+  this.heading = 0;
+  this.r = this.type == "A" ? 18 : 22;
+  var speed = this.type == "A" ? 1.8 : 1.2;
+  this.vel = p5.Vector.sub(ship.pos, this.pos).setMag(speed);
+  this.shootCooldown = this.type == "A" ? 80 : 150;
+
+  this.update = function() {
+    var targetVel = p5.Vector.sub(ship.pos, this.pos);
+    targetVel.setMag(this.type == "A" ? 1.8 : 1.2);
+    this.vel.lerp(targetVel, this.type == "A" ? 0.06 : 0.03);
+    this.pos.add(this.vel);
+    this.heading = this.vel.heading();
+    this.edges();
+    if (this.shootCooldown > 0) {
+      this.shootCooldown--;
+    }
+  }
+
+  this.show = function() {
+    push();
+    translate(this.pos.x, this.pos.y);
+    rotate(this.heading + PI / 2);
+    strokeWeight(2.5);
+    if (this.type == "A") {
+      fill(40, 120, 255);
+      stroke(130, 190, 255);
+    } else {
+      fill(250, 220, 40);
+      stroke(255, 240, 140);
+    }
+    triangle(0, -this.r, -this.r * 0.7, this.r, this.r * 0.7, this.r);
+    pop();
+  }
+
+  this.shoot = function() {
+    if (crashed || this.shootCooldown > 0) {
+      return;
+    }
+    if (this.type == "A") {
+      enemyBullets.push(new EnemyBullet(this.pos, ship.pos));
+      this.shootCooldown = Math.floor(random(70, 110));
+    } else {
+      enemyMissiles.push(new EnemyMissile(this.pos));
+      this.shootCooldown = Math.floor(random(140, 200));
+    }
+  }
+
+  this.edges = function () {
+    if (this.pos.x > width + this.r) {
+      this.pos.x = 0 - this.r;
+    } else if (this.pos.x < 0 - this.r) {
+      this.pos.x = width + this.r;
+    } else if (this.pos.y < 0 - this.r) {
+      this.pos.y = height + this.r;
+    } else if (this.pos.y > height + this.r) {
+      this.pos.y = 0 - this.r;
+    }
+  }
+}
+
+function EnemyBullet(pos, target) {
+  this.pos = pos.copy();
+  this.r = 4;
+  this.vel = p5.Vector.sub(target, this.pos);
+  this.vel.setMag(5.2);
+
+  this.update = function() {
+    this.pos.add(this.vel);
+  }
+
+  this.show = function() {
+    push();
+    noStroke();
+    fill(70, 170, 255);
+    ellipse(this.pos.x, this.pos.y, this.r * 2);
+    pop();
+  }
+
+  this.hitShip = function() {
+    return this.pos.dist(ship.pos) < ship.r + this.r;
+  }
+
+  this.edges = function() {
+    return this.pos.x > width + this.r ||
+      this.pos.x < -this.r ||
+      this.pos.y > height + this.r ||
+      this.pos.y < -this.r;
+  }
+}
+
+function EnemyMissile(pos) {
+  this.pos = pos.copy();
+  this.r = 8;
+  this.maxSpeed = 4;
+  this.vel = p5.Vector.sub(ship.pos, this.pos);
+  this.vel.setMag(2);
+  this.spawnTime = millis();
+  this.lifeTime = 10000;
+  this.dead = false;
+
+  this.update = function() {
+    if (millis() - this.spawnTime > this.lifeTime) {
+      this.dead = true;
+      return;
+    }
+    var desired = p5.Vector.sub(ship.pos, this.pos);
+    desired.setMag(this.maxSpeed);
+    this.vel.lerp(desired, 0.04);
+    this.vel.limit(this.maxSpeed);
+    this.pos.add(this.vel);
+  }
+
+  this.show = function() {
+    push();
+    translate(this.pos.x, this.pos.y);
+    rotate(this.vel.heading() + PI / 2);
+    stroke(255, 220, 60);
+    fill(255, 185, 40);
+    triangle(0, -this.r, -this.r * 0.6, this.r, this.r * 0.6, this.r);
+    pop();
+  }
+
+  this.hitShip = function() {
+    return this.pos.dist(ship.pos) < ship.r + this.r;
+  }
+
+  this.edges = function() {
+    return this.pos.x > width + 30 ||
+      this.pos.x < -30 ||
+      this.pos.y > height + 30 ||
+      this.pos.y < -30;
   }
 }
 function Jet(){

@@ -14,75 +14,48 @@ You will be developing your game using [P5.js](https://p5js.org) a javascript li
 - [Coding Train P5.js](https://thecodingtrain.com/tracks/code-programming-with-p5-js) course - go here for enthusiastic video tutorials from Dan Shiffman (recommended!)
 
 ## Project Management
+We use Kanban board (GitHub Projects) a visual workflow system that limits work-in-progress to help teams deliver work continuously and transparently : see the **Projects** tab in this repository.
 
-- We use Kanban board (GitHub Projects) a visual workflow system that limits work-in-progress to help teams deliver work continuously and transparently : see the **Projects** tab in this repository.
-
-### Week 1 Deliverables
-
+**Week 1 Deliverables**
 - Team process (workflow, DoD, WIP): see [docs/process.md](docs/process.md).
 - Game inspiration list: see [docs/inspiration.md](docs/inspiration.md).
 
-### Week 2 Deliverables
-
+**Week 2 Deliverables**
 - Drawing app (p5.js paint): [click to run](https://uob-comsm0166.github.io/2026-group-18/).
 - Two candidate ideas: see [docs/ideas.md](docs/ideas.md).
 
-### Week 3 Videos about two ideas.
-
+**Week 3 Videos about two ideas**
 - Watch Week 3 videos here:
   👉 [docs/video_links.md](docs/video_links.md)
+- The reason we choose this game final: [docs/final-idea.md](docs/final-idea.md)
 
-### Week 4 Requirements
+**Plan Update:**
+We switched our primary reference to a p5.js Asteroids project to align with the module’s required tech stack (p5.js) and ensure a feasible, testable MVP. Previous inspirations remain design references only (pacing, difficulty, patterns).
 
-stakeholders :  
-	player(new, challenger)  
-	group members(Provide requirements ,design ,code)  
-	teacher(Who mark the game)  
-	GitHub(Users, testers, original developer)  
-epics:  
-	Combat & Variety (User stories: different sessions, levels, enemies )  
-	Progression & Goals (User stories: have score in every play, and record)  
-discussion:
-
-Pros
-- Clear requirements and testable features
-- Improves gameplay depth and replay value
-- Easy to implement step-by-step
-
-Cons
-- Adds development complexity
-- Requires balancing difficulty carefully
-
-## Base Game Reference (Source Project)
-
-This project uses an existing TurboWarp / Scratch game as a technical reference and modification base.
-
-Original format: .sb3 (Scratch/TurboWarp project file)  
-Extracted structure: project.json  
-Purpose: coursework modification and system analysis
-
-Original author: <startercat>
-Original source: <https://startercat.itch.io/rage-game>
-
-We only use this base project for academic modification purposes and clearly separate original and modified work in this repository.
-We analyse and reference the original sb3 project structure, but our implementation and extensions are developed in p5.js.
+**Week 4 Deliverables**
+- Requirements (stakeholders, epics, user stories + AC, reflection): see [docs/requirements.md](docs/requirements.md).
+- OO design (UML class + sequence diagrams): see [docs/design/](docs/design.md).
 
 
 ## Repository Structures
 
 /docs — p5.js implementation and playable web version  
-/project/original — original TurboWarp (.sb3) source project used as reference  
 /docs/*.md — process and design documentation
+
 
 ## How to Run
 
 Open docs/index.html in a web browser to run the p5.js version of the game.
-
 Alternatively, use the GitHub Pages deployment link provided above.
+
 
 ## Your Game (change to title of your game)
 
-STRAPLINE. Add an exciting one sentence description of your game here.
+Asteroids-style arcade shooter with a Stress mechanic: collisions raise stress, degrading handling in predictable tiers; pickups reduce stress.
+
+- Play the game: https://uob-comsm0166.github.io/2026-group-18/
+- Demo video: (link)
+- Final idea: [docs/final-idea.md](docs/final-idea.md)
 
 IMAGE. Add an image of your game here, keep this updated with a snapshot of your latest development.
 
@@ -90,24 +63,19 @@ LINK. Add a link here to your deployed game, you can also make the image above l
 
 VIDEO. Include a demo video of your game here (you don't have to wait until the end, you can insert a work in progress video)
 
-## Plan Update
-
-After evaluating our initial reference game build, we found it is not suitable as a modification base: the exported version relies on hashed assets, tightly coupled scene logic, and non-modular effects, which makes controlled extension and refactoring impractical.
-
-To stay aligned with the course objective (modifying an existing game), we will instead select a similar game that is originally developed in p5.js. We will use that project as the base and continue adding new and interesting gameplay mechanics on top of it.
-
 
 ## Your Group
 
 GROUP PHOTO.
 ![1ea16c65c7c97f326304811ae963f9b3](https://github.com/user-attachments/assets/4f3012f3-9d78-4dff-8d98-3e032d17ac7d)
 
-
-- Group member 1, Benyu Zhu, benyuzhu@outlook.com, role
-- Group member 2, Yutong Liu, yutong11x@outlook.com, role
-- Group member 3, Lin Zhu, zhulinuk2025@gmail.com, role
-- Group member 4, Zhaohang He, zhaohanghe89@gmail.com, role
-- Group member 5, Bo Sun, bowillrich@gmail.com, role
+| Group member | Email | Role |
+|---|---|---|
+|Benyu Zhu|benyuzhu@outlook.com|role|
+|Yutong Liu|yutong11x@outlook.com|role|
+|Lin Zhu|zhulinuk2025@gmail.com|role|
+|Zhaohang He|zhaohanghe89@gmail.com|role|
+|Bo Sun|bowillrich@gmail.com|role|
 
 
 ## Project Report

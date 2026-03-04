@@ -1,0 +1,25 @@
+@startuml
+actor Player
+participant "P5 draw() loop" as Loop
+participant Game
+participant CollisionSystem as Col
+participant StressMeter as Stress
+participant Ship
+participant Telemetry as Tel
+
+loop each frame
+  Player -> Loop : input (keys)
+  Loop -> Game : update(dt)
+
+  Game -> Col : shipHitsAsteroid(Ship, Asteroid)
+  alt collision detected
+    Col --> Game : true
+    Game -> Stress : add(+10)
+    Game -> Ship : applyStress( Stress.getTier() )
+    Game -> Tel : recordCollision()
+    Game -> Tel : recordStress(Stress.value)
+  else no collision
+    Col --> Game : false
+  end
+end
+@enduml

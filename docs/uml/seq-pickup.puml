@@ -1,0 +1,26 @@
+@startuml
+actor Player
+participant "P5 draw() loop" as Loop
+participant Game
+participant CollisionSystem as Col
+participant DeStressPickup as Pickup
+participant StressMeter as Stress
+participant Ship
+participant Telemetry as Tel
+
+Player -> Loop : input (keys)
+Loop -> Game : update(dt)
+
+Game -> Col : shipHitsPickup(Ship, Pickup)
+alt pickup collected
+  Col --> Game : true
+  Game -> Pickup : applyTo(Game)
+  Pickup -> Stress : reduce(20)
+  Game -> Ship : applyStress( Stress.getTier() )
+  Game -> Tel : recordPickup()
+  Game -> Tel : recordStress(Stress.value)
+  Game -> Game : remove Pickup from pickups[]
+else no pickup
+  Col --> Game : false
+end
+@enduml

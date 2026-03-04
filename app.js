@@ -111,15 +111,129 @@ let collisionCooldown = 0;
 let enemySpawnTimer = 0;
 let gameStartTime;
 let systemAsteroidSpawnTimer = 0;
-const MAX_STRESS = 100;
+const STRESS_CONFIG = {
+  maxStress: 100,
+  // Exactly 3 tiers via 2 thresholds: [tier0 upper bound, tier1 upper bound]
+  tiers: [40, 75],
+  decayPerFrame: 0.03,
+  cooldownFrames: 120,
+  collisionDeltaAsteroid: 20,
+  collisionDeltaEnemyBullet: 12
+};
+const HANDLING_BY_TIER = [
+  { rotationMult: 1.0 },
+  { rotationMult: 0.8 },
+  { rotationMult: 0.6 }
+];
+const STRESS_UI = {
+  tierColors: [
+    [0, 255, 0],
+    [255, 200, 0],
+    [255, 0, 0]
+  ],
+  tierLabels: ["CALM", "TENSE", "PANIC"]
+};
+const MAX_STRESS = STRESS_CONFIG.maxStress;
+
+const stressState = {
+  value: 0,
+  tier: 0,
+  cooldownRemaining: 0
+};
+
+// Stress API: keep stress logic centralized while legacy globals still work.
+function resetStressState() {
+  stressState.value = 0;
+  stressState.cooldownRemaining = 0;
+  stressState.tier = getStressTier(0);
+}
+
+function getStressTier(stressValue) {
+  const tiers = STRESS_CONFIG.tiers;
+  if (stressValue < tiers[0]) return 0;
+  if (stressValue < tiers[1]) return 1;
+  return 2;
+}
+
+function clampTierIndex(tier) {
+  return Math.max(0, Math.min(2, Math.floor(tier)));
+}
+
+function getHandlingParamsByStress(stressValue) {
+  const tier = getStressTier(stressValue);
+  return HANDLING_BY_TIER[clampTierIndex(tier)];
+}
+
+function getStressUIColorByTier(tier) {
+  const rgb = STRESS_UI.tierColors[clampTierIndex(tier)];
+  return color(rgb[0], rgb[1], rgb[2]);
+}
+
+function getStressUILabelByTier(tier) {
+  return STRESS_UI.tierLabels[clampTierIndex(tier)];
+}
+
+function addStress(amount, cause) {
+  // `cause` is reserved for future telemetry/collision migration.
+  stressState.value = constrain(stressState.value + amount, 0, STRESS_CONFIG.maxStress);
+  stressState.cooldownRemaining = STRESS_CONFIG.cooldownFrames;
+  stressState.tier = getStressTier(stressState.value);
+  // Ensure legacy globals reflect API-driven writes in the same frame.
+  syncStressGlobals();
+  return cause;
+}
+
+function getStressValue() {
+  return stressState.value;
+}
+
+function getStressTierNow() {
+  return stressState.tier;
+}
+
+function syncStressStateFromGlobals() {
+  stressState.value = constrain(stress, 0, STRESS_CONFIG.maxStress);
+  stressState.cooldownRemaining = Math.max(0, stressCooldown);
+  stressState.tier = getStressTier(stressState.value);
+}
+
+function syncStressGlobals() {
+  stress = stressState.value;
+  stressTier = stressState.tier;
+  stressCooldown = stressState.cooldownRemaining;
+}
+
+function updateStressState(dtSeconds) {
+  // Backward-compat bridge: ingest any legacy `stress += ...` writes first.
+  syncStressStateFromGlobals();
+
+  var seconds = typeof dtSeconds === "number" ? dtSeconds : (1 / 60);
+  var frames = seconds * 60;
+  if (stressState.cooldownRemaining > 0) {
+    stressState.cooldownRemaining -= frames;
+  } else {
+    stressState.value -= STRESS_CONFIG.decayPerFrame * frames;
+  }
+
+  stressState.cooldownRemaining = Math.max(0, stressState.cooldownRemaining);
+  stressState.value = constrain(stressState.value, 0, STRESS_CONFIG.maxStress);
+  stressState.tier = getStressTier(stressState.value);
+
+  // Keep legacy globals in sync so old call sites continue to work.
+  syncStressGlobals();
+}
+
+function updateStress(dtSeconds) {
+  // Thin wrapper kept for existing call sites.
+  updateStressState(dtSeconds);
+}
 
 function resetGame() {
   score = 0;
   crashed = false;
   level = 1;
-  stress = 0;
-  stressTier = 0;
-  stressCooldown = 0;
+  resetStressState();
+  syncStressGlobals();
   collisionCooldown = 0;
   enemySpawnTimer = frameCount;
   systemAsteroidSpawnTimer = frameCount;
@@ -158,13 +272,11 @@ function draw() {
       asteroids[i].update();
       asteroids[i].show();
       if (!crashed && collisionCooldown === 0 && ship.hit(asteroids[i])) {
-        if (stress >= 70) {
+        if (stress >= MAX_STRESS) {
           crashed = true;
           explosions.push(new Explosion(true, ship.pos));
         } else {
-          stress += 20;
-          stress = constrain(stress, 0, 100);
-          stressCooldown = 120;
+          addStress(STRESS_CONFIG.collisionDeltaAsteroid, "asteroidCollision");
         }
         collisionCooldown = 60;   // about 1 second of invulnerability
       }
@@ -234,9 +346,7 @@ function draw() {
       enemyBullets[b].update();
       enemyBullets[b].show();
       if (!crashed && collisionCooldown === 0 && enemyBullets[b].hitShip()) {
-        stress += 12;
-        stress = constrain(stress, 0, MAX_STRESS);
-        stressCooldown = 120;
+        addStress(STRESS_CONFIG.collisionDeltaEnemyBullet, "enemyBullet");
         collisionCooldown = 15;
         enemyBullets.splice(b,1);
       } else if (enemyBullets[b] && enemyBullets[b].edges()) {
@@ -266,7 +376,8 @@ function draw() {
     drawLevelLabel();
     $('#score').text(score + " | L" + level);
     if(started){
-      updateStress();
+      const dt = (typeof deltaTime === "number" ? deltaTime : (1000 / 60)) / 1000;
+      updateStress(dt);
       drawStressBar();
     }
     if (explosions.length == 0 && crashed &&
@@ -343,24 +454,11 @@ function spawnEnemies() {
   }
 }
 
-function updateStress(){
-
-    if (stressCooldown > 0) {
-      stressCooldown--;
-    } else {
-      stress -= 0.03;
-    }
-    stress = constrain(stress,0,MAX_STRESS);
-
-    if(stress < 30) stressTier = 0;
-    else if(stress < 60) stressTier = 1;
-    else if(stress < 90) stressTier = 2;
-    else stressTier = 3;
-}
-
 function drawStressBar(){
 
     push();
+    const stressNow = getStressValue();
+    const tierNow = typeof getStressTierNow === "function" ? getStressTierNow() : getStressTier(stressNow);
 
     let barWidth = 200;
     let barHeight = 20;
@@ -371,16 +469,15 @@ function drawStressBar(){
     fill(40);
     rect(x,y,barWidth,barHeight);
 
-    let col;
+    fill(getStressUIColorByTier(tierNow));
 
-    if(stressTier === 0) col = color(0,255,0);
-    else if(stressTier === 1) col = color(255,200,0);
-    else col = color(255,0,0);
-
-    fill(col);
-
-    let currentWidth = map(stress,0,MAX_STRESS,0,barWidth);
+    let currentWidth = map(stressNow,0,MAX_STRESS,0,barWidth);
     rect(x,y,currentWidth,barHeight);
+
+    fill(220);
+    textSize(11);
+    textAlign(LEFT, TOP);
+    text(getStressUILabelByTier(tierNow), x, y + barHeight + 4);
 
     pop();
 }
@@ -901,16 +998,12 @@ function Ship() {
   }
   
   this.turn = function(angle) {
-  	let multiplier = 1;
-
-    if(stressTier === 1) multiplier = 0.8;
-    if(stressTier === 2) multiplier = 0.6;
-    if(stressTier === 3) multiplier = 0.4;
-
-  	this.heading += this.rotation * multiplier;
+    const stressNow = typeof getStressValue === "function" ? getStressValue() : stress;
+    const handling = getHandlingParamsByStress(stressNow);
+  	this.heading += this.rotation * handling.rotationMult;
     if (Math.abs(this.heading) >= TWO_PI) {
       if (this.heading > 0) {
-      	this.heading -= TWO_PI;
+       	this.heading -= TWO_PI;
       } else {
       	this.heading += TWO_PI;
       }
@@ -956,4 +1049,3 @@ function keyReleased() {
   	ship.setRotation(0);
   }
 }
-

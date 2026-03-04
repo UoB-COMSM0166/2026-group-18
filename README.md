@@ -63,6 +63,28 @@ LINK. Add a link here to your deployed game, you can also make the image above l
 
 VIDEO. Include a demo video of your game here (you don't have to wait until the end, you can insert a work in progress video)
 
+## Version History
+
+### v1.2 – Enemies and Level System
+- Added enemy ships with two types:
+  - **Type A (Blue Triangle)**: fires normal bullets toward the player.
+  - **Type B (Yellow Triangle)**: launches homing missiles.
+- Implemented **time-based level progression**.
+  - Level increases every 90 seconds.
+- Enemy spawning system introduced with controlled maximum enemy count.
+- Improved overall gameplay difficulty and pacing.
+
+### v1.1 – Stress System
+- Added **Stress Bar mechanic**.
+- Collisions with asteroids increase stress.
+- High stress reduces ship turning ability.
+- Stress gradually recovers over time.
+
+### v1.0 – Initial Game Prototype
+- Basic Asteroids-style gameplay.
+- Player spaceship movement and shooting.
+- Asteroid spawning and splitting.
+- Explosion effects and scoring system.
 
 ## Your Group
 

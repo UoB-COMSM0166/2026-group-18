@@ -9,11 +9,12 @@ function updateLevel() {
     level = 3;
   }
   if (level != previousLevel) {
-    enemySpawnTimer = frameCount;
+    enemySpawnTimer = millis() / 1000;
   }
 }
 
 function maintainAsteroids() {
+  var nowSeconds = millis() / 1000;
   if (crashed) {
     return;
   }
@@ -29,9 +30,9 @@ function maintainAsteroids() {
       systemAsteroids++;
     }
   }
-  if (systemAsteroids < target && frameCount - systemAsteroidSpawnTimer >= 120) {
+  if (systemAsteroids < target && nowSeconds - systemAsteroidSpawnTimer >= 2) {
     asteroids.push(new Asteroid(undefined, undefined, undefined, true));
-    systemAsteroidSpawnTimer = frameCount;
+    systemAsteroidSpawnTimer = nowSeconds;
   }
 }
 
@@ -46,13 +47,14 @@ function drawLevelLabel() {
 }
 
 function spawnEnemies() {
+  var nowSeconds = millis() / 1000;
   if (level < 2 || crashed) {
     return;
   }
-  if (frameCount - enemySpawnTimer < 600) {
+  if (nowSeconds - enemySpawnTimer < 10) {
     return;
   }
-  enemySpawnTimer = frameCount;
+  enemySpawnTimer = nowSeconds;
   if (level == 2) {
     enemies.push(new Enemy("A"));
   } else if (level == 3 && enemies.length < 3) {

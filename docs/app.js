@@ -37,8 +37,9 @@ function resetGame() {
   resetStressState();
   syncStressGlobals();
   collisionCooldown = 0;
-  enemySpawnTimer = frameCount;
-  systemAsteroidSpawnTimer = frameCount;
+  const nowSeconds = millis() / 1000;
+  enemySpawnTimer = nowSeconds;
+  systemAsteroidSpawnTimer = nowSeconds;
   ship = new Ship();
   jet = new Jet(ship.pos);
   asteroids = [];

@@ -189,6 +189,66 @@ function updateAndRenderEnemyMissiles() {
   }
 }
 
+function getPickupSpawnPosition(minDistanceFromShip) {
+  var minDist = typeof minDistanceFromShip === "number" ? minDistanceFromShip : 120;
+  for (var attempt = 0; attempt < 20; attempt++) {
+    var candidate = createVector(random(40, width - 40), random(40, height - 40));
+    if (ship && candidate.dist(ship.pos) < minDist) {
+      continue;
+    }
+    return candidate;
+  }
+  return createVector(random(40, width - 40), random(40, height - 40));
+}
+
+// C1: timed pickup spawn with active cap
+function spawnPickups() {
+  if (crashed) {
+    return;
+  }
+  if (pickups.length >= PICKUP_CONFIG.maxActive) {
+    return;
+  }
+  if (frameCount - pickupSpawnTimer < PICKUP_CONFIG.spawnIntervalFrames) {
+    return;
+  }
+  pickups.push(new Pickup(getPickupSpawnPosition(120), PICKUP_CONFIG.type));
+  pickupSpawnTimer = frameCount;
+}
+
+function isRecoveryPickupType(type) {
+  return type === "stressPickup" || type === "recover" || type === "stressRelief";
+}
+
+function triggerPickupFeedback(pos) {
+  var pickupFx = new Explosion(true, pos.copy());
+  pickupFx.col = [90, 255, 220];
+  if (pickupFx.particles.length > 45) {
+    pickupFx.particles.length = 45;
+  }
+  explosions.push(pickupFx);
+}
+
+// C1: pickup lifecycle + collection
+function updateAndRenderPickups() {
+  for (var p = pickups.length - 1; p > -1; p--) {
+    pickups[p].update();
+    pickups[p].show();
+    if (pickups[p].isExpired()) {
+      pickups.splice(p, 1);
+      continue;
+    }
+    if (!crashed && pickups[p].isCollectedByShip(ship)) {
+      if (isRecoveryPickupType(pickups[p].type)) {
+        reduceStress(PICKUP_CONFIG.recoverAmount, "pickup:" + pickups[p].type);
+      }
+      triggerPickupFeedback(pickups[p].pos);
+      pickups.splice(p, 1);
+    }
+  }
+}
+
+function updateAndRenderPlayer() {
 function updateAndRenderPlayer(dtSeconds) {
   jet.update();
   jet.show();
@@ -221,6 +281,7 @@ function runGameFrame() {
   updateLevel();
   maintainAsteroids();
   spawnEnemies();
+  spawnPickups();
   // stars.show();
 
   updateAndRenderAsteroids();
@@ -232,6 +293,8 @@ function runGameFrame() {
   updateAndRenderMines();
   updateAndRenderEnemyBullets();
   updateAndRenderEnemyMissiles();
+  updateAndRenderPickups();
+  
   updateAndRenderPlayer(dtSeconds);
   updateHudAndStress(dtSeconds);
 

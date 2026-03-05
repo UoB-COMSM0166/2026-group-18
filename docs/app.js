@@ -12,6 +12,8 @@ var enemyBullets;
 var enemyMissiles;
 var shotgunBullets;
 var mines;
+// C1: active de-stress pickups
+var pickups;
 var stars;
 var crashed;
 let level = 1;
@@ -22,6 +24,8 @@ let collisionCooldown = 0;
 let enemySpawnTimer = 0;
 let gameStartTime;
 let systemAsteroidSpawnTimer = 0;
+// C1: pickup spawn cadence timer
+let pickupSpawnTimer = 0;
 let missileCooldown = 0;
 let shotgunCooldown = 0;
 let mineCooldown = 0;
@@ -47,6 +51,9 @@ function resetGame() {
   enemyMissiles = [];
   shotgunBullets = [];
   mines = [];
+  // C1 reset: clear pickups and restart spawn timer
+  pickups = [];
+  pickupSpawnTimer = frameCount;
   missileCooldown = 0;
   shotgunCooldown = 0;
   mineCooldown = 0;

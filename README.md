@@ -53,7 +53,7 @@ Alternatively, use the GitHub Pages deployment link provided above.
 
 Asteroids-style arcade shooter with a Stress mechanic: collisions raise stress, degrading handling in predictable tiers; pickups reduce stress.
 
-- Play the game: https://uob-comsm0166.github.io/2026-group-18/
+- [Play the game](https://uob-comsm0166.github.io/2026-group-18/game/)
 - Demo video: (link)
 - Final idea: [docs/final-idea.md](docs/final-idea.md)
 

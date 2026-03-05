@@ -39,13 +39,13 @@ We switched our primary reference to a p5.js Asteroids project to align with the
 
 ## Repository Structures
 
-/docs — p5.js implementation and playable web version  
+/game — p5.js implementation and playable web version  
 /docs/*.md — process and design documentation
 
 
 ## How to Run
 
-Open docs/index.html in a web browser to run the p5.js version of the game.
+Open game/index.html in a web browser to run the p5.js version of the game.
 Alternatively, use the GitHub Pages deployment link provided above.
 
 
@@ -188,4 +188,3 @@ You can delete this section in your own repo, it's just here for information. in
 - **Documentation** of code (5% of report grade)
   - Organise your code so that it could easily be picked up by another team in the future and developed further.
   - Is your repo clearly organised? Is code well commented throughout?
-

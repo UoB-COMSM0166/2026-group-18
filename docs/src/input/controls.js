@@ -1,6 +1,6 @@
-// NAVIGATION WITH KEYS
-var currentPos = 0; //pos 0-start, 1-controls etc..
-var mainPage = true; // says if view is on the main page
+
+var currentPos = 0;
+var mainPage = true;
 var pages = ["main", "controls", "about"];
 var anchorLinks = $('a');
 

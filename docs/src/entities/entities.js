@@ -36,7 +36,7 @@ function Missile(pos, heading) {
       }
       var smallestDif = 40000;
       for (var i = 0; i < asteroids.length; i++) {
-        //trzeba poprawic, problem z przypadkiem gdy statek ma np 359* a asteroida 5* (roznica daje 354, a powinna 6)
+
         push();
         translate(ship.pos.x, ship.pos.y);
         var a = atan2(asteroids[i].pos.y - ship.pos.y, asteroids[i].pos.x - ship.pos.x);
@@ -238,6 +238,47 @@ function Mine(pos) {
   this.hit = function(object) {
     var objectRadius = object.radius || object.r || 0;
     return this.pos.dist(object.pos) < this.radius + objectRadius;
+  }
+}
+
+
+function Pickup(pos, type) {
+  this.position = pos.copy();
+  this.pos = this.position;
+  this.radius = PICKUP_CONFIG.radius;
+  this.type = type || PICKUP_CONFIG.type;
+  this.spawnFrame = frameCount;
+  this.lifetime = PICKUP_CONFIG.lifetimeFrames;
+  this.ttlFrames = this.lifetime;
+
+  this.update = function() {
+  }
+
+  this.show = function() {
+    push();
+    var pulse = 1 + 0.15 * sin(frameCount * 0.15);
+    noFill();
+    stroke(80, 255, 230);
+    strokeWeight(2.5);
+    ellipse(this.pos.x, this.pos.y, this.radius * 2 * pulse);
+    stroke(120, 255, 240, 180);
+    strokeWeight(1.5);
+    ellipse(this.pos.x, this.pos.y, this.radius * 1.2);
+    strokeWeight(2);
+    line(this.pos.x - this.radius * 0.45, this.pos.y, this.pos.x + this.radius * 0.45, this.pos.y);
+    line(this.pos.x, this.pos.y - this.radius * 0.45, this.pos.x, this.pos.y + this.radius * 0.45);
+    pop();
+  }
+
+  this.isExpired = function() {
+    return frameCount - this.spawnFrame >= this.ttlFrames;
+  }
+
+  this.isCollectedByShip = function(targetShip) {
+    if (!targetShip) {
+      return false;
+    }
+    return this.pos.dist(targetShip.pos) < targetShip.r + this.radius;
   }
 }
 
@@ -529,24 +570,27 @@ function Ship() {
   this.laserLife = 255;
   this.baseThrust = 0.1;
   this.baseDrag = 0.99;
+  this.laserRegenPerSecond = 60;
   this.boosting = function(b) {
     this.isBoosting = b;
   }
 
-  this.update = function() {
+  this.update = function(dtSeconds) {
     const stressNow = typeof getStressValue === "function" ? getStressValue() : stress;
     const handling = getHandlingParamsByStress(stressNow);
 
-    if (frameCount % 10 == 0) {
-      this.laserLife += 10;
-      this.laserLife = constrain(this.laserLife, 0, 255)
-    }
-    this.turn();
+    const seconds = typeof dtSeconds === "number" ? dtSeconds : (1 / 60);
+    const frameScale = seconds * 60;
+
+    this.laserLife += this.laserRegenPerSecond * seconds;
+    this.laserLife = constrain(this.laserLife, 0, 255);
+
+    this.turn(handling.rotationMult, frameScale);
     this.edges();
     if (this.isBoosting) {
-      this.boost(handling.thrustMult);
+      this.boost(handling.thrustMult, frameScale);
     }
-    this.vel.mult(Math.pow(this.baseDrag, handling.dragMult));
+    this.vel.mult(Math.pow(this.baseDrag, handling.dragMult * frameScale));
     this.pos.add(this.vel);
   }
 
@@ -574,15 +618,13 @@ function Ship() {
       this.pos.y = 0 - this.r;
     }
   }
-  this.boost = function(thrustMult) {
-    var force = p5.Vector.fromAngle(this.heading).mult(this.baseThrust * thrustMult);
+  this.boost = function(thrustMult, frameScale) {
+    var force = p5.Vector.fromAngle(this.heading).mult(this.baseThrust * thrustMult * frameScale);
     this.vel.add(force);
   }
 
-  this.turn = function() {
-    const stressNow = typeof getStressValue === "function" ? getStressValue() : stress;
-    const handling = getHandlingParamsByStress(stressNow);
-    this.heading += this.rotation * handling.rotationMult;
+  this.turn = function(rotationMult, frameScale) {
+    this.heading += this.rotation * rotationMult * frameScale;
     if (Math.abs(this.heading) >= TWO_PI) {
       if (this.heading > 0) {
         this.heading -= TWO_PI;

@@ -9,7 +9,7 @@ function updateAndRenderAsteroids() {
       } else {
         addStress(STRESS_CONFIG.collisionDeltaAsteroid, "asteroidCollision");
       }
-      collisionCooldown = 60; // about 1 second of invulnerability
+      collisionCooldown = 60;
     }
   }
 }
@@ -189,18 +189,76 @@ function updateAndRenderEnemyMissiles() {
   }
 }
 
-function updateAndRenderPlayer() {
+function getPickupSpawnPosition(minDistanceFromShip) {
+  var minDist = typeof minDistanceFromShip === "number" ? minDistanceFromShip : 120;
+  for (var attempt = 0; attempt < 20; attempt++) {
+    var candidate = createVector(random(40, width - 40), random(40, height - 40));
+    if (ship && candidate.dist(ship.pos) < minDist) {
+      continue;
+    }
+    return candidate;
+  }
+  return createVector(random(40, width - 40), random(40, height - 40));
+}
+
+
+function spawnPickups() {
+  if (crashed) {
+    return;
+  }
+  if (pickups.length >= PICKUP_CONFIG.maxActive) {
+    return;
+  }
+  if (frameCount - pickupSpawnTimer < PICKUP_CONFIG.spawnIntervalFrames) {
+    return;
+  }
+  pickups.push(new Pickup(getPickupSpawnPosition(120), PICKUP_CONFIG.type));
+  pickupSpawnTimer = frameCount;
+}
+
+function isRecoveryPickupType(type) {
+  return type === "stressPickup" || type === "recover" || type === "stressRelief";
+}
+
+function triggerPickupFeedback(pos) {
+  var pickupFx = new Explosion(true, pos.copy());
+  pickupFx.col = [90, 255, 220];
+  if (pickupFx.particles.length > 45) {
+    pickupFx.particles.length = 45;
+  }
+  explosions.push(pickupFx);
+}
+
+
+function updateAndRenderPickups() {
+  for (var p = pickups.length - 1; p > -1; p--) {
+    pickups[p].update();
+    pickups[p].show();
+    if (pickups[p].isExpired()) {
+      pickups.splice(p, 1);
+      continue;
+    }
+    if (!crashed && pickups[p].isCollectedByShip(ship)) {
+      if (isRecoveryPickupType(pickups[p].type)) {
+        reduceStress(PICKUP_CONFIG.recoverAmount, "pickup:" + pickups[p].type);
+      }
+      triggerPickupFeedback(pickups[p].pos);
+      pickups.splice(p, 1);
+    }
+  }
+}
+
+function updateAndRenderPlayer(dtSeconds) {
   jet.update();
   jet.show();
-  ship.update();
+  ship.update(dtSeconds);
   ship.show();
 }
 
-function updateHudAndStress() {
+function updateHudAndStress(dtSeconds) {
   drawLevelLabel();
   $('#score').text(score + " | L" + level);
-  const dt = (typeof deltaTime === "number" ? deltaTime : (1000 / 60)) / 1000;
-  updateStress(dt);
+  updateStress(dtSeconds);
   drawStressBar();
 }
 
@@ -213,14 +271,17 @@ function shouldTriggerGameOver() {
 }
 
 function runGameFrame() {
+  const dtSeconds = (typeof deltaTime === "number" ? deltaTime : (1000 / 60)) / 1000;
+  const frameScale = dtSeconds * 60;
   if (collisionCooldown > 0) {
-    collisionCooldown--;
+    collisionCooldown = Math.max(0, collisionCooldown - frameScale);
   }
   background(0, 160);
   updateLevel();
   maintainAsteroids();
   spawnEnemies();
-  // stars.show();
+  spawnPickups();
+
 
   updateAndRenderAsteroids();
   updateAndRenderLaserBeams();
@@ -231,8 +292,10 @@ function runGameFrame() {
   updateAndRenderMines();
   updateAndRenderEnemyBullets();
   updateAndRenderEnemyMissiles();
-  updateAndRenderPlayer();
-  updateHudAndStress();
+  updateAndRenderPickups();
+
+  updateAndRenderPlayer(dtSeconds);
+  updateHudAndStress(dtSeconds);
 
   if (shouldTriggerGameOver()) {
     gameOver();

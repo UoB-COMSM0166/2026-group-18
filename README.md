@@ -65,6 +65,36 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 
 ## Version History
 
+### v1.3 – Advanced Weapon System
+Major gameplay expansion with multiple new weapons and cooldown mechanics.
+
+New weapons added:
+
+- **Missile (Z key)**  
+  Homing missile that automatically targets asteroids.  
+  Cooldown: **5 seconds**
+
+- **Shotgun (X key)**  
+  Fires **8 bullets in a 120° cone** in front of the ship.  
+  Effective for clearing groups of enemies and asteroids.  
+  Cooldown: **15 seconds**
+
+- **Space Mine (C key)**  
+  Deploys a stationary mine at the ship’s location.  
+  The mine explodes when touched by an asteroid or enemy, destroying it and creating a red explosion effect.  
+  Cooldown: **20 seconds**
+
+Gameplay improvements:
+
+- Added **weapon cooldown system** for balanced gameplay.
+- Implemented **bullet edge cleanup** to remove projectiles when they leave the screen.
+- Added limits to prevent excessive objects:
+  - Maximum **20 shotgun bullets**
+  - Maximum **3 active mines**
+- Updated the **Controls page** to include new weapon instructions.
+
+This update significantly expands combat strategy and adds more tactical gameplay options.
+
 ### v1.2 – Enemies and Level System
 - Added enemy ships with two types:
   - **Type A (Blue Triangle)**: fires normal bullets toward the player.

@@ -102,6 +102,8 @@ var missiles;
 var enemies;
 var enemyBullets;
 var enemyMissiles;
+var shotgunBullets;
+var mines;
 var crashed;
 let level = 1;
 let stress = 0;
@@ -111,6 +113,9 @@ let collisionCooldown = 0;
 let enemySpawnTimer = 0;
 let gameStartTime;
 let systemAsteroidSpawnTimer = 0;
+let missileCooldown = 0;
+let shotgunCooldown = 0;
+let mineCooldown = 0;
 const STRESS_CONFIG = {
   maxStress: 100,
   // Exactly 3 tiers via 2 thresholds: [tier0 upper bound, tier1 upper bound]
@@ -246,6 +251,11 @@ function resetGame() {
   enemies = [];
   enemyBullets = [];
   enemyMissiles = [];
+  shotgunBullets = [];
+  mines = [];
+  missileCooldown = 0;
+  shotgunCooldown = 0;
+  mineCooldown = 0;
   for (var i = 0; i < 5; i++) {
   	asteroids.push(new Asteroid(undefined, undefined, undefined, true));
   }
@@ -323,11 +333,45 @@ function draw() {
         k--;
       }
     }
+    for (var s = shotgunBullets.length - 1; s > -1; s--) {
+      shotgunBullets[s].update();
+      shotgunBullets[s].show();
+      var shotgunHit = false;
+      for (var sa = asteroids.length - 1; sa > -1; sa--) {
+        if (shotgunBullets[s] && shotgunBullets[s].hit(asteroids[sa])) {
+          score += asteroids[sa].r * 100;
+          explosions.push(new Explosion(true, asteroids[sa].pos));
+          asteroids[sa].break();
+          asteroids.splice(sa, 1);
+          shotgunBullets.splice(s, 1);
+          shotgunHit = true;
+          break;
+        }
+      }
+      if (!shotgunHit) {
+        for (var se = enemies.length - 1; se > -1; se--) {
+          if (shotgunBullets[s] && shotgunBullets[s].hit(enemies[se])) {
+            score += enemies[se].type == "A" ? 400 : 700;
+            explosions.push(new Explosion(true, enemies[se].pos));
+            enemies.splice(se, 1);
+            shotgunBullets.splice(s, 1);
+            shotgunHit = true;
+            break;
+          }
+        }
+      }
+      if (!shotgunHit && shotgunBullets[s] && shotgunBullets[s].edges()) {
+        shotgunBullets.splice(s, 1);
+      }
+    }
     for (var l = 0; l< missiles.length; l++) {
       missiles[l].getTarget();
       missiles[l].update();
       missiles[l].show();
-      if (missiles[l].gotToCenter) {
+      if (missiles[l].targetFound && !asteroids[missiles[l].targetIndex]) {
+        missiles.splice(l,1);
+        l--;
+      } else if (missiles[l].gotToCenter) {
         explosions.push(new Explosion(true, asteroids[missiles[l].targetIndex].pos, true));
         score += asteroids[missiles[l].targetIndex].r * 100;
         asteroids[missiles[l].targetIndex].break();
@@ -341,6 +385,36 @@ function draw() {
       enemies[e].update();
       enemies[e].show();
       enemies[e].shoot();
+    }
+    for (var mi = mines.length - 1; mi > -1; mi--) {
+      mines[mi].update();
+      mines[mi].show();
+      var mineTriggered = false;
+      for (var ma = asteroids.length - 1; ma > -1; ma--) {
+        if (mines[mi] && mines[mi].hit(asteroids[ma])) {
+          var asteroidExplosion = new Explosion(true, asteroids[ma].pos);
+          asteroidExplosion.col = [255, 0, 0];
+          explosions.push(asteroidExplosion);
+          asteroids.splice(ma, 1);
+          mineTriggered = true;
+          break;
+        }
+      }
+      if (!mineTriggered) {
+        for (var me = enemies.length - 1; me > -1; me--) {
+          if (mines[mi] && mines[mi].hit(enemies[me])) {
+            var enemyExplosion = new Explosion(true, enemies[me].pos);
+            enemyExplosion.col = [255, 0, 0];
+            explosions.push(enemyExplosion);
+            enemies.splice(me, 1);
+            mineTriggered = true;
+            break;
+          }
+        }
+      }
+      if (mineTriggered) {
+        mines.splice(mi, 1);
+      }
     }
     for (var b = enemyBullets.length - 1; b > -1; b--) {
       enemyBullets[b].update();
@@ -516,6 +590,9 @@ function Missile(pos, heading) {
   this.crosshairVisibility = 1;
   this.getTarget = function() {
   	if (this.targetFound == false) {
+      if (asteroids.length === 0) {
+        return;
+      }
       var smallestDif = 40000;
       for (var i = 0; i < asteroids.length; i++) {
         
@@ -538,6 +615,10 @@ function Missile(pos, heading) {
   
   this.update = function() {
   	if (this.targetFound && !this.gotToCenter) {
+      if (!asteroids[this.targetIndex]) {
+        this.targetFound = false;
+        return;
+      }
       var dir = p5.Vector.sub(asteroids[this.targetIndex].pos, this.pos);
       dir.setMag(this.strength);
 			this.vel.add(dir);
@@ -551,6 +632,9 @@ function Missile(pos, heading) {
   
   this.show = function () {
   	if (this.targetFound) {
+      if (!asteroids[this.targetIndex]) {
+        return;
+      }
       push();
       fill(250,20,20)
     	ellipse(this.pos.x, this.pos.y, 10);
@@ -663,6 +747,63 @@ function Laser(pos, heading) {
     }
   }
 }
+
+function ShotgunBullet(pos, heading) {
+  this.pos = pos.copy();
+  this.vel = p5.Vector.fromAngle(heading).mult(6);
+  this.radius = 4;
+
+  this.update = function() {
+    this.pos.add(this.vel);
+  }
+
+  this.show = function() {
+    push();
+    noStroke();
+    fill(255, 180, 120);
+    ellipse(this.pos.x, this.pos.y, this.radius * 2);
+    pop();
+  }
+
+  this.hit = function(object) {
+    var objectRadius = object.radius || object.r || 0;
+    return this.pos.dist(object.pos) < this.radius + objectRadius;
+  }
+
+  this.edges = function() {
+    return this.pos.x > width ||
+      this.pos.x < 0 ||
+      this.pos.y > height ||
+      this.pos.y < 0;
+  }
+}
+
+function Mine(pos) {
+  this.pos = pos.copy();
+  this.radius = 6;
+
+  this.update = function() {
+  }
+
+  this.show = function() {
+    push();
+    noStroke();
+    var blinkOn = floor(frameCount / 20) % 2 === 0;
+    if (blinkOn) {
+      fill(255, 0, 0);
+    } else {
+      fill(120, 0, 0);
+    }
+    ellipse(this.pos.x, this.pos.y, 12);
+    pop();
+  }
+
+  this.hit = function(object) {
+    var objectRadius = object.radius || object.r || 0;
+    return this.pos.dist(object.pos) < this.radius + objectRadius;
+  }
+}
+
 function Asteroid(r, pos, vel, systemSpawn) {
   this.isSystemSpawn = systemSpawn || false;
   this.col = [Math.floor(random(255)),Math.floor(random(255)),Math.floor(random(255))];
@@ -1029,9 +1170,27 @@ function keyPressed() {
     } else if (key == ' ' && ship.laserLife > 50) {
       laserBeams.push(new Laser(ship.pos, ship.heading));
       ship.laserLife -= 30;
-    } else if (keyCode == CONTROL) {
-      if (missiles.length ==0) {
+    } else if (key === 'z' || key === 'Z') {
+      if (millis() - missileCooldown > 5000) {
         missiles.push(new Missile(ship.pos, ship.heading));
+        missileCooldown = millis();
+      }
+    } else if (key === 'x' || key === 'X') {
+      if (millis() - shotgunCooldown > 15000 && shotgunBullets.length < 20) {
+        var spread = radians(120);
+        var step = spread / 7;
+        var availableSlots = 20 - shotgunBullets.length;
+        var bulletsToSpawn = min(8, availableSlots);
+        for (var i = 0; i < bulletsToSpawn; i++) {
+          var angle = ship.heading - spread / 2 + step * i;
+          shotgunBullets.push(new ShotgunBullet(ship.pos, angle));
+        }
+        shotgunCooldown = millis();
+      }
+    } else if (key === 'c' || key === 'C') {
+      if (millis() - mineCooldown > 20000 && mines.length < 3) {
+        mines.push(new Mine(ship.pos));
+        mineCooldown = millis();
       }
     }    
   }

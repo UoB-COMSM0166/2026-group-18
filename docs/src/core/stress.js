@@ -2,8 +2,8 @@ const STRESS_CONFIG = {
   maxStress: 100,
   // Exactly 3 tiers via 2 thresholds: [tier0 upper bound, tier1 upper bound]
   tiers: [40, 75],
-  decayPerFrame: 0.03,
-  cooldownFrames: 120,
+  decayPerSecond: 1.8,
+  cooldownSeconds: 2,
   collisionDeltaAsteroid: 20,
   collisionDeltaEnemyBullet: 12
 };
@@ -79,7 +79,7 @@ function getStressUILabelByTier(tier) {
 function addStress(amount, cause) {
   // `cause` is reserved for future telemetry/collision migration.
   stressState.value = constrain(stressState.value + amount, 0, STRESS_CONFIG.maxStress);
-  stressState.cooldownRemaining = STRESS_CONFIG.cooldownFrames;
+  stressState.cooldownRemaining = STRESS_CONFIG.cooldownSeconds;
   stressState.tier = getStressTier(stressState.value);
   // Ensure legacy globals reflect API-driven writes in the same frame.
   syncStressGlobals();
@@ -110,18 +110,18 @@ function syncStressGlobals() {
   stressCooldown = stressState.cooldownRemaining;
 }
 
-// Per-frame stress update: cooldown, decay, clamping, tier refresh, and compatibility sync.
+// Time-based stress update: cooldown and decay are per-second and frame-rate independent.
 function updateStressState(dtSeconds) {
   // Backward-compat bridge: ingest any legacy `stress += ...` writes first.
   syncStressStateFromGlobals();
 
   var seconds = typeof dtSeconds === "number" ? dtSeconds : (1 / 60);
-  var frames = seconds * 60;
   if (stressState.cooldownRemaining > 0) {
-    stressState.cooldownRemaining -= frames;
+    stressState.cooldownRemaining -= seconds;
   } else {
-    stressState.value -= STRESS_CONFIG.decayPerFrame * frames;
+    stressState.value -= STRESS_CONFIG.decayPerSecond * seconds;
   }
+
 
   stressState.cooldownRemaining = Math.max(0, stressState.cooldownRemaining);
   stressState.value = constrain(stressState.value, 0, STRESS_CONFIG.maxStress);

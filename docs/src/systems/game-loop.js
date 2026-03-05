@@ -189,18 +189,17 @@ function updateAndRenderEnemyMissiles() {
   }
 }
 
-function updateAndRenderPlayer() {
+function updateAndRenderPlayer(dtSeconds) {
   jet.update();
   jet.show();
-  ship.update();
+  ship.update(dtSeconds);
   ship.show();
 }
 
-function updateHudAndStress() {
+function updateHudAndStress(dtSeconds) {
   drawLevelLabel();
   $('#score').text(score + " | L" + level);
-  const dt = (typeof deltaTime === "number" ? deltaTime : (1000 / 60)) / 1000;
-  updateStress(dt);
+  updateStress(dtSeconds);
   drawStressBar();
 }
 
@@ -213,8 +212,10 @@ function shouldTriggerGameOver() {
 }
 
 function runGameFrame() {
+  const dtSeconds = (typeof deltaTime === "number" ? deltaTime : (1000 / 60)) / 1000;
+  const frameScale = dtSeconds * 60;
   if (collisionCooldown > 0) {
-    collisionCooldown--;
+    collisionCooldown = Math.max(0, collisionCooldown - frameScale);
   }
   background(0, 160);
   updateLevel();
@@ -231,8 +232,8 @@ function runGameFrame() {
   updateAndRenderMines();
   updateAndRenderEnemyBullets();
   updateAndRenderEnemyMissiles();
-  updateAndRenderPlayer();
-  updateHudAndStress();
+  updateAndRenderPlayer(dtSeconds);
+  updateHudAndStress(dtSeconds);
 
   if (shouldTriggerGameOver()) {
     gameOver();

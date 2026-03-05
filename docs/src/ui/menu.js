@@ -7,6 +7,11 @@ function changeSection(from, to) {
 }
 
 function gameOver() {
+  // Ensure telemetry is finalized exactly when the game over screen appears.
+  if (typeof telemetryEnd === "function") {
+    telemetryEnd();
+  }
+
   document.getElementById("gameOver").style.display = "initial";
   $('#score').text('');
   $('#finalScore').text(score);

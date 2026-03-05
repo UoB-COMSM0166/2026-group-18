@@ -9,7 +9,7 @@ function updateAndRenderAsteroids() {
       } else {
         addStress(STRESS_CONFIG.collisionDeltaAsteroid, "asteroidCollision");
       }
-      collisionCooldown = 60; // about 1 second of invulnerability
+      collisionCooldown = 60;
     }
   }
 }
@@ -201,7 +201,7 @@ function getPickupSpawnPosition(minDistanceFromShip) {
   return createVector(random(40, width - 40), random(40, height - 40));
 }
 
-// C1: timed pickup spawn with active cap
+
 function spawnPickups() {
   if (crashed) {
     return;
@@ -229,7 +229,7 @@ function triggerPickupFeedback(pos) {
   explosions.push(pickupFx);
 }
 
-// C1: pickup lifecycle + collection
+
 function updateAndRenderPickups() {
   for (var p = pickups.length - 1; p > -1; p--) {
     pickups[p].update();
@@ -248,7 +248,6 @@ function updateAndRenderPickups() {
   }
 }
 
-function updateAndRenderPlayer() {
 function updateAndRenderPlayer(dtSeconds) {
   jet.update();
   jet.show();
@@ -282,7 +281,7 @@ function runGameFrame() {
   maintainAsteroids();
   spawnEnemies();
   spawnPickups();
-  // stars.show();
+
 
   updateAndRenderAsteroids();
   updateAndRenderLaserBeams();
@@ -294,7 +293,7 @@ function runGameFrame() {
   updateAndRenderEnemyBullets();
   updateAndRenderEnemyMissiles();
   updateAndRenderPickups();
-  
+
   updateAndRenderPlayer(dtSeconds);
   updateHudAndStress(dtSeconds);
 

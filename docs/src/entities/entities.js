@@ -527,11 +527,16 @@ function Ship() {
   this.vel = createVector(0, 0);
   this.isBoosting = false;
   this.laserLife = 255;
+  this.baseThrust = 0.1;
+  this.baseDrag = 0.99;
   this.boosting = function(b) {
     this.isBoosting = b;
   }
 
   this.update = function() {
+    const stressNow = typeof getStressValue === "function" ? getStressValue() : stress;
+    const handling = getHandlingParamsByStress(stressNow);
+
     if (frameCount % 10 == 0) {
       this.laserLife += 10;
       this.laserLife = constrain(this.laserLife, 0, 255)
@@ -539,9 +544,9 @@ function Ship() {
     this.turn();
     this.edges();
     if (this.isBoosting) {
-      this.boost();
+      this.boost(handling.thrustMult);
     }
-    this.vel.mult(0.99);
+    this.vel.mult(Math.pow(this.baseDrag, handling.dragMult));
     this.pos.add(this.vel);
   }
 
@@ -569,8 +574,8 @@ function Ship() {
       this.pos.y = 0 - this.r;
     }
   }
-  this.boost = function() {
-    var force = p5.Vector.fromAngle(this.heading).mult(0.1);
+  this.boost = function(thrustMult) {
+    var force = p5.Vector.fromAngle(this.heading).mult(this.baseThrust * thrustMult);
     this.vel.add(force);
   }
 

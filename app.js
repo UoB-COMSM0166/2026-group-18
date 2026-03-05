@@ -736,9 +736,7 @@ function Asteroid(r, pos, vel, systemSpawn) {
     if (newR > 10) {
       asteroids.push(new Asteroid(newR, newPos, newVelOne, false));
       asteroids.push(new Asteroid(newR, newPos, newVelTwo, false));
-    } else if (random() < 0.4){
-      asteroids.push(new Asteroid(undefined, undefined, undefined, false));
-    }	
+    }
   }
   this.edges = function () {
   	if (this.pos.x>width+this.r) {

@@ -39,13 +39,13 @@ We switched our primary reference to a p5.js Asteroids project to align with the
 
 ## Repository Structures
 
-/game — p5.js implementation and playable web version  
+/docs — p5.js implementation and playable web version  
 /docs/*.md — process and design documentation
 
 
 ## How to Run
 
-Open game/index.html in a web browser to run the p5.js version of the game.
+Open docs/index.html in a web browser to run the p5.js version of the game.
 Alternatively, use the GitHub Pages deployment link provided above.
 
 
@@ -53,13 +53,13 @@ Alternatively, use the GitHub Pages deployment link provided above.
 
 Asteroids-style arcade shooter with a Stress mechanic: collisions raise stress, degrading handling in predictable tiers; pickups reduce stress.
 
-- [Play the game](https://uob-comsm0166.github.io/2026-group-18/game/)
+- [Play the game](https://uob-comsm0166.github.io/2026-group-18/)
 - Demo video: (link)
 - Final idea: [docs/final-idea.md](docs/final-idea.md)
 
 IMAGE. Add an image of your game here, keep this updated with a snapshot of your latest development.
 
-LINK. Add a link here to your deployed game, you can also make the image above link to your game if you wish. Your game lives in the [/game](/game) folder, and is published using Github pages. 
+LINK. Add a link here to your deployed game, you can also make the image above link to your game if you wish. Your game lives in the [/docs](/docs) folder, and is published using Github pages. 
 
 VIDEO. Include a demo video of your game here (you don't have to wait until the end, you can insert a work in progress video)
 

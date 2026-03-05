@@ -36,7 +36,7 @@ function Missile(pos, heading) {
       }
       var smallestDif = 40000;
       for (var i = 0; i < asteroids.length; i++) {
-        //trzeba poprawic, problem z przypadkiem gdy statek ma np 359* a asteroida 5* (roznica daje 354, a powinna 6)
+
         push();
         translate(ship.pos.x, ship.pos.y);
         var a = atan2(asteroids[i].pos.y - ship.pos.y, asteroids[i].pos.x - ship.pos.x);
@@ -241,15 +241,15 @@ function Mine(pos) {
   }
 }
 
-// C1: de-stress pickup entity
+
 function Pickup(pos, type) {
   this.position = pos.copy();
-  this.pos = this.position; // backward-compatible alias
+  this.pos = this.position;
   this.radius = PICKUP_CONFIG.radius;
   this.type = type || PICKUP_CONFIG.type;
   this.spawnFrame = frameCount;
   this.lifetime = PICKUP_CONFIG.lifetimeFrames;
-  this.ttlFrames = this.lifetime; // backward-compatible alias
+  this.ttlFrames = this.lifetime;
 
   this.update = function() {
   }

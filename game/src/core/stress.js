@@ -23,6 +23,16 @@ const STRESS_UI = {
   tierLabels: ["CALM", "TENSE", "PANIC"]
 };
 
+// C1: de-stress pickup tuning
+const PICKUP_CONFIG = {
+  spawnIntervalFrames: 420,
+  maxActive: 2,
+  recoverAmount: 20,
+  radius: 12,
+  lifetimeFrames: 600,
+  type: "stressPickup"
+};
+
 const MAX_STRESS = STRESS_CONFIG.maxStress;
 
 const stressState = {
@@ -69,6 +79,14 @@ function addStress(amount, cause) {
   stressState.cooldownRemaining = STRESS_CONFIG.cooldownFrames;
   stressState.tier = getStressTier(stressState.value);
   // Ensure legacy globals reflect API-driven writes in the same frame.
+  syncStressGlobals();
+  return cause;
+}
+
+// C1: pickup recovery hook
+function reduceStress(amount, cause) {
+  stressState.value = constrain(stressState.value - Math.max(0, amount), 0, STRESS_CONFIG.maxStress);
+  stressState.tier = getStressTier(stressState.value);
   syncStressGlobals();
   return cause;
 }

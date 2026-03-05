@@ -241,6 +241,47 @@ function Mine(pos) {
   }
 }
 
+// C1: de-stress pickup entity
+function Pickup(pos, type) {
+  this.position = pos.copy();
+  this.pos = this.position; // backward-compatible alias
+  this.radius = PICKUP_CONFIG.radius;
+  this.type = type || PICKUP_CONFIG.type;
+  this.spawnFrame = frameCount;
+  this.lifetime = PICKUP_CONFIG.lifetimeFrames;
+  this.ttlFrames = this.lifetime; // backward-compatible alias
+
+  this.update = function() {
+  }
+
+  this.show = function() {
+    push();
+    var pulse = 1 + 0.15 * sin(frameCount * 0.15);
+    noFill();
+    stroke(80, 255, 230);
+    strokeWeight(2.5);
+    ellipse(this.pos.x, this.pos.y, this.radius * 2 * pulse);
+    stroke(120, 255, 240, 180);
+    strokeWeight(1.5);
+    ellipse(this.pos.x, this.pos.y, this.radius * 1.2);
+    strokeWeight(2);
+    line(this.pos.x - this.radius * 0.45, this.pos.y, this.pos.x + this.radius * 0.45, this.pos.y);
+    line(this.pos.x, this.pos.y - this.radius * 0.45, this.pos.x, this.pos.y + this.radius * 0.45);
+    pop();
+  }
+
+  this.isExpired = function() {
+    return frameCount - this.spawnFrame >= this.ttlFrames;
+  }
+
+  this.isCollectedByShip = function(targetShip) {
+    if (!targetShip) {
+      return false;
+    }
+    return this.pos.dist(targetShip.pos) < targetShip.r + this.radius;
+  }
+}
+
 function Asteroid(r, pos, vel, systemSpawn) {
   this.isSystemSpawn = systemSpawn || false;
   this.col = [Math.floor(random(255)), Math.floor(random(255)), Math.floor(random(255))];

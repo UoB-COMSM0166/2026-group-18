@@ -65,6 +65,14 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 
 ## Version History
 
+### v1.4 - Telemetry + Export
+-Implemented
+  - Record per run: `survivalTime`, `collisionCount`, `stressOverTime`, `pickupCount`, `shotsFired`, `enemyHitsTaken`
+  - Stress sampled every `0.5s`
+  - On game over: print telemetry summary to console
+  - Press `T` to download telemetry JSON
+  - Export telemetry logs.
+
 ### v1.3 – Advanced Weapon System
 Major gameplay expansion with multiple new weapons and cooldown mechanics.
 

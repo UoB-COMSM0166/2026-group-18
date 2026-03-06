@@ -1,4 +1,4 @@
-[index.html](https://github.com/user-attachments/files/24891406/index.html)# 2026-group-18
+# 2026-group-18
 2026 COMSM0166 group 18
 
 # COMSM0166 Project Template

@@ -156,6 +156,16 @@ function updateAndRenderMines() {
   }
 }
 
+function updateAndRenderUltrasonicWaves() {
+  for (var i = ultrasonicWaves.length - 1; i > -1; i--) {
+    ultrasonicWaves[i].update();
+    ultrasonicWaves[i].show();
+    if (ultrasonicWaves[i].finished()) {
+      ultrasonicWaves.splice(i, 1);
+    }
+  }
+}
+
 function updateAndRenderEnemyBullets() {
   for (var b = enemyBullets.length - 1; b > -1; b--) {
     enemyBullets[b].update();
@@ -290,6 +300,7 @@ function runGameFrame() {
   updateAndRenderMissiles();
   updateAndRenderEnemies();
   updateAndRenderMines();
+  updateAndRenderUltrasonicWaves();
   updateAndRenderEnemyBullets();
   updateAndRenderEnemyMissiles();
   updateAndRenderPickups();

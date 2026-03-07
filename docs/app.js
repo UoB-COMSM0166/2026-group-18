@@ -12,6 +12,8 @@ var enemyBullets;
 var enemyMissiles;
 var shotgunBullets;
 var mines;
+var ultrasonicWaves;
+
 
 var pickups;
 var stars;
@@ -34,6 +36,7 @@ let pickupSpawnTimer = 0;
 let missileCooldown = 0;
 let shotgunCooldown = 0;
 let mineCooldown = 0;
+let ultrasonicCooldown = 0;
 
 //set telemetry
 let telemetry = null;
@@ -63,6 +66,7 @@ function resetGame() {
   enemyMissiles = [];
   shotgunBullets = [];
   mines = [];
+  ultrasonicWaves = [];
 
   pickups = [];
   pickupSpawnTimer = frameCount;

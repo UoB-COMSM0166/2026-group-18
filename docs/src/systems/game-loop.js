@@ -14,6 +14,7 @@ function updateAndRenderAsteroids() {
     asteroids[i].update();
     asteroids[i].show();
     if (!crashed && collisionCooldown === 0 && ship.hit(asteroids[i])) {
+      triggerShipHitFeedback();
       if (shouldCrashFromStressHit(STRESS_CONFIG.collisionDeltaAsteroid, "asteroidCollision")) {
         crashed = true;
         explosions.push(new Explosion(true, ship.pos));
@@ -180,6 +181,7 @@ function updateAndRenderEnemyBullets() {
     enemyBullets[b].update();
     enemyBullets[b].show();
     if (!crashed && collisionCooldown === 0 && enemyBullets[b].hitShip()) {
+      triggerShipHitFeedback();
       if (shouldCrashFromStressHit(STRESS_CONFIG.collisionDeltaEnemyBullet, "enemyBullet")) {
         crashed = true;
         explosions.push(new Explosion(true, ship.pos));
@@ -199,6 +201,7 @@ function updateAndRenderEnemyMissiles() {
     if (enemyMissiles[n].dead) {
       enemyMissiles.splice(n, 1);
     } else if (enemyMissiles[n].hitShip()) {
+      triggerShipHitFeedback();
       explosions.push(new Explosion(true, enemyMissiles[n].pos, true));
       enemyMissiles.splice(n, 1);
       if (!crashed) {

@@ -1,4 +1,4 @@
-[index.html](https://github.com/user-attachments/files/24891406/index.html)# 2026-group-18
+# 2026-group-18
 2026 COMSM0166 group 18
 
 # COMSM0166 Project Template
@@ -65,6 +65,7 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 
 ## Version History
 
+
 # Version 1.4 Update
 
 Version **1.4** introduces two major gameplay improvements.
@@ -109,6 +110,15 @@ V – Activate Ultrasonic Wave
 This weapon is designed as a **large area-of-effect emergency ability** to clear asteroid fragments when the player is overwhelmed.
 
 ---
+=======
+### v1.4 - Telemetry + Export
+-Implemented
+  - Record per run: `survivalTime`, `collisionCount`, `stressOverTime`, `pickupCount`, `shotsFired`, `enemyHitsTaken`
+  - Stress sampled every `0.5s`
+  - On game over: print telemetry summary to console
+  - Press `T` to download telemetry JSON
+  - Export telemetry logs.
+
 
 ### v1.3 – Advanced Weapon System
 Major gameplay expansion with multiple new weapons and cooldown mechanics.

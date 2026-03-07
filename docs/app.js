@@ -125,7 +125,7 @@ function drawStressBar(){
 
 
     const tierColors = [
-      color(140, 140, 140),
+      color(0, 255, 0),
       color(255, 210, 0),
       color(255, 70, 70)
     ];

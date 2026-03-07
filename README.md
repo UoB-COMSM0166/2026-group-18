@@ -7,7 +7,7 @@ Asteroids-style arcade shooter with a Stress mechanic: collisions raise stress, 
 
 - [Play the game](https://uob-comsm0166.github.io/2026-group-18/)
 - Demo video: (link)
-- Final idea: [docs/final-idea.md](docs/final-idea.md)
+- Final idea: [requirements/final-idea.md](requirements/final-idea.md)
 
 IMAGE. Add an image of your game here, keep this updated with a snapshot of your latest development.
 
@@ -32,7 +32,7 @@ We use Kanban board (GitHub Projects) a visual workflow system that limits work-
 
 **Week 1 Deliverables**
 - Team process (workflow, DoD, WIP): see [docs/process.md](docs/process.md).
-- Game inspiration list: see [docs/inspiration.md](docs/inspiration.md).
+- Game inspiration list: see [requirements/inspiration.md](requirements/inspiration.md).
 
 **Week 2 Deliverables**
 - Drawing app (p5.js paint): [click to run](https://uob-comsm0166.github.io/2026-group-18/).
@@ -41,20 +41,23 @@ We use Kanban board (GitHub Projects) a visual workflow system that limits work-
 **Week 3 Videos about two ideas**
 - Watch Week 3 videos here:
   👉 [docs/video_links.md](docs/video_links.md)
-- The reason we choose this game final: [docs/final-idea.md](docs/final-idea.md)
+- The reason we choose this game final: [requirements/final-idea.md](requirements/final-idea.md)
 
 **Plan Update:**
 We switched our primary reference to a p5.js Asteroids project to align with the module’s required tech stack (p5.js) and ensure a feasible, testable MVP. Previous inspirations remain design references only (pacing, difficulty, patterns).
 
 **Week 4 Deliverables**
-- Requirements (stakeholders, epics, user stories + AC, reflection): see [docs/requirements.md](docs/requirements.md).
-- OO design (UML class + sequence diagrams): see [docs/design.md](docs/design.md).
+- Requirements: see [requirements/stakeholders.md](requirements/stakeholders.md), [requirements/user-stories.md](requirements/user-stories.md), and [requirements/acceptance-criteria.md](requirements/acceptance-criteria.md).
+- OO design (UML class + sequence diagrams): see [design/design.md](design/design.md).
 
 
 ## Repository Structures
 
-/docs — p5.js implementation and playable web version  
-/docs/*.md — process and design documentation
+/requirements — requirements and ideation documents  
+/design — architecture and UML design documents  
+/implementation — implementation chapter materials  
+/evaluation — evaluation and process materials  
+/docs — p5.js implementation and playable web version (game body)
 
 
 ## How to Run

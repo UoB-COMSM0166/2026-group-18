@@ -1,0 +1,109 @@
+# Version History
+
+
+## Version 1.4 Update
+
+Version **1.4** introduces two major gameplay improvements.
+
+### Automatic Laser System
+
+The player's primary laser weapon now fires **automatically every 0.5 seconds**.
+
+Previously, the player had to repeatedly press the **spacebar** to shoot.  
+This update improves gameplay flow and reduces repetitive input, allowing the player to focus more on:
+
+- movement
+- positioning
+- tactical weapon usage
+
+The laser still consumes ship energy and follows the same regeneration mechanics.
+
+---
+
+### New Weapon: Ultrasonic Wave
+
+A new special weapon called **Ultrasonic Wave** has been introduced.
+
+The Ultrasonic Wave emits a **rapidly expanding blue shockwave** from the player's ship.
+
+When activated, the wave:
+
+- expands outward from the ship
+- destroys **non-system asteroids**
+- triggers explosion effects when asteroids are hit
+
+The wave gradually fades as it expands, creating a visual shockwave effect.
+
+#### Controls
+
+V – Activate Ultrasonic Wave
+
+#### Cooldown
+
+30 seconds
+
+This weapon is designed as a **large area-of-effect emergency ability** to clear asteroid fragments when the player is overwhelmed.
+
+=======
+
+#### v1.4 - Telemetry + Export
+
+-Implemented
+  - Record per run: `survivalTime`, `collisionCount`, `stressOverTime`, `pickupCount`, `shotsFired`, `enemyHitsTaken`
+  - Stress sampled every `0.5s`
+  - On game over: print telemetry summary to console
+  - Press `T` to download telemetry JSON
+  - Export telemetry logs.
+
+
+#### v1.3 – Advanced Weapon System
+
+Major gameplay expansion with multiple new weapons and cooldown mechanics.
+
+**New weapons added:**
+
+- **Missile (Z key)**  
+  Homing missile that automatically targets asteroids.  
+  Cooldown: **5 seconds**
+
+- **Shotgun (X key)**  
+  Fires **8 bullets in a 120° cone** in front of the ship.  
+  Effective for clearing groups of enemies and asteroids.  
+  Cooldown: **15 seconds**
+
+- **Space Mine (C key)**  
+  Deploys a stationary mine at the ship’s location.  
+  The mine explodes when touched by an asteroid or enemy, destroying it and creating a red explosion effect.  
+  Cooldown: **20 seconds**
+
+**Gameplay improvements:**
+
+- Added **weapon cooldown system** for balanced gameplay.
+- Implemented **bullet edge cleanup** to remove projectiles when they leave the screen.
+- Added limits to prevent excessive objects:
+  - Maximum **20 shotgun bullets**
+  - Maximum **3 active mines**
+- Updated the **Controls page** to include new weapon instructions.
+
+This update significantly expands combat strategy and adds more tactical gameplay options.
+
+#### v1.2 – Enemies and Level System
+- Added enemy ships with two types:
+  - **Type A (Blue Triangle)**: fires normal bullets toward the player.
+  - **Type B (Yellow Triangle)**: launches homing missiles.
+- Implemented **time-based level progression**.
+  - Level increases every 90 seconds.
+- Enemy spawning system introduced with controlled maximum enemy count.
+- Improved overall gameplay difficulty and pacing.
+
+#### v1.1 – Stress System
+- Added **Stress Bar mechanic**.
+- Collisions with asteroids increase stress.
+- High stress reduces ship turning ability.
+- Stress gradually recovers over time.
+
+#### v1.0 – Initial Game Prototype
+- Basic Asteroids-style gameplay.
+- Player spaceship movement and shooting.
+- Asteroid spawning and splitting.
+- Explosion effects and scoring system.

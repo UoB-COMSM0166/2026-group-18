@@ -694,9 +694,8 @@ function Ship() {
     this.rotation = angle;
   }
   this.hit = function(asteroid) {
-    // Include ship radius in the collision envelope to avoid under-detecting hits.
-    var asteroidRadius = asteroid && typeof asteroid.r === "number" ? asteroid.r : 0;
-    var collisionRadius = this.r + asteroidRadius * 0.85;
-    return this.pos.dist(asteroid.pos) < collisionRadius;
+    if (this.pos.dist(asteroid.pos) < 0.9 * asteroid.r) {
+      return true;
+    }
   }
 }

@@ -40,10 +40,10 @@ function updateAndRenderLaserBeams() {
         break;
       }
     }
-    if (！flag ) {
+    if (flag == 0 ) {
       for (var m = enemies.length - 1; m > -1; m--) {
         if (laserBeams[j] && laserBeams[j].hit(enemies[m])) {
-          addScore(enemies[m].type === "A" ? 400 : 700);
+          addScore(enemies[m].type == "A" ? 400 : 700);
           explosions.push(new Explosion(true, enemies[m].pos));
           enemies.splice(m, 1);
           laserBeams.splice(j, 1);
@@ -53,7 +53,7 @@ function updateAndRenderLaserBeams() {
         }
       }
     }
-    if (！flag && laserBeams[j].edges()) {
+    if (flag == 0 && laserBeams[j].edges()) {
       laserBeams.splice(j, 1);
       j--;
     }

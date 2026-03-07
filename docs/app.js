@@ -43,6 +43,21 @@ let telemetry = null;
 let telemetryFinalized = false;
 let lastStressSampleAt = 0;
 let telemetryPrevState = null;
+// Task 5: ship-hit feedback config/state
+let hitSfxDurationMs = 1000;
+let hitFlashDurationMs = 1500;
+let hitFlashHz = 10;
+
+let hitSfxUntilMs = 0;
+let hitFlashUntilMs = 0;
+let lastShipHitAtMs = 0;
+let hitSfx = null;
+let hitSfxVolume = 0.8;
+let bgm = null;
+let bgmVolume = 0.3;
+let bgmStarted = false;
+
+
 
 function resetGame() {
   telemetryStart();
@@ -77,20 +92,103 @@ function resetGame() {
   missileCooldown = 0;
   shotgunCooldown = 0;
   mineCooldown = 0;
+  hitSfxUntilMs = 0;
+  hitFlashUntilMs = 0;
+  lastShipHitAtMs = 0;
+
   for (var i = 0; i < 5; i++) {
   	asteroids.push(new Asteroid(undefined, undefined, undefined, true));
   }
   stars = new Stars();
 }
 
+function triggerShipHitFeedback() {
+  const now = millis();
+
+  if (now >= hitSfxUntilMs) {
+    playHitSfx();
+  }
+
+  lastShipHitAtMs = now;
+  hitSfxUntilMs = now + hitSfxDurationMs;
+  hitFlashUntilMs = now + hitFlashDurationMs;
+}
+
+
+function isShipHitFlashActive() {
+  return millis() < hitFlashUntilMs;
+}
+
+function initHitSfx() {
+  if (hitSfx) return;
+  hitSfx = new Audio("assets/audio/hit-explosion.wav");
+  hitSfx.preload = "auto";
+  hitSfx.volume = hitSfxVolume;
+  hitSfx.load();
+}
+
+function playHitSfx() {
+  initHitSfx();
+
+  if (!hitSfx || hitSfx.readyState < 2) {
+    return;
+  }
+
+  try {
+    hitSfx.currentTime = 0;
+    hitSfx.play();
+  } catch (err) {
+    // Ignore autoplay/runtime play errors silently.
+  }
+}
+
+function initBgm() {
+  if (bgm) return;
+  bgm = new Audio("assets/audio/bgm-loop.mp3");
+  bgm.preload = "auto";
+  bgm.loop = true;
+  bgm.volume = bgmVolume;
+  bgm.load();
+}
+
+function startBgm() {
+  initBgm();
+  if (!bgm || bgmStarted) return;
+  try {
+    bgm.currentTime = 0;
+    bgm.play();
+    bgmStarted = true;
+  } catch (err) {
+    // Ignore autoplay/runtime play errors silently.
+  }
+}
+
+function stopBgm() {
+  if (!bgm) return;
+  try {
+    bgm.pause();
+    bgm.currentTime = 0;
+  } catch (err) {
+    // Ignore runtime errors silently.
+  }
+  bgmStarted = false;
+}
+
+
+
 function setup() {
   var canvas = createCanvas(900, 600);
   canvas.parent('game');
   resetGame();
+  initHitSfx();
+  initBgm();
 }
 
 function draw() {
   if (started) {
+    if (!bgmStarted && !crashed) {
+      startBgm();
+    }
     telemetrySampleStress();
     runGameFrame();
     telemetryAutoCount();
@@ -258,6 +356,7 @@ function telemetryAutoCount() {
 
 function telemetryEnd() {
   if (!telemetry || telemetryFinalized) return;
+  stopBgm();
 
   telemetry.survivalTime = Number(((millis() - gameStartTime) / 1000).toFixed(2));
   telemetry.score = score;

@@ -638,6 +638,16 @@ function Ship() {
 
   this.show = function() {
     if (!crashed) {
+      const flashActive = typeof isShipHitFlashActive === "function" && isShipHitFlashActive();
+      if (flashActive) {
+        const hz = typeof hitFlashHz === "number" ? hitFlashHz : 10;
+        const sinceHitMs = millis() - (typeof lastShipHitAtMs === "number" ? lastShipHitAtMs : 0);
+        const phase = Math.floor((sinceHitMs / 1000) * hz);
+        if (phase % 2 === 0) {
+          return;
+        }
+      }
+      
       const stressNow = typeof getStressValue === "function" ? getStressValue() : stress;
       const tierNow = typeof getStressTierNow === "function" ? getStressTierNow() : getStressTier(stressNow);
       let shipColor = getStressUIColorByTier(tierNow);

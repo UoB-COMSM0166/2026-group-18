@@ -638,12 +638,27 @@ function Ship() {
 
   this.show = function() {
     if (!crashed) {
+      const stressNow = typeof getStressValue === "function" ? getStressValue() : stress;
+      const tierNow = typeof getStressTierNow === "function" ? getStressTierNow() : getStressTier(stressNow);
+      let shipColor = getStressUIColorByTier(tierNow);
+      if (typeof previousStressTierForColor !== "undefined" &&
+        typeof stressTierColorAnimTimer !== "undefined" &&
+        typeof STRESS_TIER_COLOR_ANIM_FRAMES !== "undefined" &&
+        stressTierColorAnimTimer > 0) {
+        const fromColor = getStressUIColorByTier(previousStressTierForColor);
+        const toColor = getStressUIColorByTier(tierNow);
+        const t = 1 - (stressTierColorAnimTimer / STRESS_TIER_COLOR_ANIM_FRAMES);
+        shipColor = lerpColor(fromColor, toColor, constrain(t, 0, 1));
+      }
+      const r = red(shipColor);
+      const g = green(shipColor);
+      const b = blue(shipColor);
       push();
       translate(this.pos.x, this.pos.y);
       rotate(this.heading);
-      fill(170, 1, 20, 255 - this.laserLife);
+      fill(r, g, b, 255 - this.laserLife);
       strokeWeight(3);
-      stroke(170, 1, 20, 220);
+      stroke(r, g, b, 220);
       triangle(0, -this.r, 0, this.r, this.r * 2, 0);
       pop();
     }

@@ -3,7 +3,7 @@ const STRESS_CONFIG = {
 
   tiers: [40, 75],
   decayPerSecond: 1.8,
-  cooldownSeconds: 2,
+  cooldownSeconds: 5,
   collisionDeltaAsteroid: 20,
   collisionDeltaEnemyBullet: 12
 };
@@ -39,7 +39,8 @@ const MAX_STRESS = STRESS_CONFIG.maxStress;
 const stressState = {
   value: 0,
   tier: 0,
-  cooldownRemaining: 0
+  cooldownRemaining: 0,
+  skipDecayThisFrame: false
 };
 
 
@@ -47,6 +48,7 @@ function resetStressState() {
   stressState.value = 0;
   stressState.cooldownRemaining = 0;
   stressState.tier = getStressTier(0);
+  stressState.skipDecayThisFrame = false;
 }
 
 
@@ -89,6 +91,7 @@ function addStress(amount, cause) {
   stressState.value = constrain(stressState.value + amount, 0, STRESS_CONFIG.maxStress);
   stressState.cooldownRemaining = STRESS_CONFIG.cooldownSeconds;
   stressState.tier = getStressTier(stressState.value);
+  stressState.skipDecayThisFrame = true;
 
   syncStressGlobals();
   return cause;
@@ -130,6 +133,12 @@ function syncStressGlobals() {
 function updateStressState(dtSeconds) {
 
   syncStressStateFromGlobals();
+
+  if (stressState.skipDecayThisFrame) {
+    stressState.skipDecayThisFrame = false;
+    syncStressGlobals();
+    return;
+  }
 
   var seconds = typeof dtSeconds === "number" ? dtSeconds : (1 / 60);
   if (stressState.cooldownRemaining > 0) {

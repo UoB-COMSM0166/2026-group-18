@@ -1,13 +1,16 @@
+function shouldCrashFromStressHit(amount, cause) {
+  addStress(amount, cause);
+  return getStressValue() >= MAX_STRESS;
+}
+
 function updateAndRenderAsteroids() {
   for (var i = 0; i < asteroids.length; i++) {
     asteroids[i].update();
     asteroids[i].show();
     if (!crashed && collisionCooldown === 0 && ship.hit(asteroids[i])) {
-      if (stress >= MAX_STRESS) {
+      if (shouldCrashFromStressHit(STRESS_CONFIG.collisionDeltaAsteroid, "asteroidCollision")) {
         crashed = true;
         explosions.push(new Explosion(true, ship.pos));
-      } else {
-        addStress(STRESS_CONFIG.collisionDeltaAsteroid, "asteroidCollision");
       }
       collisionCooldown = 60;
     }
@@ -171,7 +174,10 @@ function updateAndRenderEnemyBullets() {
     enemyBullets[b].update();
     enemyBullets[b].show();
     if (!crashed && collisionCooldown === 0 && enemyBullets[b].hitShip()) {
-      addStress(STRESS_CONFIG.collisionDeltaEnemyBullet, "enemyBullet");
+      if (shouldCrashFromStressHit(STRESS_CONFIG.collisionDeltaEnemyBullet, "enemyBullet")) {
+        crashed = true;
+        explosions.push(new Explosion(true, ship.pos));
+      }
       collisionCooldown = 15;
       enemyBullets.splice(b, 1);
     } else if (enemyBullets[b] && enemyBullets[b].edges()) {

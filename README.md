@@ -65,6 +65,51 @@ VIDEO. Include a demo video of your game here (you don't have to wait until the 
 
 ## Version History
 
+# Version 1.4 Update
+
+Version **1.4** introduces two major gameplay improvements.
+
+## Automatic Laser System
+
+The player's primary laser weapon now fires **automatically every 0.5 seconds**.
+
+Previously, the player had to repeatedly press the **spacebar** to shoot.  
+This update improves gameplay flow and reduces repetitive input, allowing the player to focus more on:
+
+- movement
+- positioning
+- tactical weapon usage
+
+The laser still consumes ship energy and follows the same regeneration mechanics.
+
+---
+
+## New Weapon: Ultrasonic Wave
+
+A new special weapon called **Ultrasonic Wave** has been introduced.
+
+The Ultrasonic Wave emits a **rapidly expanding blue shockwave** from the player's ship.
+
+When activated, the wave:
+
+- expands outward from the ship
+- destroys **non-system asteroids**
+- triggers explosion effects when asteroids are hit
+
+The wave gradually fades as it expands, creating a visual shockwave effect.
+
+### Controls
+
+V – Activate Ultrasonic Wave
+
+### Cooldown
+
+30 seconds
+
+This weapon is designed as a **large area-of-effect emergency ability** to clear asteroid fragments when the player is overwhelmed.
+
+---
+
 ### v1.3 – Advanced Weapon System
 Major gameplay expansion with multiple new weapons and cooldown mechanics.
 

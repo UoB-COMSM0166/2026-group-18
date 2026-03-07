@@ -64,15 +64,22 @@ function keyPressed() {
     } else if (keyCode == UP_ARROW) {
       ship.boosting(true);
       jet.adding = true;
-    } else if (key == ' ' && ship.laserLife > 50) {
-      laserBeams.push(new Laser(ship.pos, ship.heading));
-      ship.laserLife -= 30;
+    //} else if (key == ' ' && ship.laserLife > 50) {
+      //laserBeams.push(new Laser(ship.pos, ship.heading));
+      //ship.laserLife -= 30;   ##we want to make a atuo laser that shoots every 0.5 second.
     } else if (key === 'z' || key === 'Z') {
       if (millis() - missileCooldown > 5000) {
         missiles.push(new Missile(ship.pos, ship.heading));
         missileCooldown = millis();
       }
-    } else if (key === 'x' || key === 'X') {
+    }
+    else if (key === 'v' || key === 'V') {
+      if (millis() - ultrasonicCooldown > 30000) {
+        ultrasonicWaves.push(new UltrasonicWave(ship.pos));
+        ultrasonicCooldown = millis();
+      }
+    }
+     else if (key === 'x' || key === 'X') {
       if (millis() - shotgunCooldown > 15000 && shotgunBullets.length < 20) {
         var spread = radians(120);
         var step = spread / 7;

@@ -217,7 +217,7 @@ function ShotgunBullet(pos, heading) {
 
 function Mine(pos) {
   this.pos = pos.copy();
-  this.radius = 6;
+  this.radius = 12 ;
 
   this.update = function() {
   }
@@ -241,6 +241,40 @@ function Mine(pos) {
   }
 }
 
+function UltrasonicWave(pos) {
+  this.pos = pos.copy();
+  this.speed = 5;
+  this.radius = 5;
+  this.maxRadius = 400;
+  this.update = function() {
+    this.radius += this.speed;
+    for (var i = asteroids.length - 1; i >= 0; i--) {
+      if (this.hit(asteroids[i]) && !asteroids[i].isSystemSpawn) {
+        explosions.push(new Explosion(true, asteroids[i].pos));
+        asteroids.splice(i, 1);
+      }
+    }
+  }
+  this.hit = function(asteroid) {
+    var distToAsteroid = this.pos.dist(asteroid.pos);
+    if(distToAsteroid < this.radius ) {
+      return true;
+    }
+    else{      
+      return false;
+    }
+  }
+  this.show = function() {
+    var alpha = map(this.radius, 0, this.maxRadius, 255, 0); 
+    noFill();
+    stroke(80,150,255,alpha);
+    strokeWeight(3);
+    ellipse(this.pos.x, this.pos.y, this.radius * 2, this.radius * 2);
+  }
+  this.finished = function() {
+    return this.radius > this.maxRadius;
+  }
+}
 
 function Pickup(pos, type) {
   this.position = pos.copy();
@@ -570,7 +604,9 @@ function Ship() {
   this.laserLife = 255;
   this.baseThrust = 0.1;
   this.baseDrag = 0.99;
-  this.laserRegenPerSecond = 60;
+  this.laserRegenPerSecond = 100;
+  this.autoLaserCooldown = 30;
+  this.lastAutoLaserFrame = 0;
   this.boosting = function(b) {
     this.isBoosting = b;
   }
@@ -584,6 +620,12 @@ function Ship() {
 
     this.laserLife += this.laserRegenPerSecond * seconds;
     this.laserLife = constrain(this.laserLife, 0, 255);
+
+    if (this.laserLife > 50 && frameCount - this.lastAutoLaserFrame >= this.autoLaserCooldown) {
+      laserBeams.push(new Laser(this.pos, this.heading));
+      this.laserLife -= 30;
+      this.lastAutoLaserFrame = frameCount;
+    }
 
     this.turn(handling.rotationMult, frameScale);
     this.edges();

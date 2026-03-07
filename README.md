@@ -1,6 +1,20 @@
 # 2026-group-18
 2026 COMSM0166 group 18
 
+## Our Game (change to title of your game)
+
+Asteroids-style arcade shooter with a Stress mechanic: collisions raise stress, degrading handling in predictable tiers; pickups reduce stress.
+
+- [Play the game](https://uob-comsm0166.github.io/2026-group-18/)
+- Demo video: (link)
+- Final idea: [docs/final-idea.md](docs/final-idea.md)
+
+IMAGE. Add an image of your game here, keep this updated with a snapshot of your latest development.
+
+LINK. Add a link here to your deployed game, you can also make the image above link to your game if you wish. Your game lives in the [/docs](/docs) folder, and is published using Github pages. 
+
+VIDEO. Include a demo video of your game here (you don't have to wait until the end, you can insert a work in progress video)
+
 # COMSM0166 Project Template
 A project template for the Software Engineering Discipline and Practice module (COMSM0166).
 
@@ -49,129 +63,8 @@ Open docs/index.html in a web browser to run the p5.js version of the game.
 Alternatively, use the GitHub Pages deployment link provided above.
 
 
-## Your Game (change to title of your game)
 
-Asteroids-style arcade shooter with a Stress mechanic: collisions raise stress, degrading handling in predictable tiers; pickups reduce stress.
-
-- [Play the game](https://uob-comsm0166.github.io/2026-group-18/)
-- Demo video: (link)
-- Final idea: [docs/final-idea.md](docs/final-idea.md)
-
-IMAGE. Add an image of your game here, keep this updated with a snapshot of your latest development.
-
-LINK. Add a link here to your deployed game, you can also make the image above link to your game if you wish. Your game lives in the [/docs](/docs) folder, and is published using Github pages. 
-
-VIDEO. Include a demo video of your game here (you don't have to wait until the end, you can insert a work in progress video)
-
-## Version History
-
-
-# Version 1.4 Update
-
-Version **1.4** introduces two major gameplay improvements.
-
-## Automatic Laser System
-
-The player's primary laser weapon now fires **automatically every 0.5 seconds**.
-
-Previously, the player had to repeatedly press the **spacebar** to shoot.  
-This update improves gameplay flow and reduces repetitive input, allowing the player to focus more on:
-
-- movement
-- positioning
-- tactical weapon usage
-
-The laser still consumes ship energy and follows the same regeneration mechanics.
-
----
-
-## New Weapon: Ultrasonic Wave
-
-A new special weapon called **Ultrasonic Wave** has been introduced.
-
-The Ultrasonic Wave emits a **rapidly expanding blue shockwave** from the player's ship.
-
-When activated, the wave:
-
-- expands outward from the ship
-- destroys **non-system asteroids**
-- triggers explosion effects when asteroids are hit
-
-The wave gradually fades as it expands, creating a visual shockwave effect.
-
-### Controls
-
-V – Activate Ultrasonic Wave
-
-### Cooldown
-
-30 seconds
-
-This weapon is designed as a **large area-of-effect emergency ability** to clear asteroid fragments when the player is overwhelmed.
-
----
-=======
-### v1.4 - Telemetry + Export
--Implemented
-  - Record per run: `survivalTime`, `collisionCount`, `stressOverTime`, `pickupCount`, `shotsFired`, `enemyHitsTaken`
-  - Stress sampled every `0.5s`
-  - On game over: print telemetry summary to console
-  - Press `T` to download telemetry JSON
-  - Export telemetry logs.
-
-
-### v1.3 – Advanced Weapon System
-Major gameplay expansion with multiple new weapons and cooldown mechanics.
-
-New weapons added:
-
-- **Missile (Z key)**  
-  Homing missile that automatically targets asteroids.  
-  Cooldown: **5 seconds**
-
-- **Shotgun (X key)**  
-  Fires **8 bullets in a 120° cone** in front of the ship.  
-  Effective for clearing groups of enemies and asteroids.  
-  Cooldown: **15 seconds**
-
-- **Space Mine (C key)**  
-  Deploys a stationary mine at the ship’s location.  
-  The mine explodes when touched by an asteroid or enemy, destroying it and creating a red explosion effect.  
-  Cooldown: **20 seconds**
-
-Gameplay improvements:
-
-- Added **weapon cooldown system** for balanced gameplay.
-- Implemented **bullet edge cleanup** to remove projectiles when they leave the screen.
-- Added limits to prevent excessive objects:
-  - Maximum **20 shotgun bullets**
-  - Maximum **3 active mines**
-- Updated the **Controls page** to include new weapon instructions.
-
-This update significantly expands combat strategy and adds more tactical gameplay options.
-
-### v1.2 – Enemies and Level System
-- Added enemy ships with two types:
-  - **Type A (Blue Triangle)**: fires normal bullets toward the player.
-  - **Type B (Yellow Triangle)**: launches homing missiles.
-- Implemented **time-based level progression**.
-  - Level increases every 90 seconds.
-- Enemy spawning system introduced with controlled maximum enemy count.
-- Improved overall gameplay difficulty and pacing.
-
-### v1.1 – Stress System
-- Added **Stress Bar mechanic**.
-- Collisions with asteroids increase stress.
-- High stress reduces ship turning ability.
-- Stress gradually recovers over time.
-
-### v1.0 – Initial Game Prototype
-- Basic Asteroids-style gameplay.
-- Player spaceship movement and shooting.
-- Asteroid spawning and splitting.
-- Explosion effects and scoring system.
-
-## Your Group
+## Our Group
 
 GROUP PHOTO.
 ![1ea16c65c7c97f326304811ae963f9b3](https://github.com/user-attachments/assets/4f3012f3-9d78-4dff-8d98-3e032d17ac7d)

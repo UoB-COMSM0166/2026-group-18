@@ -1,34 +1,34 @@
 
 var currentPos = 0;
 var mainPage = true;
-var pages = ["main", "controls", "about"];
-var anchorLinks = $('a');
+var pages = ["main", "about"];
+var anchorLinks = $('#main ul a');
 
 $(window).keydown(function(e) {
   if (!started) {
     switch (e.which) {
       case 40:
         if (mainPage) {
-          if (currentPos < 2) {
-            anchorLinks.eq(currentPos).removeClass('flash');
+          var maxIndex = anchorLinks.length - 1;
+          anchorLinks.eq(currentPos).removeClass('flash');
+          if (currentPos < maxIndex) {
             currentPos += 1;
-            anchorLinks.eq(currentPos).addClass('flash');
           } else {
-            anchorLinks.eq(currentPos).removeClass('flash');
             currentPos = 0;
-            anchorLinks.eq(currentPos).addClass('flash');
           }
+          anchorLinks.eq(currentPos).addClass('flash');
           break;
         }
       case 38:
         if (mainPage) {
+          var maxIndex = anchorLinks.length - 1;
           if (currentPos > 0) {
             anchorLinks.eq(currentPos).removeClass('flash');
             currentPos -= 1;
             anchorLinks.eq(currentPos).addClass('flash');
           } else {
             anchorLinks.eq(currentPos).removeClass('flash');
-            currentPos = 2;
+            currentPos = maxIndex;
             anchorLinks.eq(currentPos).addClass('flash');
           }
           break;
@@ -41,13 +41,13 @@ $(window).keydown(function(e) {
           } else if (currentPos == 1) {
             changeSection('main', pages[currentPos]);
             mainPage = false;
-          } else if (currentPos == 2) {
-            changeSection('main', pages[currentPos]);
-            mainPage = false;
           }
         } else {
           changeSection(pages[currentPos], 'main');
           mainPage = true;
+          currentPos = 0;
+          anchorLinks.removeClass('flash');
+          anchorLinks.eq(currentPos).addClass('flash');
         }
     }
   } else if (gameIsOver) {

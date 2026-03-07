@@ -3,6 +3,12 @@ function shouldCrashFromStressHit(amount, cause) {
   return getStressValue() >= MAX_STRESS;
 }
 
+function addScore(points) {
+  if (!crashed) {
+    score += points;
+  }
+}
+
 function updateAndRenderAsteroids() {
   for (var i = 0; i < asteroids.length; i++) {
     asteroids[i].update();
@@ -24,7 +30,7 @@ function updateAndRenderLaserBeams() {
     var flag = false;
     for (var i = asteroids.length - 1; i > -1; i--) {
       if (laserBeams[j].hit(asteroids[i])) {
-        score += asteroids[i].r * 100;
+        addScore(asteroids[i].r * 100);
         explosions.push(new Explosion(true, asteroids[i].pos));
         asteroids[i].break();
         asteroids.splice(i, 1);
@@ -37,7 +43,7 @@ function updateAndRenderLaserBeams() {
     if (flag == false) {
       for (var m = enemies.length - 1; m > -1; m--) {
         if (laserBeams[j] && laserBeams[j].hit(enemies[m])) {
-          score += enemies[m].type == "A" ? 400 : 700;
+          addScore(enemies[m].type == "A" ? 400 : 700);
           explosions.push(new Explosion(true, enemies[m].pos));
           enemies.splice(m, 1);
           laserBeams.splice(j, 1);
@@ -72,7 +78,7 @@ function updateAndRenderShotgunBullets() {
     var shotgunHit = false;
     for (var sa = asteroids.length - 1; sa > -1; sa--) {
       if (shotgunBullets[s] && shotgunBullets[s].hit(asteroids[sa])) {
-        score += asteroids[sa].r * 100;
+        addScore(asteroids[sa].r * 100);
         explosions.push(new Explosion(true, asteroids[sa].pos));
         asteroids[sa].break();
         asteroids.splice(sa, 1);
@@ -84,7 +90,7 @@ function updateAndRenderShotgunBullets() {
     if (!shotgunHit) {
       for (var se = enemies.length - 1; se > -1; se--) {
         if (shotgunBullets[s] && shotgunBullets[s].hit(enemies[se])) {
-          score += enemies[se].type == "A" ? 400 : 700;
+          addScore(enemies[se].type == "A" ? 400 : 700);
           explosions.push(new Explosion(true, enemies[se].pos));
           enemies.splice(se, 1);
           shotgunBullets.splice(s, 1);
@@ -109,7 +115,7 @@ function updateAndRenderMissiles() {
       l--;
     } else if (missiles[l].gotToCenter) {
       explosions.push(new Explosion(true, asteroids[missiles[l].targetIndex].pos, true));
-      score += asteroids[missiles[l].targetIndex].r * 100;
+      addScore(asteroids[missiles[l].targetIndex].r * 100);
       asteroids[missiles[l].targetIndex].break();
       asteroids.splice(missiles[l].targetIndex, 1);
       missiles.splice(l, 1);

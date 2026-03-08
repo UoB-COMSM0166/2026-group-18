@@ -11,7 +11,8 @@ index.html
 |-- src/systems/level-spawn.js
 |   |-- updateLevel()
 |   |-- maintainAsteroids()
-|   `-- spawnEnemies()
+|   |-- spawnEnemies()
+|   `-- isWeaponUnlocked(), getUnlockedWeapons()
 |-- src/entities/entities.js
 |   |-- Player: Ship, Jet
 |   |-- World: Asteroid, Pickup
@@ -30,7 +31,7 @@ index.html
 |   `-- drawStressBar()
 `-- src/input/controls.js
     |-- menu navigation input
-    `-- gameplay keys (movement + weapons)
+    `-- gameplay keys (movement + weapons, level-gated unlock checks)
 ```
 
 Game Loop relationships:
@@ -64,7 +65,8 @@ index.html
 |-- src/systems/level-spawn.js
 |   |-- updateLevel()
 |   |-- maintainAsteroids()
-|   `-- spawnEnemies()
+|   |-- spawnEnemies()
+|   `-- isWeaponUnlocked(), getUnlockedWeapons()
 |-- src/entities/entities.js
 |   |-- 玩家实体: Ship, Jet
 |   |-- 场景实体: Asteroid, Pickup
@@ -83,7 +85,7 @@ index.html
 |   `-- drawStressBar()
 `-- src/input/controls.js
     |-- 菜单导航输入
-    `-- 游戏输入（移动和武器）
+    `-- 游戏输入（移动和武器，含关卡解锁检查）
 ```
 
 主循环关系:
@@ -105,4 +107,3 @@ runGameFrame()
 |-- updateAndRenderPlayer()
 `-- updateHudAndStress()
 ```
-

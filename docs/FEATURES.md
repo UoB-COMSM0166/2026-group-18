@@ -14,27 +14,27 @@ Cooldown: `30` frames between shots (about `0.5s` at 60 FPS), gated by laser ene
 
 ## Missile Weapon
 Description: Fires a homing missile that locks to an asteroid and detonates on target.
-Dependencies: `keyPressed` (`docs/src/input/controls.js`), `Missile` class (`docs/src/entities/entities.js`), `missiles` array, `updateAndRenderMissiles` (`docs/src/systems/game-loop.js`).
-Trigger key: `Z`.
-Cooldown: `5s`.
+Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `Missile` class (`docs/src/entities/entities.js`), `missiles` array, `updateAndRenderMissiles` (`docs/src/systems/game-loop.js`).
+Trigger key: `X`.
+Cooldown: `5s` (unlocked at Level `2`).
 
 ## Shotgun Weapon
 Description: Fires a cone spread of up to 8 projectiles for short-range clearing.
-Dependencies: `keyPressed` (`docs/src/input/controls.js`), `ShotgunBullet` class, `shotgunBullets` array, `updateAndRenderShotgunBullets` (`docs/src/systems/game-loop.js`).
-Trigger key: `X`.
-Cooldown: `15s` and max `20` active shotgun bullets.
+Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `ShotgunBullet` class, `shotgunBullets` array, `updateAndRenderShotgunBullets` (`docs/src/systems/game-loop.js`).
+Trigger key: `Z`.
+Cooldown: `15s`, max `20` active shotgun bullets (unlocked at Level `1`).
 
 ## Space Mine Weapon
 Description: Places a stationary mine that explodes when an asteroid or enemy touches it.
-Dependencies: `keyPressed` (`docs/src/input/controls.js`), `Mine` class, `mines` array, `updateAndRenderMines` (`docs/src/systems/game-loop.js`), `explosions` array.
+Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `Mine` class, `mines` array, `updateAndRenderMines` (`docs/src/systems/game-loop.js`), `explosions` array.
 Trigger key: `C`.
-Cooldown: `20s` and max `3` active mines.
+Cooldown: `20s`, max `3` active mines (unlocked at Level `3`).
 
 ## Ultrasonic Wave Weapon
 Description: Expanding wave that removes non-system asteroids in range.
-Dependencies: `keyPressed` (`docs/src/input/controls.js`), `UltrasonicWave` class, `ultrasonicWaves` array, `updateAndRenderUltrasonicWaves` (`docs/src/systems/game-loop.js`).
+Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `UltrasonicWave` class, `ultrasonicWaves` array, `updateAndRenderUltrasonicWaves` (`docs/src/systems/game-loop.js`).
 Trigger key: `V`.
-Cooldown: `30s`.
+Cooldown: `30s` (unlocked at Level `1`).
 
 ## Stress System
 Description: Collisions increase stress; higher stress reduces handling. Stress decays over time and can be reduced by pickups.
@@ -58,5 +58,4 @@ Cooldown: Global spawn every `10s` (level-gated); per-enemy fire cooldown is dyn
 Description: Level scales over time and controls enemy/asteroid pressure.
 Dependencies: `updateLevel`, `maintainAsteroids`, `drawLevelLabel`, `spawnEnemies` (`docs/src/systems/level-spawn.js`), `runGameFrame` (`docs/src/systems/game-loop.js`), `asteroids` array.
 Trigger key: None.
-Cooldown: Level changes at `90s` and `180s`; system asteroid top-up checks with `2s` interval.
-
+Cooldown: Level changes at `90s` and `180s`; each level unlocks additional weapons (`L1`: shotgun, `L2`: missile, `L3`: mine); system asteroid top-up checks with `2s` interval.

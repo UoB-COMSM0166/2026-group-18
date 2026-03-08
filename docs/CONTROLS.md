@@ -9,17 +9,16 @@
 ## Weapons
 
 - `Auto Laser`: automatic fire while laser energy is available
-- `Z`: missile (`5s` cooldown)
-- `X`: shotgun (`15s` cooldown, up to 8 per shot, max 20 active shotgun bullets)
-- `C`: space mine (`20s` cooldown, max 3 active mines)
+- `Z`: shotgun (`15s` cooldown, up to 8 per shot, max 20 active shotgun bullets, unlocked at Level `1`)
+- `X`: missile (`5s` cooldown, unlocked at Level `2`)
+- `C`: space mine (`20s` cooldown, max 3 active mines, unlocked at Level `3`)
 
 ## Special Abilities
 
-- `V`: ultrasonic wave (`30s` cooldown)
+- `V`: ultrasonic wave (`30s` cooldown, unlocked at Level `1`)
 
 ## Menu / Flow Controls
 
 - `Arrow Up` / `Arrow Down`: move menu selection
 - `Enter` or `Space`: confirm in menu
 - Any key during game-over: return to menu
-

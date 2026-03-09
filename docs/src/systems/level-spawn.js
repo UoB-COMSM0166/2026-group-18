@@ -1,3 +1,35 @@
+const WEAPON_UNLOCK_REQUIREMENTS = {
+  shotgun: 1,
+  missile: 2,
+  mine: 3,
+  ultrasonic: 1
+};
+
+function getWeaponUnlockLevel(weaponId) {
+  return WEAPON_UNLOCK_REQUIREMENTS[weaponId];
+}
+
+function isWeaponUnlocked(weaponId, currentLevel) {
+  var levelToCheck = typeof currentLevel === "number" ? currentLevel : level;
+  var requiredLevel = getWeaponUnlockLevel(weaponId);
+  if (typeof requiredLevel !== "number") {
+    return true;
+  }
+  return levelToCheck >= requiredLevel;
+}
+
+function getUnlockedWeapons(currentLevel) {
+  var levelToCheck = typeof currentLevel === "number" ? currentLevel : level;
+  var unlocked = [];
+  for (var weaponId in WEAPON_UNLOCK_REQUIREMENTS) {
+    if (Object.prototype.hasOwnProperty.call(WEAPON_UNLOCK_REQUIREMENTS, weaponId) &&
+      isWeaponUnlocked(weaponId, levelToCheck)) {
+      unlocked.push(weaponId);
+    }
+  }
+  return unlocked;
+}
+
 function updateLevel() {
   var previousLevel = level;
   var elapsed = (millis() - gameStartTime) / 1000;

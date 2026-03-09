@@ -214,6 +214,26 @@ function updateAndRenderEnemyMissiles() {
   }
 }
 
+function drawFrozenCollection(collection) {
+  if (!Array.isArray(collection)) {
+    return;
+  }
+  for (var i = collection.length - 1; i > -1; i--) {
+    if (collection[i] && typeof collection[i].show === "function") {
+      collection[i].show();
+    }
+  }
+}
+
+function drawFrozenPlayer() {
+  if (jet && typeof jet.show === "function") {
+    jet.show();
+  }
+  if (ship && typeof ship.show === "function") {
+    ship.show();
+  }
+}
+
 function getPickupSpawnPosition(minDistanceFromShip) {
   var minDist = typeof minDistanceFromShip === "number" ? minDistanceFromShip : 120;
   for (var attempt = 0; attempt < 20; attempt++) {
@@ -298,11 +318,35 @@ function shouldTriggerGameOver() {
 function runGameFrame() {
   const dtSeconds = (typeof deltaTime === "number" ? deltaTime : (1000 / 60)) / 1000;
   const frameScale = dtSeconds * 60;
+  background(0, 160);
+  updateLevel();
+  var transitionActive = typeof isLevelTransitionActive === "function" && isLevelTransitionActive();
+  if (transitionActive) {
+    drawFrozenCollection(asteroids);
+    drawFrozenCollection(laserBeams);
+    drawFrozenCollection(explosions);
+    drawFrozenCollection(shotgunBullets);
+    drawFrozenCollection(missiles);
+    drawFrozenCollection(enemies);
+    drawFrozenCollection(mines);
+    drawFrozenCollection(ultrasonicWaves);
+    drawFrozenCollection(enemyBullets);
+    drawFrozenCollection(enemyMissiles);
+    drawFrozenCollection(pickups);
+    drawFrozenPlayer();
+    drawLevelLabel();
+    $('#score').text(score + " | L" + level);
+    drawStressBar();
+    if (typeof drawLevelTransitionCard === "function") {
+      drawLevelTransitionCard();
+    }
+    return;
+  }
+
   if (collisionCooldown > 0) {
     collisionCooldown = Math.max(0, collisionCooldown - frameScale);
   }
-  background(0, 160);
-  updateLevel();
+
   maintainAsteroids();
   spawnEnemies();
   spawnPickups();
@@ -319,6 +363,9 @@ function runGameFrame() {
   updateAndRenderPickups();
   updateAndRenderPlayer(dtSeconds);
   updateHudAndStress(dtSeconds);
+  if (typeof drawLevelTransitionCard === "function") {
+    drawLevelTransitionCard();
+  }
 
   if (shouldTriggerGameOver()) {
     gameOver();

@@ -25,6 +25,9 @@ function game() {
 
   gameStartTime = millis();
   started = true;
+  if (typeof triggerLevelTransition === "function") {
+    triggerLevelTransition(1);
+  }
 }
 
 function returnToMenuFromGameOver() {

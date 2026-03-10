@@ -12,49 +12,64 @@ index.html
 |   |-- updateLevel()
 |   |-- maintainAsteroids()
 |   |-- spawnEnemies()
+|   |-- triggerLevelTransition()
 |   `-- isWeaponUnlocked(), getUnlockedWeapons()
 |-- src/entities/entities.js
 |   |-- Player: Ship, Jet
-|   |-- World: Asteroid, Pickup
+|   |-- World: Asteroid, Pickup, Explosion
 |   |-- Weapons: Laser, Missile, ShotgunBullet, Mine, UltrasonicWave
 |   `-- Enemies: Enemy, EnemyBullet, EnemyMissile
 |-- src/ui/menu.js
 |   `-- game(), gameOver(), returnToMenuFromGameOver()
 |-- src/systems/game-loop.js
 |   |-- runGameFrame()
-|   |-- update/render order for all arrays
+|   |-- update/render order for all gameplay arrays
 |   |-- collision checks
+|   |-- frozen rendering during level transitions
 |   `-- HUD + stress update
 |-- app.js
 |   |-- globals and setup/reset
 |   |-- draw() -> runGameFrame()
+|   |-- hit feedback audio/flash helpers
+|   |-- BGM lifecycle
 |   `-- drawStressBar()
 `-- src/input/controls.js
     |-- menu navigation input
-    `-- gameplay keys (movement + weapons, level-gated unlock checks)
+    `-- gameplay keys (movement + level-gated weapons)
 ```
 
 Game Loop relationships:
 
 ```text
 runGameFrame()
-|-- updateLevel(), maintainAsteroids(), spawnEnemies(), spawnPickups()
-|-- updateAndRenderAsteroids()
-|-- updateAndRenderLaserBeams()
-|-- updateAndRenderExplosions()
-|-- updateAndRenderShotgunBullets()
-|-- updateAndRenderMissiles()
-|-- updateAndRenderEnemies()
-|-- updateAndRenderMines()
-|-- updateAndRenderUltrasonicWaves()
-|-- updateAndRenderEnemyBullets()
-|-- updateAndRenderEnemyMissiles()
-|-- updateAndRenderPickups()
-|-- updateAndRenderPlayer()
-`-- updateHudAndStress()
+|-- updateLevel()
+|-- if level transition active:
+|   |-- drawFrozenCollection(...) for world arrays
+|   |-- drawFrozenPlayer()
+|   |-- drawLevelLabel()
+|   |-- drawStressBar()
+|   `-- drawLevelTransitionCard()
+`-- else:
+    |-- maintainAsteroids()
+    |-- spawnEnemies()
+    |-- spawnPickups()
+    |-- updateAndRenderAsteroids()
+    |-- updateAndRenderLaserBeams()
+    |-- updateAndRenderExplosions()
+    |-- updateAndRenderShotgunBullets()
+    |-- updateAndRenderMissiles()
+    |-- updateAndRenderEnemies()
+    |-- updateAndRenderMines()
+    |-- updateAndRenderUltrasonicWaves()
+    |-- updateAndRenderEnemyBullets()
+    |-- updateAndRenderEnemyMissiles()
+    |-- updateAndRenderPickups()
+    |-- updateAndRenderPlayer()
+    |-- updateHudAndStress()
+    `-- gameOver() check
 ```
 
-## 中文
+## Chinese
 
 ```text
 index.html
@@ -66,44 +81,59 @@ index.html
 |   |-- updateLevel()
 |   |-- maintainAsteroids()
 |   |-- spawnEnemies()
+|   |-- triggerLevelTransition()
 |   `-- isWeaponUnlocked(), getUnlockedWeapons()
 |-- src/entities/entities.js
 |   |-- 玩家实体: Ship, Jet
-|   |-- 场景实体: Asteroid, Pickup
+|   |-- 场景实体: Asteroid, Pickup, Explosion
 |   |-- 武器实体: Laser, Missile, ShotgunBullet, Mine, UltrasonicWave
 |   `-- 敌人实体: Enemy, EnemyBullet, EnemyMissile
 |-- src/ui/menu.js
 |   `-- game(), gameOver(), returnToMenuFromGameOver()
 |-- src/systems/game-loop.js
 |   |-- runGameFrame()
-|   |-- 各实体数组的更新和渲染顺序
+|   |-- 各游戏数组的更新与渲染顺序
 |   |-- 碰撞检测
-|   `-- HUD 和 stress 更新
+|   |-- 关卡过场期间的冻结渲染
+|   `-- HUD 与 stress 更新
 |-- app.js
-|   |-- 全局状态和 setup/reset
+|   |-- 全局状态与 setup/reset
 |   |-- draw() -> runGameFrame()
+|   |-- 受击反馈音效与闪烁
+|   |-- BGM 生命周期控制
 |   `-- drawStressBar()
 `-- src/input/controls.js
     |-- 菜单导航输入
-    `-- 游戏输入（移动和武器，含关卡解锁检查）
+    `-- 游戏输入（移动与按关卡解锁的武器）
 ```
 
 主循环关系:
 
 ```text
 runGameFrame()
-|-- updateLevel(), maintainAsteroids(), spawnEnemies(), spawnPickups()
-|-- updateAndRenderAsteroids()
-|-- updateAndRenderLaserBeams()
-|-- updateAndRenderExplosions()
-|-- updateAndRenderShotgunBullets()
-|-- updateAndRenderMissiles()
-|-- updateAndRenderEnemies()
-|-- updateAndRenderMines()
-|-- updateAndRenderUltrasonicWaves()
-|-- updateAndRenderEnemyBullets()
-|-- updateAndRenderEnemyMissiles()
-|-- updateAndRenderPickups()
-|-- updateAndRenderPlayer()
-`-- updateHudAndStress()
+|-- updateLevel()
+|-- 如果关卡过场激活:
+|   |-- drawFrozenCollection(...) 绘制冻结中的世界对象
+|   |-- drawFrozenPlayer()
+|   |-- drawLevelLabel()
+|   |-- drawStressBar()
+|   `-- drawLevelTransitionCard()
+`-- 否则:
+    |-- maintainAsteroids()
+    |-- spawnEnemies()
+    |-- spawnPickups()
+    |-- updateAndRenderAsteroids()
+    |-- updateAndRenderLaserBeams()
+    |-- updateAndRenderExplosions()
+    |-- updateAndRenderShotgunBullets()
+    |-- updateAndRenderMissiles()
+    |-- updateAndRenderEnemies()
+    |-- updateAndRenderMines()
+    |-- updateAndRenderUltrasonicWaves()
+    |-- updateAndRenderEnemyBullets()
+    |-- updateAndRenderEnemyMissiles()
+    |-- updateAndRenderPickups()
+    |-- updateAndRenderPlayer()
+    |-- updateHudAndStress()
+    `-- 检查是否进入 gameOver()
 ```

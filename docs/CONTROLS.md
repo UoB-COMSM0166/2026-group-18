@@ -12,6 +12,7 @@
 - `Z`: shotgun (`15s` cooldown, up to 8 per shot, max 20 active shotgun bullets, unlocked at Level `1`)
 - `X`: missile (`5s` cooldown, unlocked at Level `2`)
 - `C`: space mine (`20s` cooldown, max 3 active mines, unlocked at Level `3`)
+- `Bottom HUD`: shows each secondary weapon as `READY`, `COOLING`, `LIMIT`, or `LOCKED` with a cooldown progress bar
 
 ## Special Abilities
 

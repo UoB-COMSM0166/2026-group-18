@@ -28,10 +28,11 @@ index.html
 |-- app.js
 |   |-- globals and setup/reset
 |   |-- draw() -> runGameFrame()
-|   `-- drawStressBar()
+|   |-- drawStressBar()
+|   `-- weapon HUD state + drawWeaponHud()
 `-- src/input/controls.js
     |-- menu navigation input
-    `-- gameplay keys (movement + weapons, level-gated unlock checks)
+    `-- gameplay keys (movement + weapons, level-gated unlock checks, shared cooldown readiness check)
 ```
 
 Game Loop relationships:
@@ -51,7 +52,8 @@ runGameFrame()
 |-- updateAndRenderEnemyMissiles()
 |-- updateAndRenderPickups()
 |-- updateAndRenderPlayer()
-`-- updateHudAndStress()
+|-- updateHudAndStress()
+`-- drawLevelTransitionCard()
 ```
 
 ## 中文
@@ -82,10 +84,11 @@ index.html
 |-- app.js
 |   |-- 全局状态和 setup/reset
 |   |-- draw() -> runGameFrame()
-|   `-- drawStressBar()
+|   |-- drawStressBar()
+|   `-- 武器 HUD 状态计算与 drawWeaponHud()
 `-- src/input/controls.js
     |-- 菜单导航输入
-    `-- 游戏输入（移动和武器，含关卡解锁检查）
+    `-- 游戏输入（移动和武器，含关卡解锁检查与共享冷却可用性判断）
 ```
 
 主循环关系:
@@ -105,5 +108,6 @@ runGameFrame()
 |-- updateAndRenderEnemyMissiles()
 |-- updateAndRenderPickups()
 |-- updateAndRenderPlayer()
-`-- updateHudAndStress()
+|-- updateHudAndStress()
+`-- drawLevelTransitionCard()
 ```

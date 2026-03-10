@@ -9,14 +9,19 @@
 `runGameFrame()` in `docs/src/systems/game-loop.js` executes in this order:
 
 1. Compute `dtSeconds` from `deltaTime`.
-2. Decrease `collisionCooldown`.
-3. Clear frame background.
-4. Update progression/spawn systems:
-   - `updateLevel()`
+2. Clear frame background.
+3. Update level state with `updateLevel()`.
+4. If a level transition card is active:
+   - render frozen world/player state
+   - draw HUD (`level`, `score`, stress bar, weapon readiness HUD)
+   - draw the transition card
+   - return early for that frame
+5. Decrease `collisionCooldown`.
+6. Update progression/spawn systems:
    - `maintainAsteroids()`
    - `spawnEnemies()`
    - `spawnPickups()`
-5. Update and render gameplay entities:
+7. Update and render gameplay entities:
    - asteroids
    - laser beams
    - explosions
@@ -28,15 +33,17 @@
    - enemy bullets
    - enemy missiles
    - pickups
-6. Update and render player:
+8. Update and render player:
    - `jet.update()/show()`
    - `ship.update(dtSeconds)/show()`
-7. HUD and stress:
+9. HUD and stress:
    - `drawLevelLabel()`
    - update score text
    - `updateStress(dtSeconds)`
    - `drawStressBar()`
-8. Game-over check via `shouldTriggerGameOver()`.
+   - `drawWeaponHud()`
+10. Draw level transition card if needed.
+11. Game-over check via `shouldTriggerGameOver()`.
 
 ## Rendering Order
 
@@ -45,7 +52,7 @@ Rendering is interleaved with updates inside each system function. The visible l
 1. background
 2. world objects (asteroids, effects, projectiles, enemies, pickups)
 3. player jet and ship
-4. HUD (`level`, `score`, stress bar)
+4. HUD (`level`, `score`, stress bar, weapon readiness strip)
 5. game-over menu overlay (when triggered)
 
 ## Collision Systems
@@ -65,4 +72,3 @@ Implemented collision checks include:
   - Reduces stress by `PICKUP_CONFIG.recoverAmount`.
 
 `collisionCooldown` prevents repeated instant stress hits from rapid consecutive collisions.
-

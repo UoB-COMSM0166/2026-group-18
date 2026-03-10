@@ -27,6 +27,50 @@ let lastStressTierForHud = 0;
 let previousStressTierForColor = 0;
 let stressTierColorAnimTimer = 0;
 const STRESS_TIER_COLOR_ANIM_FRAMES = 18;
+const WEAPON_HUD_LAYOUT = {
+  x: 18,
+  y: 0,
+  width: 150,
+  height: 28,
+  gap: 10,
+  bottomMargin: 18,
+  labelPadding: 10,
+  barHeight: 5
+};
+const WEAPON_HUD_CONFIG = [
+  {
+    id: "shotgun",
+    label: "Shotgun",
+    key: "Z",
+    cooldownMs: 15000,
+    cooldownRef: function () { return shotgunCooldown; },
+    activeCountRef: function () { return Array.isArray(shotgunBullets) ? shotgunBullets.length : 0; },
+    limit: 20
+  },
+  {
+    id: "missile",
+    label: "Missile",
+    key: "X",
+    cooldownMs: 5000,
+    cooldownRef: function () { return missileCooldown; }
+  },
+  {
+    id: "mine",
+    label: "Mine",
+    key: "C",
+    cooldownMs: 20000,
+    cooldownRef: function () { return mineCooldown; },
+    activeCountRef: function () { return Array.isArray(mines) ? mines.length : 0; },
+    limit: 3
+  },
+  {
+    id: "ultrasonic",
+    label: "Ultrasonic",
+    key: "V",
+    cooldownMs: 30000,
+    cooldownRef: function () { return ultrasonicCooldown; }
+  }
+];
 let collisionCooldown = 0;
 let enemySpawnTimer = 0;
 let gameStartTime;
@@ -92,6 +136,7 @@ function resetGame() {
   missileCooldown = 0;
   shotgunCooldown = 0;
   mineCooldown = 0;
+  ultrasonicCooldown = 0;
   hitSfxUntilMs = 0;
   hitFlashUntilMs = 0;
   lastShipHitAtMs = 0;
@@ -271,6 +316,134 @@ function drawStressBar(){
     text("Tip: collect cyan pickups to recover stress", x, y + barHeight + 34);
 
     pop();
+}
+
+function getWeaponHudConfig(weaponId) {
+  for (var i = 0; i < WEAPON_HUD_CONFIG.length; i++) {
+    if (WEAPON_HUD_CONFIG[i].id === weaponId) {
+      return WEAPON_HUD_CONFIG[i];
+    }
+  }
+  return null;
+}
+
+function getWeaponCooldownRemainingMs(weaponId) {
+  var config = getWeaponHudConfig(weaponId);
+  if (!config) {
+    return 0;
+  }
+
+  var lastUsedAt = typeof config.cooldownRef === "function" ? config.cooldownRef() : 0;
+  if (!lastUsedAt) {
+    return 0;
+  }
+
+  return Math.max(0, config.cooldownMs - (millis() - lastUsedAt));
+}
+
+function isWeaponReadyFromCooldown(weaponId) {
+  return getWeaponCooldownRemainingMs(weaponId) <= 0;
+}
+
+function getWeaponHudState(config) {
+  var unlocked = typeof isWeaponUnlocked === "function" ? isWeaponUnlocked(config.id) : true;
+  var activeCount = typeof config.activeCountRef === "function" ? config.activeCountRef() : 0;
+  var hasLimit = typeof config.limit === "number";
+  var limitReached = hasLimit && activeCount >= config.limit;
+  var remainingMs = getWeaponCooldownRemainingMs(config.id);
+  var coolingDown = remainingMs > 0;
+  var progress = config.cooldownMs > 0 ? constrain(1 - (remainingMs / config.cooldownMs), 0, 1) : 1;
+  var status = "READY";
+  var detail = "Ready";
+
+  if (!unlocked) {
+    status = "LOCKED";
+    detail = "L" + getWeaponUnlockLevel(config.id);
+    progress = 0;
+  } else if (limitReached) {
+    status = "LIMIT";
+    detail = activeCount + "/" + config.limit;
+  } else if (coolingDown) {
+    status = "COOLING";
+    detail = (remainingMs / 1000).toFixed(1) + "s";
+  } else if (hasLimit) {
+    detail = activeCount + "/" + config.limit;
+  }
+
+  return {
+    status: status,
+    detail: detail,
+    progress: progress
+  };
+}
+
+function getWeaponHudColors(status) {
+  if (status === "READY") {
+    return {
+      accent: color(60, 220, 130),
+      text: color(220, 245, 228),
+      background: color(10, 22, 18, 205)
+    };
+  }
+  if (status === "COOLING") {
+    return {
+      accent: color(255, 190, 70),
+      text: color(255, 239, 198),
+      background: color(28, 22, 10, 205)
+    };
+  }
+  if (status === "LIMIT") {
+    return {
+      accent: color(255, 120, 90),
+      text: color(255, 225, 215),
+      background: color(32, 16, 14, 205)
+    };
+  }
+  return {
+    accent: color(120, 140, 160),
+    text: color(208, 216, 225),
+    background: color(18, 22, 28, 205)
+  };
+}
+
+function drawWeaponHud() {
+  var layout = WEAPON_HUD_LAYOUT;
+  var rowY = height - layout.bottomMargin - layout.height;
+
+  push();
+  textAlign(LEFT, TOP);
+
+  for (var i = 0; i < WEAPON_HUD_CONFIG.length; i++) {
+    var config = WEAPON_HUD_CONFIG[i];
+    var state = getWeaponHudState(config);
+    var colors = getWeaponHudColors(state.status);
+    var x = layout.x + (i * (layout.width + layout.gap));
+
+    noStroke();
+    fill(colors.background);
+    rect(x, rowY, layout.width, layout.height, 7);
+
+    fill(colors.accent);
+    rect(x, rowY + layout.height - layout.barHeight, layout.width * state.progress, layout.barHeight, 0, 0, 7, 7);
+
+    fill(18, 24, 32, 230);
+    rect(x + 6, rowY + 5, 18, 18, 5);
+    fill(colors.accent);
+    textSize(10);
+    textAlign(CENTER, CENTER);
+    text(config.key, x + 15, rowY + 14);
+
+    textAlign(LEFT, TOP);
+    fill(240);
+    textSize(11);
+    text(config.label, x + 30, rowY + 4);
+
+    fill(colors.text);
+    textSize(9);
+    text(state.status + " " + state.detail, x + 30, rowY + 16);
+  }
+
+  pop();
 }
 
 function newTelemetryRun() {

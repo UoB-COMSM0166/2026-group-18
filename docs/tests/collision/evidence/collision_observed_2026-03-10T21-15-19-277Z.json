@@ -1,0 +1,87 @@
+{
+  "generatedAt": "2026-03-10T21:15:19.277Z",
+  "fixedDt": 0.016666666666666666,
+  "count": 8,
+  "records": [
+    {
+      "caseId": "C1",
+      "caseName": "Tangent contact",
+      "expected": "Tangent touch is treated as a collision exactly once (single trigger).",
+      "observed": "hitCount=1, hitFrames=[39]",
+      "pass": true,
+      "evidence": "evidence/C1_tangent_contact.png",
+      "fixedDt": 0.016666666666666666,
+      "recordedAt": "2026-03-10T21:12:56.817Z"
+    },
+    {
+      "caseId": "C2",
+      "caseName": "High-speed tunneling",
+      "expected": "Naive end-position check may miss; swept collision check must detect hit.",
+      "observed": "naiveHit=false, sweptHit=true",
+      "pass": true,
+      "evidence": "evidence/C2_high_speed_tunneling.png",
+      "fixedDt": 0.016666666666666666,
+      "recordedAt": "2026-03-10T21:13:11.096Z"
+    },
+    {
+      "caseId": "C3",
+      "caseName": "Spawn-overlap",
+      "expected": "Overlap at spawn is detected immediately at frame 0.",
+      "observed": "immediateCollision=true (frame=0)",
+      "pass": true,
+      "evidence": "evidence/C3_spawn_overlap.png",
+      "fixedDt": 0.016666666666666666,
+      "recordedAt": "2026-03-10T21:13:52.517Z"
+    },
+    {
+      "caseId": "C4",
+      "caseName": "Vertex/corner contact",
+      "expected": "Corner-only contact still counts as collision.",
+      "observed": "collision=true, centerIn=false, edgeHit=true, vertexHit=true",
+      "pass": true,
+      "evidence": "evidence/C4_vertex_corner_contact.png",
+      "fixedDt": 0.016666666666666666,
+      "recordedAt": "2026-03-10T21:14:01.691Z"
+    },
+    {
+      "caseId": "C5",
+      "caseName": "Multi-collision same frame",
+      "expected": "Multiple collision candidates in one frame resolve to a single damage event.",
+      "observed": "candidates=2, resolvedEvents=1",
+      "pass": true,
+      "evidence": "evidence/C5_multi_collision_same_frame.png",
+      "fixedDt": 0.016666666666666666,
+      "recordedAt": "2026-03-10T21:14:18.018Z"
+    },
+    {
+      "caseId": "C6",
+      "caseName": "Screen-wrap boundary",
+      "expected": "Collision is detected across wrapped world boundary.",
+      "observed": "directCollision=false, wrappedCollision=true",
+      "pass": true,
+      "evidence": "evidence/C6_screen_wrap_boundary.png",
+      "fixedDt": 0.016666666666666666,
+      "recordedAt": "2026-03-10T21:14:34.039Z"
+    },
+    {
+      "caseId": "C7",
+      "caseName": "Asteroid split immediate collision",
+      "expected": "Split children overlap may occur, but same-frame immediate damage is suppressed by guard logic.",
+      "observed": "overlapAtSplit=true, sameFrameDamageEvents=0",
+      "pass": true,
+      "evidence": "evidence/C7_split_immediate_collision.png",
+      "fixedDt": 0.016666666666666666,
+      "recordedAt": "2026-03-10T21:14:45.009Z"
+    },
+    {
+      "caseId": "C8",
+      "caseName": "Floating-point jitter / repeated triggers",
+      "expected": "Jitter does not cause repeated damage triggers every frame.",
+      "observed": "naiveTriggers=60, stableTriggers=1",
+      "pass": true,
+      "evidence": "evidence/C8_floating_point_jitter.png",
+      "fixedDt": 0.016666666666666666,
+      "recordedAt": "2026-03-10T21:14:54.196Z"
+    }
+  ]
+}

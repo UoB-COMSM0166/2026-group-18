@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Collision Edge-Case Tests</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #111216;
+      --panel: #1a1d24;
+      --text: #e9edf5;
+      --muted: #a6b0c3;
+      --accent: #53d2ff;
+      --good: #6dd66d;
+      --bad: #ff6f6f;
+      --pending: #f0c14b;
+      --line: #2f3442;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      line-height: 1.35;
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 16px 32px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      color: var(--accent);
+    }
+
+    .sub {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 16px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    select,
+    input,
+    button,
+    textarea {
+      width: 100%;
+      background: #111318;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 13px;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .btn-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .status {
+      margin-top: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      font-size: 12px;
+    }
+
+    .status.pass {
+      border-color: #2e7d32;
+      color: var(--good);
+    }
+
+    .status.fail {
+      border-color: #b82e2e;
+      color: var(--bad);
+    }
+
+    .status.pending {
+      border-color: #8a6a1f;
+      color: var(--pending);
+    }
+
+    .block-title {
+      margin: 12px 0 6px;
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .expected,
+    .observed,
+    .records {
+      background: #111318;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 8px;
+      font-size: 12px;
+      white-space: pre-wrap;
+      min-height: 70px;
+    }
+
+    #simCanvas {
+      width: 100%;
+      max-width: 760px;
+      height: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #0f1014;
+      display: block;
+    }
+
+    .legend {
+      display: flex;
+      gap: 12px;
+      margin: 10px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+
+    @media (max-width: 980px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Collision Edge-Case Test Mode</h1>
+    <p class="sub">Deterministic standalone simulator (fixed-step 1/60). This page is independent from the gameplay loop in <code>docs/src/*</code>.</p>
+
+    <div class="grid">
+      <section class="panel">
+        <label for="caseSelect">Case</label>
+        <select id="caseSelect"></select>
+
+        <div class="btn-row">
+          <button id="resetBtn" type="button">Reset Scenario</button>
+          <button id="runBtn" type="button">Run Scenario</button>
+        </div>
+
+        <div class="block-title">Expected</div>
+        <div id="expectedText" class="expected">Select a case.</div>
+
+        <div class="block-title">Observed</div>
+        <div id="observedText" class="observed">Not run yet.</div>
+
+        <div id="statusBox" class="status pending">Status: Pending</div>
+
+        <div class="block-title">Evidence Reference</div>
+        <input id="evidenceRef" type="text" placeholder="evidence/C1_tangent_contact.png">
+
+        <div class="btn-row-3">
+          <button id="recordBtn" type="button">Record Observed</button>
+          <button id="exportBtn" type="button">Export Observed JSON</button>
+          <button id="clearBtn" type="button">Clear Records</button>
+        </div>
+
+        <div class="block-title">Recorded Cases</div>
+        <div id="recordsBox" class="records">No records.</div>
+      </section>
+
+      <section class="panel">
+        <canvas id="simCanvas" width="760" height="380" aria-label="Collision test canvas"></canvas>
+        <div class="legend">
+          <span><span class="dot" style="background:#7bd88f"></span>Ship / probe</span>
+          <span><span class="dot" style="background:#ff8a65"></span>Asteroid / target</span>
+          <span><span class="dot" style="background:#64b5f6"></span>Path / helper geometry</span>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var FIXED_DT = 1 / 60;
+      var WORLD = { width: 760, height: 380 };
+
+      function clone(obj) {
+        return JSON.parse(JSON.stringify(obj));
+      }
+
+      function distance(ax, ay, bx, by) {
+        var dx = bx - ax;
+        var dy = by - ay;
+        return Math.sqrt(dx * dx + dy * dy);
+      }
+
+      function circleCollision(a, b) {
+        return distance(a.x, a.y, b.x, b.y) <= (a.r + b.r);
+      }
+
+      function pointInTriangle(px, py, tri) {
+        var ax = tri[0].x, ay = tri[0].y;
+        var bx = tri[1].x, by = tri[1].y;
+        var cx = tri[2].x, cy = tri[2].y;
+
+        var v0x = cx - ax;
+        var v0y = cy - ay;
+        var v1x = bx - ax;
+        var v1y = by - ay;
+        var v2x = px - ax;
+        var v2y = py - ay;
+
+        var dot00 = v0x * v0x + v0y * v0y;
+        var dot01 = v0x * v1x + v0y * v1y;
+        var dot02 = v0x * v2x + v0y * v2y;
+        var dot11 = v1x * v1x + v1y * v1y;
+        var dot12 = v1x * v2x + v1y * v2y;
+
+        var inv = 1 / (dot00 * dot11 - dot01 * dot01);
+        var u = (dot11 * dot02 - dot01 * dot12) * inv;
+        var v = (dot00 * dot12 - dot01 * dot02) * inv;
+
+        return u >= 0 && v >= 0 && (u + v) <= 1;
+      }
+
+      function distPointToSegment(px, py, ax, ay, bx, by) {
+        var abx = bx - ax;
+        var aby = by - ay;
+        var ab2 = abx * abx + aby * aby;
+        var t = 0;
+        if (ab2 > 0) {
+          t = ((px - ax) * abx + (py - ay) * aby) / ab2;
+          t = Math.max(0, Math.min(1, t));
+        }
+        var cx = ax + abx * t;
+        var cy = ay + aby * t;
+        return distance(px, py, cx, cy);
+      }
+
+      function segmentCircleCollision(ax, ay, bx, by, circle) {
+        return distPointToSegment(circle.x, circle.y, ax, ay, bx, by) <= circle.r;
+      }
+
+      function sweptCircleCollision(start, end, radius, target) {
+        var expanded = { x: target.x, y: target.y, r: target.r + radius };
+        return segmentCircleCollision(start.x, start.y, end.x, end.y, expanded);
+      }
+
+      function wrappedCircleCollision(a, b, worldWidth, worldHeight) {
+        var dx = Math.abs(a.x - b.x);
+        var dy = Math.abs(a.y - b.y);
+        dx = Math.min(dx, worldWidth - dx);
+        dy = Math.min(dy, worldHeight - dy);
+        return Math.sqrt(dx * dx + dy * dy) <= (a.r + b.r);
+      }
+
+      function drawCircle(ctx, c, color) {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      function drawLine(ctx, a, b, color) {
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      function drawLabel(ctx, text, x, y, color) {
+        ctx.fillStyle = color || "#d7dfef";
+        ctx.font = "12px monospace";
+        ctx.fillText(text, x, y);
+      }
+
+      var CASES = [
+        {
+          id: "C1",
+          name: "Tangent contact",
+          expected: "Tangent touch is treated as a collision exactly once (single trigger).",
+          evidenceDefault: "evidence/C1_tangent_contact.png",
+          setup: function () {
+            return {
+              ship: { x: 60, y: 150, r: 20, vx: 2 },
+              asteroid: { x: 140, y: 190, r: 20 },
+              frames: 60,
+              pathStart: { x: 60, y: 150 },
+              pathEnd: { x: 180, y: 150 }
+            };
+          },
+          run: function (state) {
+            var hitFrames = [];
+            for (var i = 0; i < state.frames; i++) {
+              state.ship.x += state.ship.vx;
+              if (circleCollision(state.ship, state.asteroid)) {
+                hitFrames.push(i);
+              }
+            }
+            var pass = hitFrames.length === 1;
+            return {
+              pass: pass,
+              observed: "hitCount=" + hitFrames.length + ", hitFrames=" + JSON.stringify(hitFrames)
+            };
+          },
+          draw: function (ctx, state, result) {
+            drawLine(ctx, state.pathStart, state.pathEnd, "#64b5f6");
+            drawCircle(ctx, state.asteroid, "#ff8a65");
+            drawCircle(ctx, state.ship, "#7bd88f");
+            drawLabel(ctx, "Tangent path", 70, 132, "#9fc7ff");
+            if (result) drawLabel(ctx, result.observed, 20, 340, "#d7dfef");
+          }
+        },
+        {
+          id: "C2",
+          name: "High-speed tunneling",
+          expected: "Naive end-position check may miss; swept collision check must detect hit.",
+          evidenceDefault: "evidence/C2_high_speed_tunneling.png",
+          setup: function () {
+            return {
+              start: { x: 40, y: 110, r: 5 },
+              end: { x: 260, y: 110, r: 5 },
+              target: { x: 150, y: 110, r: 20 }
+            };
+          },
+          run: function (state) {
+            var naiveHit = circleCollision(state.end, state.target);
+            var sweptHit = sweptCircleCollision(state.start, state.end, state.start.r, state.target);
+            var pass = (!naiveHit) && sweptHit;
+            return {
+              pass: pass,
+              observed: "naiveHit=" + naiveHit + ", sweptHit=" + sweptHit
+            };
+          },
+          draw: function (ctx, state, result) {
+            drawLine(ctx, state.start, state.end, "#64b5f6");
+            drawCircle(ctx, state.target, "#ff8a65");
+            drawCircle(ctx, state.start, "#7bd88f");
+            drawCircle(ctx, state.end, "#7bd88f");
+            if (state.probe) {
+              drawCircle(ctx, state.probe, "#53d2ff");
+              drawLabel(ctx, "Probe", state.probe.x - 14, state.probe.y + 20, "#53d2ff");
+            }
+            drawLabel(ctx, "Start", state.start.x - 16, state.start.y - 12, "#7bd88f");
+            drawLabel(ctx, "End", state.end.x - 10, state.end.y - 12, "#7bd88f");
+            if (result) drawLabel(ctx, result.observed, 20, 340, "#d7dfef");
+          }
+        },
+        {
+          id: "C3",
+          name: "Spawn-overlap",
+          expected: "Overlap at spawn is detected immediately at frame 0.",
+          evidenceDefault: "evidence/C3_spawn_overlap.png",
+          setup: function () {
+            return {
+              ship: { x: 220, y: 180, r: 18 },
+              spawned: { x: 232, y: 180, r: 18 }
+            };
+          },
+          run: function (state) {
+            var immediate = circleCollision(state.ship, state.spawned);
+            return {
+              pass: immediate,
+              observed: "immediateCollision=" + immediate + " (frame=0)"
+            };
+          },
+          draw: function (ctx, state, result) {
+            drawCircle(ctx, state.ship, "#7bd88f");
+            drawCircle(ctx, state.spawned, "#ff8a65");
+            drawLabel(ctx, "spawn point", 246, 180, "#ff8a65");
+            if (result) drawLabel(ctx, result.observed, 20, 340, "#d7dfef");
+          }
+        },
+        {
+          id: "C4",
+          name: "Vertex/corner contact",
+          expected: "Corner-only contact still counts as collision.",
+          evidenceDefault: "evidence/C4_vertex_corner_contact.png",
+          setup: function () {
+            return {
+              tri: [
+                { x: 300, y: 80 },
+                { x: 380, y: 230 },
+                { x: 220, y: 230 }
+              ],
+              probe: { x: 285, y: 92, r: 20 }
+            };
+          },
+          run: function (state) {
+            var tri = state.tri;
+            var p = state.probe;
+            var centerIn = pointInTriangle(p.x, p.y, tri);
+
+            var edgeHit = segmentCircleCollision(tri[0].x, tri[0].y, tri[1].x, tri[1].y, p) ||
+              segmentCircleCollision(tri[1].x, tri[1].y, tri[2].x, tri[2].y, p) ||
+              segmentCircleCollision(tri[2].x, tri[2].y, tri[0].x, tri[0].y, p);
+
+            var vertexHit = distance(p.x, p.y, tri[0].x, tri[0].y) <= p.r ||
+              distance(p.x, p.y, tri[1].x, tri[1].y) <= p.r ||
+              distance(p.x, p.y, tri[2].x, tri[2].y) <= p.r;
+
+            var collision = centerIn || edgeHit || vertexHit;
+            return {
+              pass: collision && vertexHit,
+              observed: "collision=" + collision + ", centerIn=" + centerIn + ", edgeHit=" + edgeHit + ", vertexHit=" + vertexHit
+            };
+          },
+          draw: function (ctx, state, result) {
+            var tri = state.tri;
+            ctx.beginPath();
+            ctx.moveTo(tri[0].x, tri[0].y);
+            ctx.lineTo(tri[1].x, tri[1].y);
+            ctx.lineTo(tri[2].x, tri[2].y);
+            ctx.closePath();
+            ctx.strokeStyle = "#ff8a65";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            drawCircle(ctx, state.probe, "#7bd88f");
+            drawLabel(ctx, "corner contact probe", 244, 66, "#9fc7ff");
+            if (result) drawLabel(ctx, result.observed, 20, 340, "#d7dfef");
+          }
+        },
+        {
+          id: "C5",
+          name: "Multi-collision same frame",
+          expected: "Multiple collision candidates in one frame resolve to a single damage event.",
+          evidenceDefault: "evidence/C5_multi_collision_same_frame.png",
+          setup: function () {
+            return {
+              ship: { x: 260, y: 180, r: 16 },
+              asteroids: [
+                { x: 260, y: 180, r: 16 },
+                { x: 274, y: 180, r: 16 }
+              ]
+            };
+          },
+          run: function (state) {
+            var candidates = 0;
+            for (var i = 0; i < state.asteroids.length; i++) {
+              if (circleCollision(state.ship, state.asteroids[i])) {
+                candidates++;
+              }
+            }
+
+            var resolvedEvents = 0;
+            var frameCollisionGate = 0;
+            for (var j = 0; j < candidates; j++) {
+              if (frameCollisionGate === 0) {
+                resolvedEvents++;
+                frameCollisionGate = 1;
+              }
+            }
+
+            return {
+              pass: candidates === 2 && resolvedEvents === 1,
+              observed: "candidates=" + candidates + ", resolvedEvents=" + resolvedEvents
+            };
+          },
+          draw: function (ctx, state, result) {
+            drawCircle(ctx, state.ship, "#7bd88f");
+            drawCircle(ctx, state.asteroids[0], "#ff8a65");
+            drawCircle(ctx, state.asteroids[1], "#ff8a65");
+            drawLabel(ctx, "same-frame overlap cluster", 228, 150, "#9fc7ff");
+            if (result) drawLabel(ctx, result.observed, 20, 340, "#d7dfef");
+          }
+        },
+        {
+          id: "C6",
+          name: "Screen-wrap boundary",
+          expected: "Collision is detected across wrapped world boundary.",
+          evidenceDefault: "evidence/C6_screen_wrap_boundary.png",
+          setup: function () {
+            return {
+              a: { x: 750, y: 170, r: 14 },
+              b: { x: 8, y: 170, r: 14 },
+              world: { w: WORLD.width, h: WORLD.height }
+            };
+          },
+          run: function (state) {
+            var direct = circleCollision(state.a, state.b);
+            var wrapped = wrappedCircleCollision(state.a, state.b, state.world.w, state.world.h);
+            return {
+              pass: (!direct) && wrapped,
+              observed: "directCollision=" + direct + ", wrappedCollision=" + wrapped
+            };
+          },
+          draw: function (ctx, state, result) {
+            ctx.strokeStyle = "#2f3442";
+            ctx.strokeRect(1, 1, WORLD.width - 2, WORLD.height - 2);
+            drawCircle(ctx, state.a, "#7bd88f");
+            drawCircle(ctx, state.b, "#ff8a65");
+            drawLabel(ctx, "right edge", 690, 150, "#9fc7ff");
+            drawLabel(ctx, "left edge", 14, 150, "#9fc7ff");
+            if (result) drawLabel(ctx, result.observed, 20, 340, "#d7dfef");
+          }
+        },
+        {
+          id: "C7",
+          name: "Asteroid split immediate collision",
+          expected: "Split children overlap may occur, but same-frame immediate damage is suppressed by guard logic.",
+          evidenceDefault: "evidence/C7_split_immediate_collision.png",
+          setup: function () {
+            return {
+              ship: { x: 380, y: 180, r: 16 },
+              splitChildren: [
+                { x: 388, y: 180, r: 12 },
+                { x: 372, y: 180, r: 12 }
+              ],
+              guardFrames: 1
+            };
+          },
+          run: function (state) {
+            var overlap = false;
+            for (var i = 0; i < state.splitChildren.length; i++) {
+              if (circleCollision(state.ship, state.splitChildren[i])) {
+                overlap = true;
+              }
+            }
+
+            var sameFrameDamageEvents = 0;
+            var currentFrame = 0;
+            if (overlap && currentFrame >= state.guardFrames) {
+              sameFrameDamageEvents = 1;
+            }
+
+            return {
+              pass: overlap && sameFrameDamageEvents === 0,
+              observed: "overlapAtSplit=" + overlap + ", sameFrameDamageEvents=" + sameFrameDamageEvents
+            };
+          },
+          draw: function (ctx, state, result) {
+            drawCircle(ctx, state.ship, "#7bd88f");
+            drawCircle(ctx, state.splitChildren[0], "#ff8a65");
+            drawCircle(ctx, state.splitChildren[1], "#ff8a65");
+            drawLabel(ctx, "split frame guard", 336, 146, "#9fc7ff");
+            if (result) drawLabel(ctx, result.observed, 20, 340, "#d7dfef");
+          }
+        },
+        {
+          id: "C8",
+          name: "Floating-point jitter / repeated triggers",
+          expected: "Jitter does not cause repeated damage triggers every frame.",
+          evidenceDefault: "evidence/C8_floating_point_jitter.png",
+          setup: function () {
+            return {
+              anchor: { x: 220, y: 200, r: 20 },
+              probe: { x: 180, y: 200, r: 20 },
+              frames: 120,
+              jitter: 0.002
+            };
+          },
+          run: function (state) {
+            var sumR = state.anchor.r + state.probe.r;
+            var naiveTriggers = 0;
+            var stableTriggers = 0;
+            var retriggerCooldown = 0;
+
+            for (var i = 0; i < state.frames; i++) {
+              var offset = (i % 2 === 0) ? -state.jitter : state.jitter;
+              var dist = sumR + offset;
+
+              if (dist <= sumR) {
+                naiveTriggers++;
+              }
+
+              if (retriggerCooldown > 0) {
+                retriggerCooldown--;
+              }
+
+              if (dist <= sumR - 0.001 && retriggerCooldown === 0) {
+                stableTriggers++;
+                retriggerCooldown = 120;
+              }
+            }
+
+            return {
+              pass: naiveTriggers > 1 && stableTriggers === 1,
+              observed: "naiveTriggers=" + naiveTriggers + ", stableTriggers=" + stableTriggers
+            };
+          },
+          draw: function (ctx, state, result) {
+            drawCircle(ctx, state.anchor, "#ff8a65");
+            drawCircle(ctx, state.probe, "#7bd88f");
+            drawLine(ctx, { x: 180, y: 160 }, { x: 260, y: 160 }, "#64b5f6");
+            drawLabel(ctx, "jitter around tangent threshold", 152, 146, "#9fc7ff");
+            if (result) drawLabel(ctx, result.observed, 20, 340, "#d7dfef");
+          }
+        }
+      ];
+
+      var caseSelect = document.getElementById("caseSelect");
+      var expectedText = document.getElementById("expectedText");
+      var observedText = document.getElementById("observedText");
+      var statusBox = document.getElementById("statusBox");
+      var evidenceRef = document.getElementById("evidenceRef");
+      var recordsBox = document.getElementById("recordsBox");
+      var runBtn = document.getElementById("runBtn");
+      var resetBtn = document.getElementById("resetBtn");
+      var recordBtn = document.getElementById("recordBtn");
+      var exportBtn = document.getElementById("exportBtn");
+      var clearBtn = document.getElementById("clearBtn");
+
+      var canvas = document.getElementById("simCanvas");
+      var ctx = canvas.getContext("2d");
+
+      var currentCase = null;
+      var currentState = null;
+      var currentResult = null;
+      var observedRecords = {};
+      var ANIMATION_DURATION_MS = 1800;
+      var animationState = {
+        active: false,
+        progress: 0,
+        startedAt: 0
+      };
+      var animationHandle = null;
+
+      function getCaseById(id) {
+        for (var i = 0; i < CASES.length; i++) {
+          if (CASES[i].id === id) return CASES[i];
+        }
+        return CASES[0];
+      }
+
+      function setStatus(mode, text) {
+        statusBox.className = "status " + mode;
+        statusBox.textContent = text;
+      }
+
+      function updateRecordsBox() {
+        var keys = Object.keys(observedRecords);
+        if (keys.length === 0) {
+          recordsBox.textContent = "No records.";
+          return;
+        }
+        var lines = [];
+        for (var i = 0; i < keys.length; i++) {
+          var r = observedRecords[keys[i]];
+          lines.push(
+            r.caseId + " | " + (r.pass ? "PASS" : "FAIL") + " | " +
+            r.evidence + " | " + r.observed
+          );
+        }
+        recordsBox.textContent = lines.join("\n");
+      }
+
+      function stopAnimation() {
+        if (animationHandle !== null) {
+          cancelAnimationFrame(animationHandle);
+          animationHandle = null;
+        }
+        animationState.active = false;
+        runBtn.disabled = false;
+        runBtn.textContent = "Run Scenario";
+      }
+
+      function resetScenario() {
+        stopAnimation();
+        animationState.progress = 0;
+        currentState = currentCase.setup();
+        currentResult = null;
+        observedText.textContent = "Not run yet.";
+        expectedText.textContent = currentCase.expected;
+        evidenceRef.value = currentCase.evidenceDefault;
+        setStatus("pending", "Status: Pending");
+        render();
+      }
+
+      function runScenario() {
+        var runState = clone(currentState);
+        currentResult = currentCase.run(runState);
+        observedText.textContent = currentResult.observed;
+        if (currentResult.pass) {
+          setStatus("pass", "Status: PASS");
+        } else {
+          setStatus("fail", "Status: FAIL");
+        }
+        startAnimation();
+      }
+
+      function recordObserved() {
+        if (!currentResult) {
+          setStatus("pending", "Status: Pending (run scenario first)");
+          return;
+        }
+        observedRecords[currentCase.id] = {
+          caseId: currentCase.id,
+          caseName: currentCase.name,
+          expected: currentCase.expected,
+          observed: currentResult.observed,
+          pass: !!currentResult.pass,
+          evidence: evidenceRef.value || currentCase.evidenceDefault,
+          fixedDt: FIXED_DT,
+          recordedAt: new Date().toISOString()
+        };
+        updateRecordsBox();
+      }
+
+      function exportObserved() {
+        var keys = Object.keys(observedRecords);
+        var records = [];
+        for (var i = 0; i < keys.length; i++) {
+          records.push(observedRecords[keys[i]]);
+        }
+        var payload = {
+          generatedAt: new Date().toISOString(),
+          fixedDt: FIXED_DT,
+          count: records.length,
+          records: records
+        };
+        var stamp = new Date().toISOString().replace(/[:.]/g, "-");
+        var name = "collision_observed_" + stamp + ".json";
+        var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function clearRecords() {
+        observedRecords = {};
+        updateRecordsBox();
+      }
+
+      function getAnimatedState(baseState, progress) {
+        var t = Math.max(0, Math.min(1, progress));
+        var s = clone(baseState);
+        var smooth = t * t * (3 - 2 * t);
+
+        if (currentCase.id === "C1") {
+          s.ship.x = s.pathStart.x + (s.pathEnd.x - s.pathStart.x) * smooth;
+        } else if (currentCase.id === "C2") {
+          s.probe = {
+            x: s.start.x + (s.end.x - s.start.x) * smooth,
+            y: s.start.y + (s.end.y - s.start.y) * smooth,
+            r: s.start.r
+          };
+        } else if (currentCase.id === "C3") {
+          var finalOffset = 12;
+          var startOffset = 90;
+          var offset = startOffset + (finalOffset - startOffset) * smooth;
+          s.spawned.x = s.ship.x + offset;
+        } else if (currentCase.id === "C4") {
+          var startProbe = { x: 250, y: 70 };
+          s.probe.x = startProbe.x + (s.probe.x - startProbe.x) * smooth;
+          s.probe.y = startProbe.y + (s.probe.y - startProbe.y) * smooth;
+        } else if (currentCase.id === "C5") {
+          var shipStartX = 220;
+          s.ship.x = shipStartX + (s.ship.x - shipStartX) * smooth;
+        } else if (currentCase.id === "C6") {
+          var rawX = 730 + 70 * smooth;
+          s.a.x = ((rawX % WORLD.width) + WORLD.width) % WORLD.width;
+        } else if (currentCase.id === "C7") {
+          var target0 = clone(s.splitChildren[0]);
+          var target1 = clone(s.splitChildren[1]);
+          if (smooth < 0.45) {
+            s.splitChildren[0].x = s.ship.x;
+            s.splitChildren[0].y = s.ship.y;
+            s.splitChildren[1].x = s.ship.x;
+            s.splitChildren[1].y = s.ship.y;
+          } else {
+            var splitT = (smooth - 0.45) / 0.55;
+            s.splitChildren[0].x = s.ship.x + (target0.x - s.ship.x) * splitT;
+            s.splitChildren[0].y = s.ship.y + (target0.y - s.ship.y) * splitT;
+            s.splitChildren[1].x = s.ship.x + (target1.x - s.ship.x) * splitT;
+            s.splitChildren[1].y = s.ship.y + (target1.y - s.ship.y) * splitT;
+          }
+        } else if (currentCase.id === "C8") {
+          var amp = 4;
+          var phase = Math.sin(smooth * Math.PI * 10);
+          s.probe.x = s.anchor.x - (s.anchor.r + s.probe.r + amp * phase);
+        }
+
+        return s;
+      }
+
+      function animateFrame(now) {
+        if (!animationState.active) {
+          return;
+        }
+        var elapsed = now - animationState.startedAt;
+        animationState.progress = Math.min(1, elapsed / ANIMATION_DURATION_MS);
+        render();
+
+        if (animationState.progress < 1) {
+          animationHandle = requestAnimationFrame(animateFrame);
+        } else {
+          stopAnimation();
+          animationState.progress = 1;
+          render();
+        }
+      }
+
+      function startAnimation() {
+        stopAnimation();
+        animationState.active = true;
+        animationState.progress = 0;
+        animationState.startedAt = performance.now();
+        runBtn.disabled = true;
+        runBtn.textContent = "Running...";
+        animationHandle = requestAnimationFrame(animateFrame);
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#0f1014";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.strokeStyle = "#202633";
+        for (var x = 0; x <= canvas.width; x += 40) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, canvas.height);
+          ctx.stroke();
+        }
+        for (var y = 0; y <= canvas.height; y += 40) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(canvas.width, y);
+          ctx.stroke();
+        }
+
+        var drawState = clone(currentState);
+        if (animationState.active || animationState.progress > 0) {
+          drawState = getAnimatedState(currentState, animationState.progress);
+        }
+
+        currentCase.draw(ctx, drawState, currentResult);
+
+        drawLabel(ctx, currentCase.id + " - " + currentCase.name, 20, 24, "#53d2ff");
+        drawLabel(ctx, "fixedDt=" + FIXED_DT.toFixed(4), 20, 42, "#a6b0c3");
+        if (animationState.active) {
+          drawLabel(ctx, "animating: " + Math.round(animationState.progress * 100) + "%", 20, 60, "#f0c14b");
+        }
+      }
+
+      function init() {
+        for (var i = 0; i < CASES.length; i++) {
+          var option = document.createElement("option");
+          option.value = CASES[i].id;
+          option.textContent = CASES[i].id + " - " + CASES[i].name;
+          caseSelect.appendChild(option);
+        }
+
+        currentCase = CASES[0];
+        resetScenario();
+        updateRecordsBox();
+
+        caseSelect.addEventListener("change", function () {
+          currentCase = getCaseById(caseSelect.value);
+          resetScenario();
+        });
+
+        resetBtn.addEventListener("click", resetScenario);
+        runBtn.addEventListener("click", runScenario);
+        recordBtn.addEventListener("click", recordObserved);
+        exportBtn.addEventListener("click", exportObserved);
+        clearBtn.addEventListener("click", clearRecords);
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>

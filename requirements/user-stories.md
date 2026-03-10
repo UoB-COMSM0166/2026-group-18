@@ -63,11 +63,11 @@ As a player, I want enemies with distinct behavior patterns so that gameplay pre
 
 ## Epic 5 - Level Progression
 
-### US-5.1 - Time-Based Level Advancement
+### US-5.1 - Score-Based Level Advancement
 
-As a player, I want the game level to advance over time so that challenge increases during longer runs.
+As a player, I want the game level to advance when my score reaches defined thresholds so that progression reflects performance and feels fair.
 
-### US-5.2 - Difficulty Scaling
+_Note: Updated after playtesting to replace time-based progression with score-gated thresholds._### US-5.2 - Difficulty Scaling
 
 As a player, I want spawn rates and enemy presence to scale with level so that progression feels meaningful.
 

@@ -305,6 +305,9 @@ function updateHudAndStress(dtSeconds) {
   $('#score').text(score + " | L" + level);
   updateStress(dtSeconds);
   drawStressBar();
+  if (typeof drawWeaponHud === "function") {
+    drawWeaponHud();
+  }
 }
 
 function shouldTriggerGameOver() {
@@ -337,6 +340,9 @@ function runGameFrame() {
     drawLevelLabel();
     $('#score').text(score + " | L" + level);
     drawStressBar();
+    if (typeof drawWeaponHud === "function") {
+      drawWeaponHud();
+    }
     if (typeof drawLevelTransitionCard === "function") {
       drawLevelTransitionCard();
     }

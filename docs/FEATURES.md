@@ -36,6 +36,12 @@ Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`
 Trigger key: `V`.
 Cooldown: `30s` (unlocked at Level `1`).
 
+## Weapon Readiness HUD
+Description: Bottom HUD strip shows each secondary weapon's key, cooldown progress, and clear availability state (`READY`, `COOLING`, `LIMIT`, `LOCKED`) so players can tell immediately whether it can be used.
+Dependencies: `WEAPON_HUD_CONFIG`, `getWeaponCooldownRemainingMs`, `getWeaponHudState`, `drawWeaponHud` (`docs/app.js`), `isWeaponReadyFromCooldown` (`docs/app.js`), `keyPressed` (`docs/src/input/controls.js`), `updateHudAndStress` (`docs/src/systems/game-loop.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`).
+Trigger key: None (passive HUD feedback for `Z`, `X`, `C`, `V`).
+Cooldown: Mirrors weapon cooldowns and active-entity limits; unlocked weapons are immediately available at run start.
+
 ## Stress System
 Description: Collisions increase stress; higher stress reduces handling. Stress decays over time and can be reduced by pickups.
 Dependencies: `STRESS_CONFIG`, `HANDLING_BY_TIER`, `updateStress` (`docs/src/core/stress.js`), `addStress`/`reduceStress`, `drawStressBar` (`docs/app.js`), collision logic in `updateAndRenderAsteroids` and `updateAndRenderEnemyBullets` (`docs/src/systems/game-loop.js`).

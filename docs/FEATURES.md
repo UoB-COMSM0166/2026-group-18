@@ -54,6 +54,18 @@ Dependencies: `PICKUP_CONFIG` (`docs/src/core/stress.js`), `Pickup` class (`docs
 Trigger key: None (spawned automatically; collected on contact).
 Cooldown: Spawn interval `420` frames, max `2` active pickups, lifetime `600` frames.
 
+## Hit Feedback System
+Description: Ship hits trigger a temporary flash effect and a gated impact sound to make damage more readable.
+Dependencies: `triggerShipHitFeedback`, `initHitSfx`, `playHitSfx` (`docs/app.js`), `isShipHitFlashActive` (`docs/app.js`), `Ship.show` (`docs/src/entities/entities.js`), hit branches in `updateAndRenderAsteroids`, `updateAndRenderEnemyBullets`, and `updateAndRenderEnemyMissiles` (`docs/src/systems/game-loop.js`).
+Trigger key: None (triggered automatically when the ship is hit).
+Cooldown: Impact SFX gate `1000ms`; flash duration `1500ms`.
+
+## Background Music
+Description: A looping background track starts during gameplay and stops when the run ends.
+Dependencies: `initBgm`, `startBgm`, `stopBgm` (`docs/app.js`), `draw` (`docs/app.js`), `telemetryEnd` (`docs/app.js`), `assets/audio/bgm-loop.mp3`.
+Trigger key: None (game-state driven).
+Cooldown: None.
+
 ## Enemy System
 Description: Type A enemies fire bullets; Type B enemies fire homing missiles.
 Dependencies: `Enemy`, `EnemyBullet`, `EnemyMissile` classes (`docs/src/entities/entities.js`), `enemies`/`enemyBullets`/`enemyMissiles` arrays, `spawnEnemies` (`docs/src/systems/level-spawn.js`), `updateAndRenderEnemies`/`updateAndRenderEnemyBullets`/`updateAndRenderEnemyMissiles` (`docs/src/systems/game-loop.js`).
@@ -65,3 +77,9 @@ Description: Level scales over time and controls enemy/asteroid pressure.
 Dependencies: `updateLevel`, `maintainAsteroids`, `drawLevelLabel`, `spawnEnemies` (`docs/src/systems/level-spawn.js`), `runGameFrame` (`docs/src/systems/game-loop.js`), `asteroids` array.
 Trigger key: None.
 Cooldown: Level changes at `90s` and `180s`; each level unlocks additional weapons (`L1`: shotgun, `L2`: missile, `L3`: mine); system asteroid top-up checks with `2s` interval.
+
+## Level Transition Briefings
+Description: Each level start shows a temporary overlay briefing that freezes active gameplay visuals while introducing new threats and weapons.
+Dependencies: `LEVEL_TRANSITION_CONTENT`, `triggerLevelTransition`, `drawLevelTransitionCard`, `isLevelTransitionActive` (`docs/src/systems/level-spawn.js`), frozen draw helpers in `docs/src/systems/game-loop.js`, `game()` (`docs/src/ui/menu.js`).
+Trigger key: None (automatic on level start/change).
+Cooldown: Transition card duration `4200ms` with `320ms` fade-in/out windows.

@@ -5,12 +5,13 @@
 - Add new enemy variants with distinct movement and attack patterns.
 - Add boss encounters at fixed time or level milestones.
 - Add asteroid-type diversity (armored, splitting chain, fast fragments).
+- Rebalance Type B missile lethality so late-game pressure stays readable without feeling unfair.
 
 ## Weapon and Progression Systems
 
 - Add upgrade trees for existing weapons (damage, radius, cooldown, ammo efficiency).
 - Add temporary power-ups and risk/reward pickups.
-- Add score-based unlocks to improve long-session progression.
+- Replace time-based level progression with score-based thresholds to match the current requirement update.
 
 ## Difficulty and Balance
 
@@ -20,9 +21,15 @@
 
 ## UX, Audio, and Feedback
 
+
+- Add more layered sound feedback (weapon SFX, enemy warnings, pause/menu cues, volume controls).
+- Add clearer cooldown indicators and per-weapon HUD widgets.
+
 - Add full sound system (weapon SFX, warnings, ambient loop, impact feedback).
 - Add HUD animation polish such as flashing just-ready states and stronger low-availability warnings.
+
 - Add pause screen, restart shortcut, and accessibility options.
+- Refine the stress bar presentation if the team decides to switch from a pressure meter to a health-like HUD metaphor.
 
 ## Technical and Quality
 

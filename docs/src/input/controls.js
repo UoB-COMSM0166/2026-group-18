@@ -106,10 +106,15 @@ function keyPressed() {
 
 function keyReleased() {
   if (!keyIsDown(UP_ARROW)) {
-    ship.boosting(false)
+    ship.boosting(false);
     jet.adding = false;
   }
-  if (key != ' ') {
+
+  if (keyIsDown(LEFT_ARROW)) {
+    ship.setRotation(-PI / 45);
+  } else if (keyIsDown(RIGHT_ARROW)) {
+    ship.setRotation(PI / 45);
+  } else {
     ship.setRotation(0);
   }
 }

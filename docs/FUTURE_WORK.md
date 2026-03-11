@@ -21,8 +21,13 @@
 
 ## UX, Audio, and Feedback
 
+
 - Add more layered sound feedback (weapon SFX, enemy warnings, pause/menu cues, volume controls).
 - Add clearer cooldown indicators and per-weapon HUD widgets.
+
+- Add full sound system (weapon SFX, warnings, ambient loop, impact feedback).
+- Add HUD animation polish such as flashing just-ready states and stronger low-availability warnings.
+
 - Add pause screen, restart shortcut, and accessibility options.
 - Refine the stress bar presentation if the team decides to switch from a pressure meter to a health-like HUD metaphor.
 
@@ -31,4 +36,3 @@
 - Add automated gameplay tests for collisions, cooldowns, and spawn rules.
 - Refactor globals into state modules to reduce coupling.
 - Add deterministic seed mode for reproducible debugging and balance tests.
-

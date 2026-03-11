@@ -69,7 +69,7 @@ function keyPressed() {
       //ship.laserLife -= 30;   ##we want to make a atuo laser that shoots every 0.5 second.
     } else if (key === 'z' || key === 'Z') {
       if (isWeaponUnlocked("shotgun") &&
-        millis() - shotgunCooldown > 15000 &&
+        isWeaponReadyFromCooldown("shotgun") &&
         shotgunBullets.length < 20) {
         var spread = radians(120);
         var step = spread / 7;
@@ -83,19 +83,19 @@ function keyPressed() {
       }
     }
     else if (key === 'v' || key === 'V') {
-      if (isWeaponUnlocked("ultrasonic") && millis() - ultrasonicCooldown > 30000) {
+      if (isWeaponUnlocked("ultrasonic") && isWeaponReadyFromCooldown("ultrasonic")) {
         ultrasonicWaves.push(new UltrasonicWave(ship.pos));
         ultrasonicCooldown = millis();
       }
     }
      else if (key === 'x' || key === 'X') {
-      if (isWeaponUnlocked("missile") && millis() - missileCooldown > 5000) {
+      if (isWeaponUnlocked("missile") && isWeaponReadyFromCooldown("missile")) {
         missiles.push(new Missile(ship.pos, ship.heading));
         missileCooldown = millis();
       }
     } else if (key === 'c' || key === 'C') {
       if (isWeaponUnlocked("mine") &&
-        millis() - mineCooldown > 20000 &&
+        isWeaponReadyFromCooldown("mine") &&
         mines.length < 3) {
         mines.push(new Mine(ship.pos));
         mineCooldown = millis();

@@ -2,37 +2,32 @@
 
 ## Gameplay and Enemies
 
-- Add new enemy variants with distinct movement and attack patterns.
-- Add boss encounters at fixed time or level milestones.
-- Add asteroid-type diversity (armored, splitting chain, fast fragments).
-- Rebalance Type B missile lethality so late-game pressure stays readable without feeling unfair.
+- Rebalance Type B homing missile lethality so late-game pressure stays readable and fair.
+- Add more enemy variants with distinct movement and attack patterns.
+- Add boss encounters at major progression milestones.
+- Add more asteroid archetypes such as armored or fast-fragment variants.
 
-## Weapon and Progression Systems
+## Weapons and Progression
 
-- Add upgrade trees for existing weapons (damage, radius, cooldown, ammo efficiency).
+- Add upgrade paths for existing weapons such as damage, radius, cooldown, or efficiency upgrades.
 - Add temporary power-ups and risk/reward pickups.
-- Finish configuring later score thresholds after the current Level `2` unlock at `300000`.
-
-## Difficulty and Balance
-
-- Replace hard thresholds with adaptive difficulty scaling based on player performance.
-- Tune stress gain/decay with telemetry and balancing presets.
-- Improve enemy spawn logic to avoid unfair overlap spawns.
+- Finalize later score thresholds so Level `3` progression becomes reachable.
 
 ## UX, Audio, and Feedback
 
+- Expand the sound layer with weapon-specific SFX, enemy warning cues, and user volume controls.
+- Improve HUD polish with stronger ready-state flashes and clearer low-availability warnings.
+- Continue iterating on stress-bar readability if the team wants a more explicit health-like presentation.
+- Add pause, quick restart, and accessibility options.
 
-- Add more layered sound feedback (weapon SFX, enemy warnings, pause/menu cues, volume controls).
-- Add clearer cooldown indicators and per-weapon HUD widgets.
+## Difficulty and Balance
 
-- Add full sound system (weapon SFX, warnings, ambient loop, impact feedback).
-- Add HUD animation polish such as flashing just-ready states and stronger low-availability warnings.
+- Tune stress gain, passive recovery, and pickup recovery using telemetry from playtests.
+- Improve spawn logic to avoid unfair overlap or blindside situations.
+- Explore adaptive difficulty instead of fixed thresholds.
 
-- Add pause screen, restart shortcut, and accessibility options.
-- Refine the stress bar presentation if the team decides to switch from a pressure meter to a health-like HUD metaphor.
+## Technical Quality
 
-## Technical and Quality
-
-- Add automated gameplay tests for collisions, cooldowns, and spawn rules.
-- Refactor globals into state modules to reduce coupling.
-- Add deterministic seed mode for reproducible debugging and balance tests.
+- Add automated tests for collisions, cooldown rules, and progression thresholds.
+- Refactor global state into more isolated modules.
+- Add deterministic seed support for reproducible debugging and balancing.

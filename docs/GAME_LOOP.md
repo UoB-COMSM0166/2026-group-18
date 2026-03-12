@@ -2,33 +2,40 @@
 
 ## Main Frame Entry
 
-`draw()` in `docs/app.js` calls `runGameFrame()` when `started === true`. Before the frame starts, it also:
+`draw()` in `docs/app.js` is the frame entry point when `started === true`.
 
-1. Starts looping BGM if the run is active and music has not started yet.
+Before each gameplay frame it:
+
+1. Starts BGM if gameplay is active and music has not started yet.
 2. Samples telemetry stress values.
-3. Runs telemetry end/finalization when `crashed === true`.
+3. Calls `runGameFrame()`.
+4. Updates telemetry counters.
+5. Finalizes telemetry when the run has crashed.
 
 ## Update Order
 
-`runGameFrame()` in `docs/src/systems/game-loop.js` executes in this order:
+`runGameFrame()` in `docs/src/systems/game-loop.js` runs in this order:
 
 1. Compute `dtSeconds` and `frameScale` from `deltaTime`.
-2. Clear the frame background.
-3. Update progression via `updateLevel()`.
+2. Clear the background.
+3. Update score-driven level state with `updateLevel()`.
 4. Check `isLevelTransitionActive()`.
-5. If a level transition is active:
-   - Render frozen world arrays with `drawFrozenCollection(...)`.
-   - Render frozen player with `drawFrozenPlayer()`.
-   - Draw `drawLevelLabel()`, score text, and `drawStressBar()`.
-   - Draw `drawLevelTransitionCard()`.
-   - Return early without advancing gameplay simulation.
+5. If a transition is active:
+   - draw frozen copies of active world arrays
+   - draw the frozen player
+   - draw `drawLevelLabel()`
+   - update score text
+   - draw `drawStressBar()`
+   - draw `drawWeaponHud()`
+   - draw `drawLevelTransitionCard()`
+   - return early without advancing gameplay simulation
 6. If no transition is active:
-   - Decrease `collisionCooldown`.
-   - Run spawn/maintenance systems:
+   - decrease `collisionCooldown`
+   - run spawn and maintenance systems:
      - `maintainAsteroids()`
      - `spawnEnemies()`
      - `spawnPickups()`
-   - Update and render gameplay entities in this order:
+   - update and render world objects in this order:
      - asteroids
      - laser beams
      - explosions
@@ -40,99 +47,70 @@
      - enemy bullets
      - enemy missiles
      - pickups
-   - Update and render player:
+   - update and render player:
      - `jet.update()/show()`
      - `ship.update(dtSeconds)/show()`
-   - Update HUD and stress:
+   - update HUD and stress:
      - `drawLevelLabel()`
-     - update score text
+     - score text update
      - `updateStress(dtSeconds)`
      - `drawStressBar()`
-   - Draw `drawLevelTransitionCard()` again if the transition became active during this frame.
-   - Run the game-over check via `shouldTriggerGameOver()`.
-
-1. Compute `dtSeconds` from `deltaTime`.
-2. Clear frame background.
-3. Update level state with `updateLevel()`.
-4. If a level transition card is active:
-   - render frozen world/player state
-   - draw HUD (`level`, `score`, stress bar, weapon readiness HUD)
-   - draw the transition card
-   - return early for that frame
-5. Decrease `collisionCooldown`.
-6. Update progression/spawn systems:
-   - `maintainAsteroids()`
-   - `spawnEnemies()`
-   - `spawnPickups()`
-7. Update and render gameplay entities:
-   - asteroids
-   - laser beams
-   - explosions
-   - shotgun bullets
-   - missiles
-   - enemies
-   - mines
-   - ultrasonic waves
-   - enemy bullets
-   - enemy missiles
-   - pickups
-8. Update and render player:
-   - `jet.update()/show()`
-   - `ship.update(dtSeconds)/show()`
-9. HUD and stress:
-   - `drawLevelLabel()`
-   - update score text
-   - `updateStress(dtSeconds)`
-   - `drawStressBar()`
-   - `drawWeaponHud()`
-10. Draw level transition card if needed.
-11. Game-over check via `shouldTriggerGameOver()`.
-
+     - `drawWeaponHud()`
+   - draw `drawLevelTransitionCard()` if needed
+   - check `shouldTriggerGameOver()`
 
 ## Rendering Order
 
-Rendering is interleaved with updates inside each system function. The visible layering is approximately:
+Rendering is interleaved with updates, but the visible order is roughly:
 
 1. background
-2. world objects (asteroids, effects, projectiles, enemies, pickups)
+2. world objects: asteroids, explosions, projectiles, enemies, pickups
 3. player jet and ship
-
-4. HUD (`level`, `score`, stress bar)
-5. level transition briefing overlay (when active)
-6. game-over menu overlay (when triggered)
-
-4. HUD (`level`, `score`, stress bar, weapon readiness strip)
-5. game-over menu overlay (when triggered)
-
+4. HUD: level, score, stress bar, weapon readiness strip
+5. level transition briefing overlay
+6. game-over menu overlay
 
 ## Collision Systems
 
-Implemented collision checks include:
+Current collision logic includes:
 
 - Ship vs asteroid:
-  - If stress already at max, ship crashes.
-  - Else stress increases by `collisionDeltaAsteroid`.
-- Laser/shotgun/missile/mine vs asteroid or enemy:
-  - Removes targets, triggers explosions, updates score where applicable.
+  - triggers hit feedback
+  - adds `collisionDeltaAsteroid` stress
+  - crashes only if stress reaches `MAX_STRESS`
 - Enemy bullet vs ship:
-  - Adds stress by `collisionDeltaEnemyBullet`.
+  - triggers hit feedback
+  - adds `collisionDeltaEnemyBullet` stress
+  - crashes only if stress reaches `MAX_STRESS`
 - Enemy missile vs ship:
-  - Immediate ship crash.
-  - Also triggers hit feedback and missile explosion visuals.
+  - triggers hit feedback
+  - adds `collisionDeltaEnemyMissile` stress
+  - crashes only if stress reaches `MAX_STRESS`
+  - applies a short collision cooldown after impact
+- Laser vs asteroid or enemy:
+  - destroys the target
+  - updates score
+  - spawns explosions
+- Shotgun vs asteroid or enemy:
+  - destroys the target
+  - updates score
+  - spawns explosions
+- Missile vs asteroid:
+  - homes to a target asteroid
+  - detonates on arrival
+  - updates score
+- Mine vs asteroid or enemy:
+  - destroys the target on contact
+  - spawns a red explosion effect
 - Pickup vs ship:
-  - Reduces stress by `PICKUP_CONFIG.recoverAmount`.
+  - reduces stress by `PICKUP_CONFIG.recoverAmount`
 
+`collisionCooldown` suppresses repeated rapid stress hits from asteroid, enemy bullet, and post-missile impact overlap.
 
-`collisionCooldown` prevents repeated instant stress hits from rapid consecutive collisions from asteroids and enemy bullets.
+## Feedback Systems
 
-## Player Feedback Systems
-
-- Ship hit feedback is centralized through `triggerShipHitFeedback()` in `docs/app.js`.
-- Hit feedback includes:
-  - gated impact SFX
-  - temporary ship flash in `Ship.show()`
+- `triggerShipHitFeedback()` centralizes ship hit feedback.
+- Ship hit feedback includes:
+  - impact SFX with a `1000ms` gate
+  - temporary flash in `Ship.show()`
 - BGM is initialized in `setup()`, started from `draw()`, and stopped in `telemetryEnd()`.
-
-
-`collisionCooldown` prevents repeated instant stress hits from rapid consecutive collisions.
-

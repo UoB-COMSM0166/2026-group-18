@@ -2,58 +2,51 @@
 
 ## English
 
+```text
 index.html
 |-- style.css
 |-- src/core/stress.js
 |   |-- STRESS_CONFIG / PICKUP_CONFIG
-|   `-- updateStress(), addStress(), reduceStress()
+|   |-- addStress(), reduceStress(), updateStress()
+|   `-- stress tier / handling helpers
 |-- src/systems/level-spawn.js
-|   |-- updateLevel()
-|   |-- maintainAsteroids()
-|   |-- spawnEnemies()
-|   |-- triggerLevelTransition()
-|   `-- isWeaponUnlocked(), getUnlockedWeapons()
+|   |-- score-based level progression
+|   |-- weapon unlock rules
+|   |-- asteroid maintenance
+|   `-- level transition briefings
 |-- src/entities/entities.js
 |   |-- Player: Ship, Jet
 |   |-- World: Asteroid, Pickup, Explosion
 |   |-- Weapons: Laser, Missile, ShotgunBullet, Mine, UltrasonicWave
 |   `-- Enemies: Enemy, EnemyBullet, EnemyMissile
 |-- src/ui/menu.js
-|   `-- game(), gameOver(), returnToMenuFromGameOver()
+|   `-- game flow state: game(), gameOver(), returnToMenuFromGameOver()
 |-- src/systems/game-loop.js
 |   |-- runGameFrame()
-|   |-- update/render order for all gameplay arrays
-|   |-- collision checks
-|   |-- frozen rendering during level transitions
-|   `-- HUD + stress update
+|   |-- entity update/render pipelines
+|   |-- collision handling
+|   `-- frozen rendering during level transitions
 |-- app.js
-|   |-- globals and setup/reset
-|   |-- draw() -> runGameFrame()
-
-|   |-- hit feedback audio/flash helpers
-|   |-- BGM lifecycle
-|   `-- drawStressBar()
+|   |-- global state and setup/reset
+|   |-- draw() frame entry
+|   |-- stress HUD
+|   |-- weapon HUD
+|   |-- hit feedback audio/flash
+|   `-- BGM lifecycle
 `-- src/input/controls.js
-    |-- menu navigation input
-    `-- gameplay keys (movement + level-gated weapons)
+    |-- menu navigation keys
+    `-- gameplay movement + weapon keys
+```
 
-|   |-- drawStressBar()
-|   `-- weapon HUD state + drawWeaponHud()
-`-- src/input/controls.js
-    |-- menu navigation input
-    `-- gameplay keys (movement + weapons, level-gated unlock checks, shared cooldown readiness check)
-
-
-Game Loop relationships:
-
+```text
 runGameFrame()
-
 |-- updateLevel()
 |-- if level transition active:
 |   |-- drawFrozenCollection(...) for world arrays
 |   |-- drawFrozenPlayer()
 |   |-- drawLevelLabel()
 |   |-- drawStressBar()
+|   |-- drawWeaponHud()
 |   `-- drawLevelTransitionCard()
 `-- else:
     |-- maintainAsteroids()
@@ -73,80 +66,55 @@ runGameFrame()
     |-- updateAndRenderPlayer()
     |-- updateHudAndStress()
     `-- gameOver() check
-
-|-- updateLevel(), maintainAsteroids(), spawnEnemies(), spawnPickups()
-|-- updateAndRenderAsteroids()
-|-- updateAndRenderLaserBeams()
-|-- updateAndRenderExplosions()
-|-- updateAndRenderShotgunBullets()
-|-- updateAndRenderMissiles()
-|-- updateAndRenderEnemies()
-|-- updateAndRenderMines()
-|-- updateAndRenderUltrasonicWaves()
-|-- updateAndRenderEnemyBullets()
-|-- updateAndRenderEnemyMissiles()
-|-- updateAndRenderPickups()
-|-- updateAndRenderPlayer()
-|-- updateHudAndStress()
-`-- drawLevelTransitionCard()
-
+```
 
 ## Chinese
 
-
+```text
 index.html
 |-- style.css
 |-- src/core/stress.js
 |   |-- STRESS_CONFIG / PICKUP_CONFIG
-|   `-- updateStress(), addStress(), reduceStress()
+|   |-- addStress(), reduceStress(), updateStress()
+|   `-- stress 分层与操控辅助函数
 |-- src/systems/level-spawn.js
-|   |-- updateLevel()
-|   |-- maintainAsteroids()
-|   |-- spawnEnemies()
-|   |-- triggerLevelTransition()
-|   `-- isWeaponUnlocked(), getUnlockedWeapons()
+|   |-- 基于分数的关卡推进
+|   |-- 武器解锁规则
+|   |-- 陨石维持生成
+|   `-- 关卡过场说明卡
 |-- src/entities/entities.js
 |   |-- 玩家实体: Ship, Jet
 |   |-- 场景实体: Asteroid, Pickup, Explosion
 |   |-- 武器实体: Laser, Missile, ShotgunBullet, Mine, UltrasonicWave
 |   `-- 敌人实体: Enemy, EnemyBullet, EnemyMissile
 |-- src/ui/menu.js
-|   `-- game(), gameOver(), returnToMenuFromGameOver()
+|   `-- 游戏流程状态: game(), gameOver(), returnToMenuFromGameOver()
 |-- src/systems/game-loop.js
 |   |-- runGameFrame()
-|   |-- 各游戏数组的更新与渲染顺序
-|   |-- 碰撞检测
-|   |-- 关卡过场期间的冻结渲染
-|   `-- HUD 与 stress 更新
+|   |-- 各实体数组的更新与渲染流程
+|   |-- 碰撞处理
+|   `-- 关卡过场时的冻结渲染
 |-- app.js
 |   |-- 全局状态与 setup/reset
-|   |-- draw() -> runGameFrame()
-
-|   |-- 受击反馈音效与闪烁
-|   |-- BGM 生命周期控制
-|   `-- drawStressBar()
+|   |-- draw() 帧入口
+|   |-- 压力条 HUD
+|   |-- 武器 HUD
+|   |-- 受击音效与闪烁反馈
+|   `-- BGM 生命周期
 `-- src/input/controls.js
-    |-- 菜单导航输入
-    `-- 游戏输入（移动与按关卡解锁的武器）
-
-|   |-- drawStressBar()
-|   `-- 武器 HUD 状态计算与 drawWeaponHud()
-`-- src/input/controls.js
-    |-- 菜单导航输入
-    `-- 游戏输入（移动和武器，含关卡解锁检查与共享冷却可用性判断）
-
-
-主循环关系:
+    |-- 菜单导航按键
+    `-- 游戏移动与武器按键
+```
 
 ```text
 runGameFrame()
-
 |-- updateLevel()
 |-- 如果关卡过场激活:
-|   |-- drawFrozenCollection(...) 绘制冻结中的世界对象
+|   |-- drawFrozenCollection(...) 绘制冻结场景对象
 |   |-- drawFrozenPlayer()
 |   |-- drawLevelLabel()
 |   |-- drawStressBar()
+|   |-- drawWeaponHud()
 |   `-- drawLevelTransitionCard()
 `-- 否则:
     |-- maintainAsteroids()
@@ -165,21 +133,5 @@ runGameFrame()
     |-- updateAndRenderPickups()
     |-- updateAndRenderPlayer()
     |-- updateHudAndStress()
-    `-- 检查是否进入 gameOver()
-
-|-- updateLevel(), maintainAsteroids(), spawnEnemies(), spawnPickups()
-|-- updateAndRenderAsteroids()
-|-- updateAndRenderLaserBeams()
-|-- updateAndRenderExplosions()
-|-- updateAndRenderShotgunBullets()
-|-- updateAndRenderMissiles()
-|-- updateAndRenderEnemies()
-|-- updateAndRenderMines()
-|-- updateAndRenderUltrasonicWaves()
-|-- updateAndRenderEnemyBullets()
-|-- updateAndRenderEnemyMissiles()
-|-- updateAndRenderPickups()
-|-- updateAndRenderPlayer()
-|-- updateHudAndStress()
-`-- drawLevelTransitionCard()
-
+    `-- 检查是否触发 gameOver()
+```

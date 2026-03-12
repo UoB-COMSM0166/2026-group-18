@@ -11,7 +11,7 @@
 
 - Add upgrade trees for existing weapons (damage, radius, cooldown, ammo efficiency).
 - Add temporary power-ups and risk/reward pickups.
-- Finish configuring later score thresholds after the current Level `2` unlock at `300000`.
+- Tune the current score thresholds (`300000`, `700000`) against playtest data and session length targets.
 
 ## Difficulty and Balance
 

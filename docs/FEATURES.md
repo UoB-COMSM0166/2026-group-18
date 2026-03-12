@@ -76,7 +76,7 @@ Cooldown: Global spawn every `10s` (level-gated); per-enemy fire cooldown is dyn
 Description: Level scales by score thresholds and controls enemy/asteroid pressure.
 Dependencies: `updateLevel`, `maintainAsteroids`, `drawLevelLabel`, `spawnEnemies` (`docs/src/systems/level-spawn.js`), `runGameFrame` (`docs/src/systems/game-loop.js`), `asteroids` array.
 Trigger key: None.
-Cooldown: Level `2` unlocks at score `300000`; Level `3` threshold is still pending configuration; each level unlocks additional weapons (`L1`: shotgun, `L2`: missile, `L3`: mine); system asteroid top-up checks with `2s` interval.
+Cooldown: Level `2` unlocks at score `300000`; Level `3` unlocks at score `700000`; each level unlocks additional weapons (`L1`: shotgun, `L2`: missile, `L3`: mine); system asteroid top-up checks with `2s` interval.
 
 ## Level Transition Briefings
 Description: Each level start shows a temporary overlay briefing that freezes active gameplay visuals while introducing new threats and weapons.

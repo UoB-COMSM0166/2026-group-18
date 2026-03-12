@@ -11,7 +11,7 @@
 
 - Add upgrade trees for existing weapons (damage, radius, cooldown, ammo efficiency).
 - Add temporary power-ups and risk/reward pickups.
-- Replace time-based level progression with score-based thresholds to match the current requirement update.
+- Finish configuring later score thresholds after the current Level `2` unlock at `300000`.
 
 ## Difficulty and Balance
 

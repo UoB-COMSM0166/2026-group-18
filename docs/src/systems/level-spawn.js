@@ -4,6 +4,10 @@ const WEAPON_UNLOCK_REQUIREMENTS = {
   mine: 3,
   ultrasonic: 1
 };
+const LEVEL_SCORE_THRESHOLDS = {
+  2: 300000,
+  3: Number.POSITIVE_INFINITY
+};
 
 const LEVEL_TRANSITION_DURATION_MS = 4200;
 const LEVEL_TRANSITION_FADE_MS = 320;
@@ -127,13 +131,12 @@ function getUnlockedWeapons(currentLevel) {
 
 function updateLevel() {
   var previousLevel = level;
-  var elapsed = (millis() - gameStartTime) / 1000;
-  if (elapsed < 90) {
-    level = 1;
-  } else if (elapsed < 180) {
+  if (score >= LEVEL_SCORE_THRESHOLDS[3]) {
+    level = 3;
+  } else if (score >= LEVEL_SCORE_THRESHOLDS[2]) {
     level = 2;
   } else {
-    level = 3;
+    level = 1;
   }
   if (level != previousLevel) {
     enemySpawnTimer = millis() / 1000;

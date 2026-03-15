@@ -594,6 +594,88 @@ function Jet() {
   }
 }
 
+function shipOutlineVNotch(r) {
+  beginShape();
+  vertex(2.2 * r, 0.0 * r);
+  vertex(1.0 * r, -0.50 * r);
+  vertex(0.3 * r, -1.00 * r);
+  vertex(0.1 * r, -0.40 * r);
+  vertex(-0.5 * r, -0.30 * r);
+  vertex(-0.7 * r, 0.0 * r);
+  vertex(-0.5 * r, 0.30 * r);
+  vertex(0.1 * r, 0.40 * r);
+  vertex(0.3 * r, 1.00 * r);
+  vertex(1.0 * r, 0.50 * r);
+  endShape(CLOSE);
+}
+
+function rotatedOffset(offsetVec, heading) {
+  const v = offsetVec.copy();
+  v.rotate(heading);
+  return v;
+}
+
+function hardpointWorldPos(ship, offsetLocal) {
+  return p5.Vector.add(ship.pos, rotatedOffset(offsetLocal, ship.heading));
+}
+
+function drawShipHardpoints(ship, shipSize, currentLevel, accentColor) {
+  var missileUnlocked = typeof isWeaponUnlocked === "function" ? isWeaponUnlocked("missile", currentLevel) : currentLevel >= 2;
+  var mineUnlocked = typeof isWeaponUnlocked === "function" ? isWeaponUnlocked("mine", currentLevel) : currentLevel >= 3;
+  var accentR = red(accentColor);
+  var accentG = green(accentColor);
+  var accentB = blue(accentColor);
+  var laserPodWidth = max(5.2, shipSize * 0.52);
+  var laserPodHeight = max(2.6, shipSize * 0.24);
+  var missilePodWidth = max(6.2, shipSize * 0.62);
+  var missilePodHeight = max(3.4, shipSize * 0.3);
+  var missileSlotWidth = missilePodWidth * 0.42;
+  var minePortSize = max(3.8, shipSize * 0.34);
+
+  push();
+  rectMode(CENTER);
+
+  noStroke();
+  fill(240, 246, 255, 220);
+  rect(ship.hardpoints.LASER_L.x, ship.hardpoints.LASER_L.y, laserPodWidth, laserPodHeight, 1.5);
+  rect(ship.hardpoints.LASER_R.x, ship.hardpoints.LASER_R.y, laserPodWidth, laserPodHeight, 1.5);
+
+  stroke(accentR, accentG, accentB, 210);
+  strokeWeight(1.1);
+  line(ship.hardpoints.LASER_L.x + laserPodWidth * 0.15, ship.hardpoints.LASER_L.y,
+    ship.hardpoints.LASER_L.x + laserPodWidth * 0.55, ship.hardpoints.LASER_L.y);
+  line(ship.hardpoints.LASER_R.x + laserPodWidth * 0.15, ship.hardpoints.LASER_R.y,
+    ship.hardpoints.LASER_R.x + laserPodWidth * 0.55, ship.hardpoints.LASER_R.y);
+
+  if (missileUnlocked) {
+    noStroke();
+    fill(238, 244, 255, 225);
+    rect(ship.hardpoints.MISSILE.x, ship.hardpoints.MISSILE.y, missilePodWidth, missilePodHeight, 1.8);
+    fill(20, 24, 32, 220);
+    rect(ship.hardpoints.MISSILE.x, ship.hardpoints.MISSILE.y, missileSlotWidth, missilePodHeight * 0.42, 1);
+    stroke(accentR, accentG, accentB, 190);
+    strokeWeight(1);
+    line(ship.hardpoints.MISSILE.x - missilePodWidth * 0.18, ship.hardpoints.MISSILE.y - missilePodHeight * 0.34,
+      ship.hardpoints.MISSILE.x + missilePodWidth * 0.18, ship.hardpoints.MISSILE.y - missilePodHeight * 0.34);
+    line(ship.hardpoints.MISSILE.x - missilePodWidth * 0.18, ship.hardpoints.MISSILE.y + missilePodHeight * 0.34,
+      ship.hardpoints.MISSILE.x + missilePodWidth * 0.18, ship.hardpoints.MISSILE.y + missilePodHeight * 0.34);
+  }
+
+  if (mineUnlocked) {
+    noStroke();
+    fill(240, 246, 255, 210);
+    ellipse(ship.hardpoints.MINE.x, ship.hardpoints.MINE.y, minePortSize, minePortSize);
+    fill(22, 26, 34, 230);
+    ellipse(ship.hardpoints.MINE.x, ship.hardpoints.MINE.y, minePortSize * 0.42, minePortSize * 0.42);
+    stroke(accentR, accentG, accentB, 180);
+    strokeWeight(1);
+    line(ship.hardpoints.MINE.x - minePortSize * 0.45, ship.hardpoints.MINE.y,
+      ship.hardpoints.MINE.x + minePortSize * 0.45, ship.hardpoints.MINE.y);
+  }
+
+  pop();
+}
+
 function Ship() {
   this.pos = createVector(width / 2, height / 2);
   this.r = 10;
@@ -607,8 +689,22 @@ function Ship() {
   this.laserRegenPerSecond = 100;
   this.autoLaserCooldown = 30;
   this.lastAutoLaserFrame = 0;
+  this.hardpoints = {
+    LASER_L: createVector(0.75 * this.r, -0.55 * this.r),
+    LASER_R: createVector(0.75 * this.r, 0.55 * this.r),
+    MISSILE: createVector(0.15 * this.r, 0),
+    MINE: createVector(-0.55 * this.r, 0)
+  };
   this.boosting = function(b) {
     this.isBoosting = b;
+  }
+
+  this.getHardpointPosition = function(hardpointId) {
+    var offset = this.hardpoints[hardpointId];
+    if (!offset) {
+      return this.pos.copy();
+    }
+    return hardpointWorldPos(this, offset);
   }
 
   this.update = function(dtSeconds) {
@@ -663,13 +759,65 @@ function Ship() {
       const r = red(shipColor);
       const g = green(shipColor);
       const b = blue(shipColor);
+      const shipSize = this.r;
+      const accentColor = lerpColor(shipColor, color(220, 245, 255), 0.45);
+      const accentR = red(accentColor);
+      const accentG = green(accentColor);
+      const accentB = blue(accentColor);
       push();
       translate(this.pos.x, this.pos.y);
       rotate(this.heading);
       fill(r, g, b, 255 - this.laserLife);
       strokeWeight(3);
       stroke(r, g, b, 220);
-      triangle(0, -this.r, 0, this.r, this.r * 2, 0);
+      shipOutlineVNotch(this.r);
+
+      noStroke();
+      fill(12, 18, 28, 135);
+      beginShape();
+      vertex(shipSize * 0.12, -shipSize * 0.18);
+      vertex(shipSize * 0.62, -shipSize * 0.28);
+      vertex(shipSize * 0.86, -shipSize * 0.08);
+      vertex(shipSize * 0.34, -shipSize * 0.02);
+      endShape(CLOSE);
+      beginShape();
+      vertex(shipSize * 0.12, shipSize * 0.18);
+      vertex(shipSize * 0.62, shipSize * 0.28);
+      vertex(shipSize * 0.86, shipSize * 0.08);
+      vertex(shipSize * 0.34, shipSize * 0.02);
+      endShape(CLOSE);
+
+      stroke(accentR, accentG, accentB, 175);
+      strokeWeight(1.4);
+      noFill();
+      beginShape();
+      vertex(shipSize * 0.3, -shipSize * 0.55);
+      vertex(shipSize * 0.9, 0);
+      vertex(shipSize * 0.3, shipSize * 0.55);
+      endShape();
+
+      stroke(255, 245, 210, 210);
+      strokeWeight(1.5);
+      line(shipSize * 0.3, 0, shipSize * 1.7, 0);
+      noStroke();
+      fill(255, 245, 210, 220);
+      triangle(shipSize * 1.72, 0, shipSize * 1.58, -shipSize * 0.08, shipSize * 1.58, shipSize * 0.08);
+
+      fill(12, 18, 28, 170);
+      stroke(r, g, b, 165);
+      strokeWeight(1.2);
+      ellipse(-shipSize * 0.15, -shipSize * 0.35, shipSize * 0.36, shipSize * 0.36);
+      ellipse(-shipSize * 0.15, shipSize * 0.35, shipSize * 0.36, shipSize * 0.36);
+      noStroke();
+      fill(255, 180, 100, this.isBoosting ? 210 : 155);
+      ellipse(-shipSize * 0.15, -shipSize * 0.35, max(2, shipSize * 0.18), max(2, shipSize * 0.18));
+      ellipse(-shipSize * 0.15, shipSize * 0.35, max(2, shipSize * 0.18), max(2, shipSize * 0.18));
+
+      fill(accentR, accentG, accentB, 175);
+      ellipse(shipSize * 1.2, shipSize * 0.18, max(1.5, shipSize * 0.12), max(1.5, shipSize * 0.12));
+
+      var currentLevel = typeof level === "number" ? level : 1;
+      drawShipHardpoints(this, shipSize, currentLevel, accentColor);
       pop();
     }
   }

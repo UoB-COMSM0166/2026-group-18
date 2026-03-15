@@ -5,6 +5,16 @@ var pages = ["main", "about"];
 var anchorLinks = $('#main ul a');
 
 $(window).keydown(function(e) {
+  if (started && !gameIsOver && e.which === 32) {
+    if (typeof isLevelTransitionActive === "function" && isLevelTransitionActive()) {
+      if (typeof beginLevelTransitionHold === "function") {
+        beginLevelTransitionHold();
+      }
+      e.preventDefault();
+      return;
+    }
+  }
+
   if (!started) {
     switch (e.which) {
       case 40:
@@ -52,6 +62,12 @@ $(window).keydown(function(e) {
     }
   } else if (gameIsOver) {
     returnToMenuFromGameOver();
+  }
+});
+
+$(window).keyup(function(e) {
+  if (e.which === 32 && typeof cancelLevelTransitionHold === "function") {
+    cancelLevelTransitionHold();
   }
 });
 

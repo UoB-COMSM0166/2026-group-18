@@ -204,10 +204,11 @@ function updateAndRenderEnemyMissiles() {
       triggerShipHitFeedback();
       explosions.push(new Explosion(true, enemyMissiles[n].pos, true));
       enemyMissiles.splice(n, 1);
-      if (!crashed) {
+      if (shouldCrashFromStressHit(STRESS_CONFIG.collisionDeltaEnemyMissile, "enemyMissile")) {
         crashed = true;
         explosions.push(new Explosion(true, ship.pos));
       }
+      collisionCooldown = 30;
     } else if (enemyMissiles[n] && enemyMissiles[n].edges()) {
       enemyMissiles.splice(n, 1);
     }

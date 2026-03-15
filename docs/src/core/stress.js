@@ -5,7 +5,8 @@ const STRESS_CONFIG = {
   decayPerSecond: 1.8,
   cooldownSeconds: 2,
   collisionDeltaAsteroid: 20,
-  collisionDeltaEnemyBullet: 12
+  collisionDeltaEnemyBullet: 12,
+  collisionDeltaEnemyMissile: 30
 };
 
 

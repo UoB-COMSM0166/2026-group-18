@@ -20,7 +20,7 @@
 ## HUD Feedback
 
 - Bottom weapon HUD: shows `READY`, `COOLING`, `LIMIT`, or `LOCKED` for each secondary weapon
-- Top-right stress bar: shows current stress state using a full-to-empty danger display
+- Top-right stress bar: shows current stress with a full-to-empty integrity-style danger display and handling pressure
 
 ## Menu / Flow Controls
 
@@ -31,5 +31,5 @@
 ## Notes
 
 - Weapon use is level-gated through `isWeaponUnlocked(...)`.
-- Releasing weapon keys should no longer interrupt active steering input.
+- Releasing weapon keys should not interrupt active steering input.
 - The active menu navigation currently exposes `Start` and `About`.

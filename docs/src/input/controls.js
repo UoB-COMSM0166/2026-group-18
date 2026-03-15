@@ -75,9 +75,10 @@ function keyPressed() {
         var step = spread / 7;
         var availableSlots = 20 - shotgunBullets.length;
         var bulletsToSpawn = min(8, availableSlots);
+        var muzzle = hardpointWorldPos(ship, ship.hardpoints.MISSILE);
         for (var i = 0; i < bulletsToSpawn; i++) {
           var angle = ship.heading - spread / 2 + step * i;
-          shotgunBullets.push(new ShotgunBullet(ship.pos, angle));
+          shotgunBullets.push(new ShotgunBullet(muzzle, angle));
         }
         shotgunCooldown = millis();
       }
@@ -90,14 +91,15 @@ function keyPressed() {
     }
      else if (key === 'x' || key === 'X') {
       if (isWeaponUnlocked("missile") && isWeaponReadyFromCooldown("missile")) {
-        missiles.push(new Missile(ship.pos, ship.heading));
+        const muzzle = hardpointWorldPos(ship, ship.hardpoints.MISSILE);
+        missiles.push(new Missile(muzzle, ship.heading));
         missileCooldown = millis();
       }
     } else if (key === 'c' || key === 'C') {
       if (isWeaponUnlocked("mine") &&
         isWeaponReadyFromCooldown("mine") &&
         mines.length < 3) {
-        mines.push(new Mine(ship.pos));
+        mines.push(new Mine(ship.getHardpointPosition("MINE")));
         mineCooldown = millis();
       }
     }

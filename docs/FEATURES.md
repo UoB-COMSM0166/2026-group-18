@@ -6,33 +6,39 @@ Dependencies: `Ship` (`docs/src/entities/entities.js`), `keyPressed`/`keyRelease
 Trigger key: `Arrow Left`, `Arrow Right`, `Arrow Up`.
 Cooldown: None.
 
+## Player Ship Visual Readability
+Description: The player ship keeps the classic triangle silhouette but adds a V-interceptor style nose stripe, internal V structure, split plating trench, twin hot-end thrusters, a small sensor nub, and visible weapon hardpoints. Laser pods are always visible, while the missile bay and mine port only appear after their level unlocks. Hardpoint geometry is visual-only; collision still uses the original circular ship radius.
+Dependencies: `Ship.show`, `this.hardpoints`, `rotatedOffset`, `hardpointWorldPos`, `getHardpointPosition` (`docs/src/entities/entities.js`), `isShipHitFlashActive` (`docs/app.js`), stress-tier ship color helpers in `docs/src/core/stress.js`.
+Trigger key: None (passive visual presentation).
+Cooldown: None.
+
 ## Auto Laser (Primary Fire)
 Description: The ship auto-fires laser shots when laser energy is available.
-Dependencies: `Ship.update` and `autoLaserCooldown` (`docs/src/entities/entities.js`), `Laser` class, `laserBeams` array, `updateAndRenderLaserBeams` (`docs/src/systems/game-loop.js`).
+Dependencies: `Ship.update`, `autoLaserCooldown` (`docs/src/entities/entities.js`), `Laser` class, `laserBeams` array, `updateAndRenderLaserBeams` (`docs/src/systems/game-loop.js`).
 Trigger key: Automatic (no manual key).
 Cooldown: `30` frames between shots (about `0.5s` at 60 FPS), gated by laser energy.
 
 ## Missile Weapon
 Description: Fires a homing missile that locks to an asteroid and detonates on target.
-Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `Missile` class (`docs/src/entities/entities.js`), `missiles` array, `updateAndRenderMissiles` (`docs/src/systems/game-loop.js`).
+Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `Missile` class and `hardpointWorldPos(ship, ship.hardpoints.MISSILE)` (`docs/src/entities/entities.js`), `missiles` array, `updateAndRenderMissiles` (`docs/src/systems/game-loop.js`).
 Trigger key: `X`.
 Cooldown: `5s` (unlocked at Level `2`).
 
 ## Shotgun Weapon
 Description: Fires a cone spread of up to 8 projectiles for short-range clearing.
-Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `ShotgunBullet` class, `shotgunBullets` array, `updateAndRenderShotgunBullets` (`docs/src/systems/game-loop.js`).
+Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `ShotgunBullet` class, `hardpointWorldPos(ship, ship.hardpoints.MISSILE)` (`docs/src/entities/entities.js`), `shotgunBullets` array, `updateAndRenderShotgunBullets` (`docs/src/systems/game-loop.js`).
 Trigger key: `Z`.
 Cooldown: `15s`, max `20` active shotgun bullets (unlocked at Level `1`).
 
 ## Space Mine Weapon
 Description: Places a stationary mine that explodes when an asteroid or enemy touches it.
-Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `Mine` class, `mines` array, `updateAndRenderMines` (`docs/src/systems/game-loop.js`), `explosions` array.
+Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `Mine` class and `getHardpointPosition("MINE")` (`docs/src/entities/entities.js`), `mines` array, `updateAndRenderMines` (`docs/src/systems/game-loop.js`), `explosions` array.
 Trigger key: `C`.
 Cooldown: `20s`, max `3` active mines (unlocked at Level `3`).
 
 ## Ultrasonic Wave Weapon
 Description: Expanding wave that removes non-system asteroids in range.
-Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `UltrasonicWave` class, `ultrasonicWaves` array, `updateAndRenderUltrasonicWaves` (`docs/src/systems/game-loop.js`).
+Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `UltrasonicWave` class, `ultrasonicWaves` array, `updateAndRenderUltrasonicWaves` (`docs/src/systems/game-loop.js`), `ship.pos` center origin.
 Trigger key: `V`.
 Cooldown: `30s` (unlocked at Level `1`).
 

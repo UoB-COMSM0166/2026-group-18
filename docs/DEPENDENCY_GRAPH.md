@@ -7,7 +7,8 @@ index.html
 |-- style.css
 |-- src/core/stress.js
 |   |-- STRESS_CONFIG / PICKUP_CONFIG
-|   `-- updateStress(), addStress(), reduceStress()
+|   |-- addStress(), reduceStress(), updateStress()
+|   `-- stress tier / handling helpers
 |-- src/systems/level-spawn.js
 |   |-- LEVEL_SCORE_THRESHOLDS
 |   |-- updateLevel()
@@ -21,15 +22,14 @@ index.html
 |   |-- Weapons: Laser, Missile, ShotgunBullet, Mine, UltrasonicWave
 |   `-- Enemies: Enemy, EnemyBullet, EnemyMissile
 |-- src/ui/menu.js
-|   `-- game(), gameOver(), returnToMenuFromGameOver()
+|   `-- game flow state: game(), gameOver(), returnToMenuFromGameOver()
 |-- src/systems/game-loop.js
 |   |-- runGameFrame()
-|   |-- update/render order for all gameplay arrays
-|   |-- collision checks
-|   |-- frozen rendering during level transitions
-|   `-- HUD + stress update
+|   |-- entity update/render pipelines
+|   |-- collision handling
+|   `-- frozen rendering during level transitions
 |-- app.js
-|   |-- globals and setup/reset
+|   |-- global state and setup/reset
 |   |-- draw() -> runGameFrame()
 |   |-- hit feedback audio/flash helpers
 |   |-- BGM lifecycle
@@ -39,8 +39,6 @@ index.html
     |-- menu navigation input
     `-- gameplay keys (movement + weapons, level-gated unlock checks, shared cooldown readiness check)
 ```
-
-Game Loop relationships:
 
 ```text
 runGameFrame()
@@ -79,7 +77,8 @@ index.html
 |-- style.css
 |-- src/core/stress.js
 |   |-- STRESS_CONFIG / PICKUP_CONFIG
-|   `-- updateStress(), addStress(), reduceStress()
+|   |-- addStress(), reduceStress(), updateStress()
+|   `-- stress 分层与操控辅助函数
 |-- src/systems/level-spawn.js
 |   |-- LEVEL_SCORE_THRESHOLDS
 |   |-- updateLevel()
@@ -93,13 +92,12 @@ index.html
 |   |-- 武器实体: Laser, Missile, ShotgunBullet, Mine, UltrasonicWave
 |   `-- 敌人实体: Enemy, EnemyBullet, EnemyMissile
 |-- src/ui/menu.js
-|   `-- game(), gameOver(), returnToMenuFromGameOver()
+|   `-- 游戏流程状态: game(), gameOver(), returnToMenuFromGameOver()
 |-- src/systems/game-loop.js
 |   |-- runGameFrame()
-|   |-- 各游戏数组的更新与渲染顺序
-|   |-- 碰撞检测
-|   |-- 关卡过场期间的冻结渲染
-|   `-- HUD 与 stress 更新
+|   |-- 各实体数组的更新与渲染流程
+|   |-- 碰撞处理
+|   `-- 关卡过场时的冻结渲染
 |-- app.js
 |   |-- 全局状态与 setup/reset
 |   |-- draw() -> runGameFrame()
@@ -112,13 +110,11 @@ index.html
     `-- 游戏输入（移动和武器，含关卡解锁检查与共享冷却可用性判断）
 ```
 
-主循环关系:
-
 ```text
 runGameFrame()
 |-- updateLevel()
 |-- 如果关卡过场激活:
-|   |-- drawFrozenCollection(...) 绘制冻结中的世界对象
+|   |-- drawFrozenCollection(...) 绘制冻结场景对象
 |   |-- drawFrozenPlayer()
 |   |-- drawLevelLabel()
 |   |-- drawStressBar()

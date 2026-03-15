@@ -2,15 +2,19 @@
 
 ## Main Frame Entry
 
-`draw()` in `docs/app.js` calls `runGameFrame()` when `started === true`. Before the frame starts, it also:
+`draw()` in `docs/app.js` is the frame entry point when `started === true`.
 
-1. Starts looping BGM if gameplay is active and music has not started yet.
+Before each gameplay frame it:
+
+1. Starts BGM if gameplay is active and music has not started yet.
 2. Samples telemetry stress values.
-3. Finalizes telemetry when `crashed === true`.
+3. Calls `runGameFrame()`.
+4. Updates telemetry counters.
+5. Finalizes telemetry when the run has crashed.
 
 ## Update Order
 
-`runGameFrame()` in `docs/src/systems/game-loop.js` executes in this order:
+`runGameFrame()` in `docs/src/systems/game-loop.js` runs in this order:
 
 1. Compute `dtSeconds` and `frameScale` from `deltaTime`.
 2. Clear the frame background.
@@ -28,7 +32,7 @@
      - `maintainAsteroids()`
      - `spawnEnemies()`
      - `spawnPickups()`
-   - Update and render gameplay entities in this order:
+   - Update and render world objects in this order:
      - asteroids
      - laser beams
      - explosions
@@ -43,9 +47,9 @@
    - Update and render the player:
      - `jet.update()/show()`
      - `ship.update(dtSeconds)/show()`
-   - Update HUD and stress:
+   - update HUD and stress:
      - `drawLevelLabel()`
-     - update score text
+     - score text update
      - `updateStress(dtSeconds)`
      - `drawStressBar()`
      - `drawWeaponHud()`
@@ -54,10 +58,10 @@
 
 ## Rendering Order
 
-Rendering is interleaved with updates inside each system function. The visible layering is approximately:
+Rendering is interleaved with updates, but the visible order is roughly:
 
 1. background
-2. world objects (asteroids, effects, projectiles, enemies, pickups)
+2. world objects: asteroids, explosions, projectiles, enemies, pickups
 3. player jet and ship
 4. HUD (`level`, `score`, stress bar, weapon readiness strip)
 5. level transition briefing overlay (when active)
@@ -65,25 +69,45 @@ Rendering is interleaved with updates inside each system function. The visible l
 
 ## Collision Systems
 
-Implemented collision checks include:
+Current collision logic includes:
 
 - Ship vs asteroid:
-  - If stress already at max, the ship crashes.
-  - Else stress increases by `collisionDeltaAsteroid`.
-- Laser/shotgun/missile/mine vs asteroid or enemy:
-  - Removes targets, triggers explosions, and updates score where applicable.
+  - Triggers hit feedback.
+  - Adds `collisionDeltaAsteroid` stress.
+  - Crashes only if stress reaches `MAX_STRESS`.
 - Enemy bullet vs ship:
-  - Adds stress by `collisionDeltaEnemyBullet`.
+  - Triggers hit feedback.
+  - Adds `collisionDeltaEnemyBullet` stress.
+  - Crashes only if stress reaches `MAX_STRESS`.
 - Enemy missile vs ship:
-  - Immediate ship crash.
-  - Also triggers hit feedback and missile explosion visuals.
+  - Triggers hit feedback and an explosion effect.
+  - Adds `collisionDeltaEnemyMissile` stress.
+  - Crashes only if stress reaches `MAX_STRESS`.
+  - Applies a short collision cooldown after impact.
+- Laser vs asteroid or enemy:
+  - Destroys the target.
+  - Updates score.
+  - Spawns explosions.
+- Shotgun vs asteroid or enemy:
+  - Destroys the target.
+  - Updates score.
+  - Spawns explosions.
+- Missile vs asteroid:
+  - Homes to a target asteroid.
+  - Detonates on arrival.
+  - Updates score.
+- Mine vs asteroid or enemy:
+  - Destroys the target on contact.
+  - Spawns a red explosion effect.
 - Pickup vs ship:
-  - Reduces stress by `PICKUP_CONFIG.recoverAmount`.
+  - reduces stress by `PICKUP_CONFIG.recoverAmount`
 
-`collisionCooldown` prevents repeated instant stress hits from rapid consecutive asteroid and enemy-bullet collisions.
+`collisionCooldown` suppresses repeated rapid stress hits from asteroid collisions, enemy bullets, and post-missile impact overlap.
 
 ## Player Feedback Systems
 
-- Ship hit feedback is centralized through `triggerShipHitFeedback()` in `docs/app.js`.
-- Hit feedback includes gated impact SFX and a temporary ship flash in `Ship.show()`.
+- `triggerShipHitFeedback()` centralizes ship hit feedback.
+- Ship hit feedback includes:
+  - impact SFX with a `1000ms` gate
+  - temporary flash in `Ship.show()`
 - BGM is initialized in `setup()`, started from `draw()`, and stopped in `telemetryEnd()`.

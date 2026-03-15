@@ -1,10 +1,11 @@
 # FEATURES
 
 ## Player Ship Movement
-Description: The player rotates and boosts a ship with screen wrap-around movement.
-Dependencies: `Ship` (`docs/src/entities/entities.js`), `keyPressed`/`keyReleased` (`docs/src/input/controls.js`), `updateAndRenderPlayer` (`docs/src/systems/game-loop.js`), `ship` global.
+Description: The player rotates and boosts a ship with wrap-around movement. Steering remains responsive when weapon keys are pressed and released during movement.
+Dependencies: `Ship` and `Jet` (`docs/src/entities/entities.js`), `keyPressed` and `keyReleased` (`docs/src/input/controls.js`), `updateAndRenderPlayer` (`docs/src/systems/game-loop.js`), `ship` and `jet` globals.
 Trigger key: `Arrow Left`, `Arrow Right`, `Arrow Up`.
 Cooldown: None.
+
 
 ## Player Ship Visual Readability
 Description: The player ship keeps the classic triangle silhouette but adds a V-interceptor style nose stripe, internal V structure, split plating trench, twin hot-end thrusters, a small sensor nub, and visible weapon hardpoints. Laser pods are always visible, while the missile bay and mine port only appear after their level unlocks. Hardpoint geometry is visual-only; collision still uses the original circular ship radius.
@@ -27,65 +28,94 @@ Cooldown: `5s` (unlocked at Level `2`).
 ## Shotgun Weapon
 Description: Fires a cone spread of up to 8 projectiles for short-range clearing.
 Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `ShotgunBullet` class, `hardpointWorldPos(ship, ship.hardpoints.MISSILE)` (`docs/src/entities/entities.js`), `shotgunBullets` array, `updateAndRenderShotgunBullets` (`docs/src/systems/game-loop.js`).
+
+## Auto Laser
+Description: The ship continuously fires a primary laser while enough laser energy is available.
+Dependencies: `Ship.update`, `autoLaserCooldown`, and `laserLife` (`docs/src/entities/entities.js`), `Laser` class, `laserBeams` array, `updateAndRenderLaserBeams` (`docs/src/systems/game-loop.js`).
+Trigger key: Automatic.
+Cooldown: `30` frames between shots, gated by laser energy regeneration.
+
+## Shotgun
+Description: Fires a short-range spread of pellets for close-range clearing.
+Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `ShotgunBullet` (`docs/src/entities/entities.js`), `shotgunBullets` array, `updateAndRenderShotgunBullets` (`docs/src/systems/game-loop.js`).
+
+
 Trigger key: `Z`.
-Cooldown: `15s`, max `20` active shotgun bullets (unlocked at Level `1`).
+Cooldown: `15s`; max `20` active shotgun bullets; unlocked at Level `1`.
+
 
 ## Space Mine Weapon
 Description: Places a stationary mine that explodes when an asteroid or enemy touches it.
 Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `Mine` class and `getHardpointPosition("MINE")` (`docs/src/entities/entities.js`), `mines` array, `updateAndRenderMines` (`docs/src/systems/game-loop.js`), `explosions` array.
+=======
+## Missile
+Description: Launches a homing missile that locks onto an asteroid and detonates on contact.
+Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `Missile` (`docs/src/entities/entities.js`), `missiles` array, `updateAndRenderMissiles` (`docs/src/systems/game-loop.js`).
+Trigger key: `X`.
+Cooldown: `5s`; unlocked at Level `2`.
+
+## Mine
+Description: Drops a stationary mine that destroys asteroids or enemies on contact.
+Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `Mine` (`docs/src/entities/entities.js`), `mines` array, `updateAndRenderMines` (`docs/src/systems/game-loop.js`), `explosions` array.
+
 Trigger key: `C`.
-Cooldown: `20s`, max `3` active mines (unlocked at Level `3`).
+Cooldown: `20s`; max `3` active mines; unlocked at Level `3`.
+
 
 ## Ultrasonic Wave Weapon
 Description: Expanding wave that removes non-system asteroids in range.
 Dependencies: `keyPressed` (`docs/src/input/controls.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `UltrasonicWave` class, `ultrasonicWaves` array, `updateAndRenderUltrasonicWaves` (`docs/src/systems/game-loop.js`), `ship.pos` center origin.
+
+## Ultrasonic Wave
+Description: Emits an expanding wave that clears non-system asteroids in range.
+
 Trigger key: `V`.
-Cooldown: `30s` (unlocked at Level `1`).
+Cooldown: `30s`; unlocked at Level `1`.
 
 ## Weapon Readiness HUD
-Description: Bottom HUD strip shows each secondary weapon's key, cooldown progress, and clear availability state (`READY`, `COOLING`, `LIMIT`, `LOCKED`) so players can tell immediately whether it can be used.
-Dependencies: `WEAPON_HUD_CONFIG`, `getWeaponCooldownRemainingMs`, `getWeaponHudState`, `drawWeaponHud` (`docs/app.js`), `isWeaponReadyFromCooldown` (`docs/app.js`), `keyPressed` (`docs/src/input/controls.js`), `updateHudAndStress` (`docs/src/systems/game-loop.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`).
-Trigger key: None (passive HUD feedback for `Z`, `X`, `C`, `V`).
-Cooldown: Mirrors weapon cooldowns and active-entity limits; unlocked weapons are immediately available at run start.
+Description: Displays each secondary weapon with its key, cooldown progress, limit state, and lock status.
+Dependencies: `WEAPON_HUD_CONFIG`, `getWeaponHudState`, `getWeaponHudColors`, and `drawWeaponHud` (`docs/app.js`), `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), weapon arrays and cooldown globals.
+Trigger key: None.
+Cooldown: Mirrors underlying weapon cooldowns and active-entity limits.
 
 ## Stress System
-Description: Collisions increase stress; higher stress reduces handling. Stress decays over time and can be reduced by pickups.
-Dependencies: `STRESS_CONFIG`, `HANDLING_BY_TIER`, `updateStress` (`docs/src/core/stress.js`), `addStress`/`reduceStress`, `drawStressBar` (`docs/app.js`), collision logic in `updateAndRenderAsteroids` and `updateAndRenderEnemyBullets` (`docs/src/systems/game-loop.js`).
-Trigger key: Passive system (collision-driven).
-Cooldown: Stress decay cooldown `2s` after stress increases.
+Description: Collisions raise stress, higher stress reduces handling, stress decays over time after a cooldown, and the HUD presents a full-to-empty integrity-style danger bar alongside the current stress readout.
+Dependencies: `STRESS_CONFIG`, `HANDLING_BY_TIER`, `addStress`, `reduceStress`, `updateStress` (`docs/src/core/stress.js`), `drawStressBar` (`docs/app.js`), hit logic in `docs/src/systems/game-loop.js`.
+Trigger key: Passive system.
+Cooldown: Stress decay waits `2s` after the last stress gain.
 
 ## Stress Recovery Pickups
-Description: Periodic pickups that reduce stress when collected by the ship.
-Dependencies: `PICKUP_CONFIG` (`docs/src/core/stress.js`), `Pickup` class (`docs/src/entities/entities.js`), `pickups` array, `spawnPickups` and `updateAndRenderPickups` (`docs/src/systems/game-loop.js`).
-Trigger key: None (spawned automatically; collected on contact).
-Cooldown: Spawn interval `420` frames, max `2` active pickups, lifetime `600` frames.
+Description: Cyan pickups spawn automatically and immediately reduce stress on collection.
+Dependencies: `PICKUP_CONFIG` (`docs/src/core/stress.js`), `Pickup` (`docs/src/entities/entities.js`), `pickups` array, `spawnPickups` and `updateAndRenderPickups` (`docs/src/systems/game-loop.js`).
+Trigger key: None.
+Cooldown: Spawn interval `420` frames; max `2` active pickups; lifetime `600` frames.
 
-## Hit Feedback System
-Description: Ship hits trigger a temporary flash effect and a gated impact sound to make damage more readable.
-Dependencies: `triggerShipHitFeedback`, `initHitSfx`, `playHitSfx` (`docs/app.js`), `isShipHitFlashActive` (`docs/app.js`), `Ship.show` (`docs/src/entities/entities.js`), hit branches in `updateAndRenderAsteroids`, `updateAndRenderEnemyBullets`, and `updateAndRenderEnemyMissiles` (`docs/src/systems/game-loop.js`).
-Trigger key: None (triggered automatically when the ship is hit).
+## Hit Feedback
+Description: Ship hits trigger a temporary flash and gated impact sound so damage is easier to read.
+Dependencies: `triggerShipHitFeedback`, `isShipHitFlashActive`, `initHitSfx`, `playHitSfx` (`docs/app.js`), `Ship.show` (`docs/src/entities/entities.js`), ship-hit branches in `docs/src/systems/game-loop.js`.
+Trigger key: None.
 Cooldown: Impact SFX gate `1000ms`; flash duration `1500ms`.
 
 ## Background Music
-Description: A looping background track starts during gameplay and stops when the run ends.
-Dependencies: `initBgm`, `startBgm`, `stopBgm` (`docs/app.js`), `draw` (`docs/app.js`), `telemetryEnd` (`docs/app.js`), `assets/audio/bgm-loop.mp3`.
-Trigger key: None (game-state driven).
+Description: A looping BGM track starts during active gameplay and stops when the run ends.
+Dependencies: `initBgm`, `startBgm`, `stopBgm`, and `draw` (`docs/app.js`), `telemetryEnd` (`docs/app.js`), `docs/assets/audio/bgm-loop.mp3`.
+Trigger key: None.
 Cooldown: None.
 
 ## Enemy System
-Description: Type A enemies fire bullets; Type B enemies fire homing missiles.
-Dependencies: `Enemy`, `EnemyBullet`, `EnemyMissile` classes (`docs/src/entities/entities.js`), `enemies`/`enemyBullets`/`enemyMissiles` arrays, `spawnEnemies` (`docs/src/systems/level-spawn.js`), `updateAndRenderEnemies`/`updateAndRenderEnemyBullets`/`updateAndRenderEnemyMissiles` (`docs/src/systems/game-loop.js`).
-Trigger key: None (system-driven spawn and AI fire).
-Cooldown: Global spawn every `10s` (level-gated); per-enemy fire cooldown is dynamic.
+Description: Type A enemies fire bullets; Type B enemies launch homing missiles that now deal heavy stress damage instead of unconditional instant death.
+Dependencies: `Enemy`, `EnemyBullet`, `EnemyMissile` (`docs/src/entities/entities.js`), `STRESS_CONFIG.collisionDeltaEnemyMissile` (`docs/src/core/stress.js`), `enemies`, `enemyBullets`, `enemyMissiles` arrays, `spawnEnemies` (`docs/src/systems/level-spawn.js`), enemy update/render functions in `docs/src/systems/game-loop.js`.
+Trigger key: None.
+Cooldown: Spawn check every `10s`; each enemy manages its own fire cooldown.
 
 ## Level Progression and Asteroid Maintenance
-Description: Level scales by score thresholds and controls enemy/asteroid pressure.
-Dependencies: `updateLevel`, `maintainAsteroids`, `drawLevelLabel`, `spawnEnemies` (`docs/src/systems/level-spawn.js`), `runGameFrame` (`docs/src/systems/game-loop.js`), `asteroids` array.
+Description: Level scales by score thresholds and controls enemy pressure, asteroid density, and weapon unlocks.
+Dependencies: `LEVEL_SCORE_THRESHOLDS`, `updateLevel`, `maintainAsteroids`, `drawLevelLabel`, `spawnEnemies`, `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `runGameFrame` (`docs/src/systems/game-loop.js`), `score`, `level`, `asteroids`, and enemy arrays.
 Trigger key: None.
 Cooldown: Level `2` unlocks at score `300000`; Level `3` unlocks at score `700000`; each level unlocks additional weapons (`L1`: shotgun, `L2`: missile, `L3`: mine); system asteroid top-up checks with `2s` interval.
 
 ## Level Transition Briefings
-Description: Each level start shows a temporary overlay briefing that freezes active gameplay visuals while introducing new threats and weapons.
-Dependencies: `LEVEL_TRANSITION_CONTENT`, `triggerLevelTransition`, `drawLevelTransitionCard`, `isLevelTransitionActive` (`docs/src/systems/level-spawn.js`), frozen draw helpers in `docs/src/systems/game-loop.js`, `game()` (`docs/src/ui/menu.js`).
-Trigger key: None (automatic on level start/change).
-Cooldown: Transition card duration `4200ms` with `320ms` fade-in/out windows.
+Description: A temporary briefing card freezes live gameplay updates and introduces each level's threats and weapon tips.
+Dependencies: `LEVEL_TRANSITION_CONTENT`, `triggerLevelTransition`, `isLevelTransitionActive`, `drawLevelTransitionCard` (`docs/src/systems/level-spawn.js`), frozen draw helpers in `docs/src/systems/game-loop.js`, `game` (`docs/src/ui/menu.js`).
+Trigger key: None.
+Cooldown: Transition duration `4200ms`; fade window `320ms`.

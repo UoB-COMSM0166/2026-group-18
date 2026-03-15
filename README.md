@@ -29,7 +29,7 @@ GROUP PHOTO.
 ![1ea16c65c7c97f326304811ae963f9b3](https://github.com/user-attachments/assets/4f3012f3-9d78-4dff-8d98-3e032d17ac7d)
 
 | Group member | Email | GitHub Username | Role |
-|---|---|---|
+|---|---|---|---|
 |Benyu Zhu|benyuzhu@outlook.com|Josh-Zhu0326|Software Developer|
 |Yutong Liu|yutong11x@outlook.com|Volta0411|Graphics & Design|
 |Lin Zhu|zhulinuk2025@gmail.com|kath0925|Project Manager|

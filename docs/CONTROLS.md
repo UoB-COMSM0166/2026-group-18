@@ -20,7 +20,7 @@
 ## HUD Feedback
 
 - Bottom weapon HUD: shows `READY`, `COOLING`, `LIMIT`, or `LOCKED` for each secondary weapon
-- Top-right stress bar: shows current stress and handling pressure
+- Top-right stress bar: shows current stress with a full-to-empty integrity-style danger display and handling pressure
 
 ## Menu / Flow Controls
 

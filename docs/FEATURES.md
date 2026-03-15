@@ -43,7 +43,7 @@ Trigger key: None.
 Cooldown: Mirrors underlying weapon cooldowns and active-entity limits.
 
 ## Stress System
-Description: Collisions raise stress, higher stress reduces handling, stress decays over time after a cooldown, and the HUD displays current pressure level.
+Description: Collisions raise stress, higher stress reduces handling, stress decays over time after a cooldown, and the HUD presents a full-to-empty integrity-style danger bar alongside the current stress readout.
 Dependencies: `STRESS_CONFIG`, `HANDLING_BY_TIER`, `addStress`, `reduceStress`, `updateStress` (`docs/src/core/stress.js`), `drawStressBar` (`docs/app.js`), hit logic in `docs/src/systems/game-loop.js`.
 Trigger key: Passive system.
 Cooldown: Stress decay waits `2s` after the last stress gain.

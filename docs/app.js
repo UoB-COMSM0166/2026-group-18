@@ -248,6 +248,8 @@ function drawStressBar(){
     push();
     const stressNow = getStressValue();
     const tierNow = typeof getStressTierNow === "function" ? getStressTierNow() : getStressTier(stressNow);
+    const integrityNow = MAX_STRESS - stressNow;
+    const integrityRatio = constrain(integrityNow / MAX_STRESS, 0, 1);
 
     if (tierNow !== lastStressTierForHud) {
       stressTierFlashTimer = 24;
@@ -267,23 +269,37 @@ function drawStressBar(){
     rect(x, y, barWidth, barHeight);
 
 
-    const tierColors = [
-      color(0, 255, 0),
-      color(255, 210, 0),
-      color(255, 70, 70)
-    ];
-    const fromColor = tierColors[Math.max(0, Math.min(2, previousStressTierForColor))];
-    const toColor = tierColors[Math.max(0, Math.min(2, tierNow))];
+    const fullColor = color(0, 255, 110);
+    const midColor = color(255, 210, 0);
+    const lowColor = color(255, 70, 70);
+    let targetColor;
 
-    let barColor = toColor;
+    if (integrityRatio > 0.6) {
+      const t = map(integrityRatio, 0.6, 1, 0, 1);
+      targetColor = lerpColor(midColor, fullColor, constrain(t, 0, 1));
+    } else {
+      const t = map(integrityRatio, 0, 0.6, 0, 1);
+      targetColor = lerpColor(lowColor, midColor, constrain(t, 0, 1));
+    }
+
+    let barColor = targetColor;
     if (stressTierColorAnimTimer > 0) {
+      const previousIntegrityRatio = constrain((MAX_STRESS - (previousStressTierForColor === 0 ? 20 : previousStressTierForColor === 1 ? 57.5 : 87.5)) / MAX_STRESS, 0, 1);
+      let previousColor;
+      if (previousIntegrityRatio > 0.6) {
+        const t = map(previousIntegrityRatio, 0.6, 1, 0, 1);
+        previousColor = lerpColor(midColor, fullColor, constrain(t, 0, 1));
+      } else {
+        const t = map(previousIntegrityRatio, 0, 0.6, 0, 1);
+        previousColor = lerpColor(lowColor, midColor, constrain(t, 0, 1));
+      }
       const t = 1 - (stressTierColorAnimTimer / STRESS_TIER_COLOR_ANIM_FRAMES);
-      barColor = lerpColor(fromColor, toColor, constrain(t, 0, 1));
+      barColor = lerpColor(previousColor, targetColor, constrain(t, 0, 1));
       stressTierColorAnimTimer--;
     }
 
     fill(barColor);
-    let currentWidth = map(stressNow, 0, MAX_STRESS, 0, barWidth);
+    let currentWidth = map(integrityNow, 0, MAX_STRESS, 0, barWidth);
     rect(x, y, currentWidth, barHeight);
 
 
@@ -302,14 +318,13 @@ function drawStressBar(){
     textSize(10);
     textAlign(LEFT, TOP);
 
-    var tierLabel = tierNow === 1 ? "MED" : getStressUILabelByTier(tierNow);
-    text("Tier " + (tierNow + 1) + " - " + tierLabel, x, y + barHeight + 6);
+    text("Stress " + Math.round(stressNow) + " / " + MAX_STRESS, x, y + barHeight + 6);
 
     var handlingText = "normal";
     if (tierNow === 1) {
       handlingText = "reduced";
     } else if (tierNow >= 2) {
-      handlingText = "heavily reduced";
+      handlingText = "critical";
     }
     text("Handling: " + handlingText, x, y + barHeight + 20);
 

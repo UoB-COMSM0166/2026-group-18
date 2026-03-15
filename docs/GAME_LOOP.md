@@ -47,9 +47,9 @@ Before each gameplay frame it:
    - Update and render the player:
      - `jet.update()/show()`
      - `ship.update(dtSeconds)/show()`
-   - Update HUD and stress:
+   - update HUD and stress:
      - `drawLevelLabel()`
-     - update score text
+     - score text update
      - `updateStress(dtSeconds)`
      - `drawStressBar()`
      - `drawWeaponHud()`
@@ -100,7 +100,7 @@ Current collision logic includes:
   - Destroys the target on contact.
   - Spawns a red explosion effect.
 - Pickup vs ship:
-  - Reduces stress by `PICKUP_CONFIG.recoverAmount`.
+  - reduces stress by `PICKUP_CONFIG.recoverAmount`
 
 `collisionCooldown` suppresses repeated rapid stress hits from asteroid collisions, enemy bullets, and post-missile impact overlap.
 

@@ -72,11 +72,11 @@ Dependencies: `Enemy`, `EnemyBullet`, `EnemyMissile` (`docs/src/entities/entitie
 Trigger key: None.
 Cooldown: Spawn check every `10s`; each enemy manages its own fire cooldown.
 
-## Level Progression
-Description: Score thresholds raise the level, unlock weapons, increase asteroid pressure, and enable stronger enemies.
-Dependencies: `LEVEL_SCORE_THRESHOLDS`, `updateLevel`, `maintainAsteroids`, `spawnEnemies`, `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `runGameFrame` (`docs/src/systems/game-loop.js`), `score`, `level`, and gameplay arrays.
+## Level Progression and Asteroid Maintenance
+Description: Level scales by score thresholds and controls enemy pressure, asteroid density, and weapon unlocks.
+Dependencies: `LEVEL_SCORE_THRESHOLDS`, `updateLevel`, `maintainAsteroids`, `drawLevelLabel`, `spawnEnemies`, `isWeaponUnlocked` (`docs/src/systems/level-spawn.js`), `runGameFrame` (`docs/src/systems/game-loop.js`), `score`, `level`, `asteroids`, and enemy arrays.
 Trigger key: None.
-Cooldown: Level `2` begins at score `300000`; Level `3` is not currently reachable because its threshold is `Infinity`.
+Cooldown: Level `2` unlocks at score `300000`; Level `3` unlocks at score `700000`; each level unlocks additional weapons (`L1`: shotgun, `L2`: missile, `L3`: mine); system asteroid top-up checks with `2s` interval.
 
 ## Level Transition Briefings
 Description: A temporary briefing card freezes live gameplay updates and introduces each level's threats and weapon tips.

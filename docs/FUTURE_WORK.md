@@ -11,7 +11,13 @@
 
 - Add upgrade paths for existing weapons such as damage, radius, cooldown, or efficiency upgrades.
 - Add temporary power-ups and risk/reward pickups.
-- Finalize later score thresholds so Level `3` progression becomes reachable.
+- Tune the current score thresholds (`300000`, `700000`) against playtest data and session length targets.
+
+## Difficulty and Balance
+
+- Replace hard thresholds with adaptive difficulty scaling based on player performance.
+- Tune stress gain/decay with telemetry and balancing presets.
+- Improve enemy spawn logic to avoid unfair overlap spawns.
 
 ## UX, Audio, and Feedback
 
@@ -19,12 +25,6 @@
 - Improve HUD polish with stronger ready-state flashes and clearer low-availability warnings.
 - Keep iterating on stress-bar readability if the team wants a different visual metaphor.
 - Add pause, quick restart, and accessibility options.
-
-## Difficulty and Balance
-
-- Tune stress gain, passive recovery, pickup recovery, and weapon cooldowns using telemetry from playtests.
-- Improve spawn logic to avoid unfair overlap or blindside situations.
-- Explore adaptive difficulty instead of fixed thresholds.
 
 ## Technical Quality
 

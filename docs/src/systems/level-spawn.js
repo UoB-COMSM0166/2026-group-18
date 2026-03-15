@@ -6,28 +6,36 @@ const WEAPON_UNLOCK_REQUIREMENTS = {
 };
 const LEVEL_SCORE_THRESHOLDS = {
   2: 300000,
-  3: Number.POSITIVE_INFINITY
+  3: 700000
 };
 
-const LEVEL_TRANSITION_DURATION_MS = 4200;
-const LEVEL_TRANSITION_FADE_MS = 320;
+const LEVEL_TRANSITION_FADE_IN_MS = 320;
+const LEVEL_TRANSITION_HOLD_MS = 900;
+const LEVEL_TRANSITION_HOLD_HINT = "HOLD SPACE TO CONTINUE";
 let levelTransitionCard = null;
+const levelTransitionImageCache = {};
 
 const LEVEL_TRANSITION_CONTENT = {
   1: {
     title: "LEVEL 1 BRIEFING",
     enemy: "New Enemy: Asteroids only (no enemy ships yet).",
-    weapon: "Weapon Tip: Hold UP to boost. Auto Laser fires itself. Press Z for Shotgun, V for Ultrasonic."
+    weapon: "Weapon Tip: Hold UP to boost. Auto Laser fires itself. Press Z for Shotgun, V for Ultrasonic.",
+    skillImagePath: "assets/level1-skill.png",
+    skillImageHint: "Add image: assets/level1-skill.png"
   },
   2: {
     title: "LEVEL 2 BRIEFING",
     enemy: "New Enemy: Type A Drone (blue). Fast chaser that fires straight bullets.",
-    weapon: "Weapon Tip: Press X to launch a Missile (locks onto asteroids). Keep moving to dodge bullets."
+    weapon: "Weapon Tip: Press X to launch a Missile (locks onto asteroids). Keep moving to dodge bullets.",
+    skillImagePath: "assets/level2-skill.png",
+    skillImageHint: "Add image: assets/level2-skill.png"
   },
   3: {
     title: "LEVEL 3 BRIEFING",
     enemy: "New Enemy: Type B Hunter (yellow). Slower but launches homing missiles.",
-    weapon: "Weapon Tip: Press C to drop Mines. Lure enemies close, then clear space safely."
+    weapon: "Weapon Tip: Press C to drop Mines. Lure enemies close, then clear space safely.",
+    skillImagePath: "assets/level3-skill.png",
+    skillImageHint: "Add image: assets/level3-skill.png"
   }
 };
 
@@ -35,8 +43,35 @@ function getLevelTransitionContent(targetLevel) {
   return LEVEL_TRANSITION_CONTENT[targetLevel] || {
     title: "LEVEL " + targetLevel + " BRIEFING",
     enemy: "New Enemy: Mixed hostile units incoming.",
-    weapon: "Weapon Tip: Rotate weapons by cooldown and keep stress under control."
+    weapon: "Weapon Tip: Rotate weapons by cooldown and keep stress under control.",
+    skillImagePath: "",
+    skillImageHint: ""
   };
+}
+
+function getLevelTransitionSkillImage(path) {
+  if (!path) {
+    return null;
+  }
+  var cacheItem = levelTransitionImageCache[path];
+  if (!cacheItem) {
+    cacheItem = {
+      state: "loading",
+      image: null
+    };
+    levelTransitionImageCache[path] = cacheItem;
+    loadImage(path, function(img) {
+      cacheItem.state = "ready";
+      cacheItem.image = img;
+    }, function() {
+      cacheItem.state = "error";
+      cacheItem.image = null;
+    });
+  }
+  if (cacheItem.state === "ready") {
+    return cacheItem.image;
+  }
+  return null;
 }
 
 function triggerLevelTransition(targetLevel) {
@@ -44,41 +79,75 @@ function triggerLevelTransition(targetLevel) {
   levelTransitionCard = {
     level: targetLevel,
     startedAt: millis(),
+    holdStartedAt: null,
     title: content.title,
     enemy: content.enemy,
-    weapon: content.weapon
+    weapon: content.weapon,
+    skillImagePath: content.skillImagePath,
+    skillImageHint: content.skillImageHint
   };
 }
 
 function isLevelTransitionActive() {
-  if (!levelTransitionCard || crashed) {
+  return !!levelTransitionCard && !crashed;
+}
+
+function beginLevelTransitionHold() {
+  if (!isLevelTransitionActive()) {
     return false;
   }
-  if (millis() - levelTransitionCard.startedAt >= LEVEL_TRANSITION_DURATION_MS) {
-    levelTransitionCard = null;
-    return false;
+  if (levelTransitionCard.holdStartedAt === null) {
+    levelTransitionCard.holdStartedAt = millis();
   }
   return true;
+}
+
+function cancelLevelTransitionHold() {
+  if (levelTransitionCard) {
+    levelTransitionCard.holdStartedAt = null;
+  }
+}
+
+function getLevelTransitionHoldProgress() {
+  if (!isLevelTransitionActive() || levelTransitionCard.holdStartedAt === null) {
+    return 0;
+  }
+  var holdElapsed = millis() - levelTransitionCard.holdStartedAt;
+  return constrain(holdElapsed / LEVEL_TRANSITION_HOLD_MS, 0, 1);
+}
+
+function tryCompleteLevelTransitionByHold() {
+  if (!isLevelTransitionActive() || levelTransitionCard.holdStartedAt === null) {
+    return false;
+  }
+  if (millis() - levelTransitionCard.holdStartedAt >= LEVEL_TRANSITION_HOLD_MS) {
+    levelTransitionCard = null;
+    return true;
+  }
+  return false;
 }
 
 function drawLevelTransitionCard() {
   if (!isLevelTransitionActive()) {
     return;
   }
-
-  var elapsed = millis() - levelTransitionCard.startedAt;
-
-  var alpha = 215;
-  if (elapsed < LEVEL_TRANSITION_FADE_MS) {
-    alpha = map(elapsed, 0, LEVEL_TRANSITION_FADE_MS, 0, 215);
-  } else if (elapsed > LEVEL_TRANSITION_DURATION_MS - LEVEL_TRANSITION_FADE_MS) {
-    alpha = map(LEVEL_TRANSITION_DURATION_MS - elapsed, 0, LEVEL_TRANSITION_FADE_MS, 0, 215);
+  if (tryCompleteLevelTransitionByHold()) {
+    return;
   }
 
-  var panelWidth = min(760, width - 120);
-  var panelHeight = 170;
+  var elapsed = millis() - levelTransitionCard.startedAt;
+  var alpha = map(min(elapsed, LEVEL_TRANSITION_FADE_IN_MS), 0, LEVEL_TRANSITION_FADE_IN_MS, 0, 215);
+  var holdProgress = getLevelTransitionHoldProgress();
+  var panelWidth = min(820, width - 60);
+  var panelHeight = min(380, height - 60);
   var panelX = (width - panelWidth) / 2;
-  var panelY = 72;
+  var panelY = (height - panelHeight) / 2;
+  var bodyWidth = panelWidth - 48;
+  var imageBoxWidth = min(280, panelWidth - 120);
+  var imageBoxHeight = 120;
+  var imageBoxX = panelX + (panelWidth - imageBoxWidth) / 2;
+  var imageBoxY = panelY + 146;
+  var skillImage = getLevelTransitionSkillImage(levelTransitionCard.skillImagePath);
 
   push();
   noStroke();
@@ -93,14 +162,50 @@ function drawLevelTransitionCard() {
   noStroke();
   textAlign(CENTER, TOP);
   fill(255, 80, 80, min(255, alpha + 20));
-  textSize(28);
-  text(levelTransitionCard.title, width / 2, panelY + 14);
+  textSize(34);
+  text(levelTransitionCard.title, width / 2, panelY + 16);
 
   textAlign(LEFT, TOP);
-  fill(220, 245, 255, 255);
-  textSize(14);
-  text(levelTransitionCard.enemy, panelX + 24, panelY + 66, panelWidth - 48, 46);
-  text(levelTransitionCard.weapon, panelX + 24, panelY + 112, panelWidth - 48, 52);
+  fill(220, 245, 255, min(255, alpha + 40));
+  textSize(16);
+  text(levelTransitionCard.enemy, panelX + 24, panelY + 82, bodyWidth, 52);
+
+  stroke(80, 220, 255, alpha);
+  strokeWeight(1.5);
+  fill(12, 24, 30, alpha);
+  rect(imageBoxX, imageBoxY, imageBoxWidth, imageBoxHeight, 6);
+
+  if (skillImage) {
+    imageMode(CENTER);
+    image(skillImage, imageBoxX + imageBoxWidth / 2, imageBoxY + imageBoxHeight / 2, imageBoxWidth - 12, imageBoxHeight - 12);
+  } else {
+    noStroke();
+    fill(170, 230, 255, min(255, alpha + 30));
+    textAlign(CENTER, CENTER);
+    textSize(13);
+    text(levelTransitionCard.skillImageHint || "Skill image can be loaded here.", imageBoxX + imageBoxWidth / 2, imageBoxY + imageBoxHeight / 2);
+  }
+
+  noStroke();
+  textAlign(LEFT, TOP);
+  fill(220, 245, 255, min(255, alpha + 40));
+  textSize(16);
+  text(levelTransitionCard.weapon, panelX + 24, imageBoxY + imageBoxHeight + 16, bodyWidth, 52);
+
+  var holdBarWidth = panelWidth - 120;
+  var holdBarHeight = 12;
+  var holdBarX = panelX + (panelWidth - holdBarWidth) / 2;
+  var holdBarY = panelY + panelHeight - 42;
+  noStroke();
+  fill(20, 20, 20, alpha);
+  rect(holdBarX, holdBarY, holdBarWidth, holdBarHeight, 4);
+  fill(80, 220, 255, min(255, alpha + 30));
+  rect(holdBarX, holdBarY, holdBarWidth * holdProgress, holdBarHeight, 4);
+
+  textAlign(CENTER, BOTTOM);
+  fill(130, 220, 255, min(255, alpha + 20));
+  textSize(12);
+  text(LEVEL_TRANSITION_HOLD_HINT, width / 2, holdBarY - 6);
   pop();
 }
 

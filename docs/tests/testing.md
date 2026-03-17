@@ -220,11 +220,11 @@ Progression to next level and activation of associated game effects.
 
 | ID | Inputs | Expected outputs | Observed outputs | Pass/Fail |
 |---|---|---|---|---|
-| LP1 | Progress below level-up threshold | Level does not change |  |  |
-| LP2 | Progress reaches level-up threshold | Level increases immediately |  |  |
-| LP3 | Level increases to unlock new feature | Correct upgrade / unlock effect appears |  |  |
-| LP4 | New level begins | Spawning follows the new level rules |  |  |
-| LP5 | Progress continues after level-up | No duplicate or incorrect level transition occurs |  |  |
+| LP1 | score < 300000 | Level 1; Auto Laser keep shooting; shotgun & ultrasonic unlock; only Asteroid | Level 1 shown on top left; Level 1 brief appeared and hold space to start; Auto Laser kept shooting; shotgun & ultrasonic unlocked while mine & missle locked; only Asteroid appeared and gain scores by destroing them | Pass |
+| LP2 | right after scorce >= 300000 | Level up; new level brief appears; new weapon unlocks | Level 2 shown on top left; Level 2 brief appeared and hold space to continue; new weapon: shotgun unlocked | Pass |
+| LP3 | 300000 <= score < 700000 | Level 2; new enemy | Level 2 shown on top left; new enemy: Enemy("A") in blue appears periodically | Pass |
+| LP4 | right after scorce >= 700000 | Level up; new level brief appears; new weapon unlocks | Level 3 shown on top left; Level 3 brief appeared and hold space to continue; new weapon: mine unlocked | Pass |
+| LP5 | score >= 700000 | Level 2; new enemy | Level 3 shown on top left; new enemy: Enemy("B") in yellow appears periodically | Pass |
 
 ---
 

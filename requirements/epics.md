@@ -28,9 +28,9 @@ This epic set refines the draft into engineering-oriented requirements that are 
 
 ## Epic 5 - Level Progression
 
-- Goal: Increase challenge over time through stage/level progression.
-- Engineering focus: time-driven progression logic, parameter scaling, difficulty pacing.
-- Verifiable outcome: level indicators and spawn/difficulty parameters transition as expected with elapsed play time.
+- Goal: Increase challenge through score-threshold stage/level progression.
+- Engineering focus: score-threshold progression logic, parameter scaling, difficulty pacing.
+- Verifiable outcome: level indicators and spawn/difficulty parameters transition as expected when score reaches defined thresholds.
 
 ## Epic 6 - User Interface and Feedback
 
@@ -42,4 +42,3 @@ This epic set refines the draft into engineering-oriented requirements that are 
 
 - Must-have: Epic 1, Epic 2, Epic 3, Epic 6
 - Should-have: Epic 4, Epic 5
-

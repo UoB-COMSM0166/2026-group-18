@@ -67,7 +67,9 @@ As a player, I want enemies with distinct behavior patterns so that gameplay pre
 
 As a player, I want the game level to advance when my score reaches defined thresholds so that progression reflects performance and feels fair.
 
-_Note: Updated after playtesting to replace time-based progression with score-gated thresholds._### US-5.2 - Difficulty Scaling
+_Note: Updated after playtesting to replace time-based progression with score-gated thresholds._
+
+### US-5.2 - Difficulty Scaling
 
 As a player, I want spawn rates and enemy presence to scale with level so that progression feels meaningful.
 

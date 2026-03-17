@@ -67,15 +67,15 @@ Orchestrates frame-by-frame updates in fixed order at 60 FPS:
 
 ### Level System ([level-spawn.js](src/systems/level-spawn.js))
 
-Time-based difficulty progression:
+Score-based difficulty progression:
 
-| Level | Time Range | Asteroids | Enemies |
+| Level | Score Range | Asteroids | Enemies |
 |-------|-----------|-----------|---------|
-| **Level 1** | 0-90s | 5 base | None |
-| **Level 2** | 90-180s | 7 asteroids | Type A only |
-| **Level 3** | 180s+ | 9 asteroids | Type A & B |
+| **Level 1** | 0-299999 | 5 base | None |
+| **Level 2** | 300000-699999 | 7 asteroids | Type A only |
+| **Level 3** | 700000+ | 9 asteroids | Type A & B |
 
-System asteroids spawn every 120 frames (governed by target count).
+System asteroids are replenished every 2 seconds while below the target count.
 
 ---
 
@@ -148,7 +148,7 @@ resetGame()
 draw() loop (60 FPS):
   └── if !started: show menu
   └── if started: runGameFrame()
-      ├── Update level (time-based)
+      ├── Update level (score-based)
       ├── Maintain asteroids (spawn if below target)
       ├── Spawn enemies (level-dependent)
       ├── Update & render all entities
@@ -219,7 +219,7 @@ STRESS_UI = {
 ✅ **Modular**: Clear separation between stress, game loop, input, UI  
 ✅ **Extensible**: Entity hierarchy allows new projectile/enemy types  
 ✅ **Debuggable**: Centralized stress API with clear getter/setter semantics  
-✅ **Deterministic**: Time-based progression (levels), frame-based physics  
+✅ **Deterministic**: Score-threshold level progression, frame-based physics  
 
 ---
 

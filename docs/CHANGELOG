@@ -93,6 +93,7 @@ This update significantly expands combat strategy and adds more tactical gamepla
   - **Type B (Yellow Triangle)**: launches homing missiles.
 - Implemented **time-based level progression**.
   - Level increases every 90 seconds.
+  - This was later replaced by score-based progression thresholds (`Level 2` at `300000`, `Level 3` at `700000`).
 - Enemy spawning system introduced with controlled maximum enemy count.
 - Improved overall gameplay difficulty and pacing.
 

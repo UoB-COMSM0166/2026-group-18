@@ -63,7 +63,7 @@ Later iterations introduced several new gameplay features, including:
 * enemy ships with simple AI
 * a stress system affecting ship control
 * multiple weapon types (laser, missile, shotgun, mines)
-* level progression based on gameplay time
+* level progression based on gameplay time, later replaced by score-based thresholds after playtesting
 * a HUD displaying player status
 
 These additions significantly expanded the gameplay experience while maintaining the core arcade mechanics.

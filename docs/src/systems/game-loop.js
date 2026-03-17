@@ -108,17 +108,30 @@ function updateAndRenderShotgunBullets() {
 
 function updateAndRenderMissiles() {
   for (var l = 0; l < missiles.length; l++) {
-    missiles[l].getTarget();
-    missiles[l].update();
-    missiles[l].show();
-    if (missiles[l].targetFound && !asteroids[missiles[l].targetIndex]) {
-      missiles.splice(l, 1);
-      l--;
-    } else if (missiles[l].gotToCenter) {
-      explosions.push(new Explosion(true, asteroids[missiles[l].targetIndex].pos, true));
-      addScore(asteroids[missiles[l].targetIndex].r * 100);
-      asteroids[missiles[l].targetIndex].break();
-      asteroids.splice(missiles[l].targetIndex, 1);
+    var missile = missiles[l];
+    missile.getTarget();
+    missile.update();
+    missile.show();
+
+    if (missile.gotToCenter) {
+      if (missile.targetFound) {
+        if (missile.targetType === "asteroid") {
+          var asteroidIndex = asteroids.indexOf(missile.target);
+          if (asteroidIndex > -1) {
+            explosions.push(new Explosion(true, asteroids[asteroidIndex].pos, true));
+            addScore(asteroids[asteroidIndex].r * 100);
+            asteroids[asteroidIndex].break();
+            asteroids.splice(asteroidIndex, 1);
+          }
+        } else if (missile.targetType === "enemy") {
+          var enemyIndex = enemies.indexOf(missile.target);
+          if (enemyIndex > -1) {
+            explosions.push(new Explosion(true, enemies[enemyIndex].pos, true));
+            addScore(enemies[enemyIndex].type == "A" ? 400 : 700);
+            enemies.splice(enemyIndex, 1);
+          }
+        }
+      }
       missiles.splice(l, 1);
       l--;
     }

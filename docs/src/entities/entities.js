@@ -19,52 +19,107 @@ function Stars() {
   }
 }
 
+function findMissileTarget(pos) {
+  // Prioritize enemy ships first, then asteroids.
+  var best = null;
+  var bestDistSq = Infinity;
+  var enemiesList = Array.isArray(enemies) ? enemies : [];
+  var asteroidsList = Array.isArray(asteroids) ? asteroids : [];
+
+  for (var i = 0; i < enemiesList.length; i++) {
+    if (!enemiesList[i]) {
+      continue;
+    }
+    var d2 = p5.Vector.sub(enemiesList[i].pos, pos).magSq();
+    if (d2 < bestDistSq) {
+      bestDistSq = d2;
+      best = { type: "enemy", index: i, target: enemiesList[i] };
+    }
+  }
+
+  if (best) {
+    return best;
+  }
+
+  for (var i = 0; i < asteroidsList.length; i++) {
+    if (!asteroidsList[i]) {
+      continue;
+    }
+    var d2 = p5.Vector.sub(asteroidsList[i].pos, pos).magSq();
+    if (d2 < bestDistSq) {
+      bestDistSq = d2;
+      best = { type: "asteroid", index: i, target: asteroidsList[i] };
+    }
+  }
+
+  return best;
+}
+
 function Missile(pos, heading) {
   this.pos = pos.copy();
   this.heading = heading;
   this.targetFound = false;
+  this.targetType = null; // "enemy" or "asteroid"
   this.targetIndex = NaN;
+  this.target = null;
   this.vel = p5.Vector.fromAngle(ship.heading).mult(25);
   this.strength = 0.8;
   this.gravityConstant = 300;
   this.gotToCenter = false;
   this.crosshairVisibility = 1;
   this.getTarget = function() {
-    if (this.targetFound == false) {
-      if (asteroids.length === 0) {
-        return;
-      }
-      var smallestDif = 40000;
-      for (var i = 0; i < asteroids.length; i++) {
-
-        push();
-        translate(ship.pos.x, ship.pos.y);
-        var a = atan2(asteroids[i].pos.y - ship.pos.y, asteroids[i].pos.x - ship.pos.x);
-        var deg = (Math.floor(ship.heading * 180 / PI) + 360) % 360;
-        var dega = (Math.floor(a * 180 / PI) + 360) % 360;
-        pop();
-        var difference = Math.abs(deg - dega);
-        if (difference < smallestDif) {
-          smallestDif = difference;
-          this.targetIndex = i;
+    if (this.targetFound) {
+      if (this.targetType === "enemy") {
+        if (!Array.isArray(enemies) || !enemies.includes(this.target)) {
+          this.targetFound = false;
+          this.target = null;
+          this.targetType = null;
+        } else {
+          return;
+        }
+      } else if (this.targetType === "asteroid") {
+        if (!Array.isArray(asteroids) || !asteroids.includes(this.target)) {
+          this.targetFound = false;
+          this.target = null;
+          this.targetType = null;
+        } else {
+          return;
         }
       }
-      this.targetFound = true;
     }
+
+    var targetInfo = findMissileTarget(this.pos);
+    if (!targetInfo) {
+      this.targetFound = false;
+      this.target = null;
+      this.targetType = null;
+      this.targetIndex = NaN;
+      return;
+    }
+
+    this.targetFound = true;
+    this.targetType = targetInfo.type;
+    this.targetIndex = targetInfo.index;
+    this.target = targetInfo.target;
   }
 
   this.update = function() {
     if (this.targetFound && !this.gotToCenter) {
-      if (!asteroids[this.targetIndex]) {
+      if (this.targetType === "enemy" && (!Array.isArray(enemies) || !enemies.includes(this.target))) {
         this.targetFound = false;
         return;
       }
-      var dir = p5.Vector.sub(asteroids[this.targetIndex].pos, this.pos);
+      if (this.targetType === "asteroid" && (!Array.isArray(asteroids) || !asteroids.includes(this.target))) {
+        this.targetFound = false;
+        return;
+      }
+
+      var dir = p5.Vector.sub(this.target.pos, this.pos);
       dir.setMag(this.strength);
       this.vel.add(dir);
       this.vel.mult(0.94);
       this.pos.add(this.vel);
-      if (this.pos.dist(asteroids[this.targetIndex].pos) < asteroids[this.targetIndex].r * 0.5) {
+      if (this.pos.dist(this.target.pos) < this.target.r * 0.5) {
         this.gotToCenter = true;
       }
     }
@@ -72,7 +127,7 @@ function Missile(pos, heading) {
 
   this.show = function() {
     if (this.targetFound) {
-      if (!asteroids[this.targetIndex]) {
+      if (!this.target) {
         return;
       }
       push();
@@ -86,13 +141,13 @@ function Missile(pos, heading) {
         noFill();
         stroke(255, 0, 0, 120);
         strokeWeight(3)
-        var ax = asteroids[this.targetIndex].pos.x;
-        var ay = asteroids[this.targetIndex].pos.y;
+        var ax = this.target.pos.x;
+        var ay = this.target.pos.y;
         ellipse(ax, ay, 50);
         ellipse(ax, ay, 30);
         push();
         translate(ax, ay);
-        rotate(asteroids[this.targetIndex].heading);
+        rotate(this.target.heading || 0);
         line(0, 0 - 30, 0, 0 + 30);
         line(0 - 30, 0, 0 + 30, 0);
         pop();

@@ -64,43 +64,48 @@ Player movement response to control input.
 
 ---
 
-### Functional Unit 2: Collision, Damage and Cooldown Protection
+### Functional Unit 2: Collision, Stress Increase and Cooldown Protection
 
 **Feature under test**  
-Damage application when the player collides with harmful entities.
+Stress increase and protection behaviour when the player collides with harmful entities.
 
 **Inputs / behaviour categories**
 - No collision
-- Collision while vulnerable
-- Collision while protection / cooldown is active
+- Collision while not protected
+- Collision while collision cooldown is active
 - Repeated collision across multiple frames
-- Collision with low remaining health
+- Collision when stress is close to maximum threshold
 
 **Outputs**
-- Whether damage is applied
-- Whether protection state starts
-- Whether repeated damage is blocked
-- Health / state update
+- Whether stress is increased
+- Whether stress cooldown starts or resets
+- Whether repeated collision is blocked by collision cooldown
+- Whether stress tier changes
+- Whether fail-state is triggered
 
 **Constraints**
-- Collision does not always imply damage; protection state must be checked
-- Repeated contact should not necessarily apply repeated damage immediately
+- Collision does not always imply a new stress increase; collision cooldown must be checked
+- A valid hit updates ```stressState.value```, ```stressState.cooldownRemaining```, and ```stressState.tier```
+- Repeated contact should not immediately apply another stress increase during active collision cooldown
+- Crash should occur when stress reaches or exceeds the maximum threshold
 
 **Boundary values**
 - Just touching vs not touching collision boundary
-- First frame of protection
-- First frame after protection ends
-- Health at 1 / 0
+- First frame of collision cooldown
+- First frame after collision cooldown ends
+- Stress just below maximum threshold
+- Stress exactly at / above maximum threshold
 
 **Test cases**
 
-| ID | Inputs | Expected outputs | Observed outputs | Pass/Fail |
-|---|---|---|---|---|
-| CD1 | Harmful entity does not touch player | No damage applied |  |  |
-| CD2 | Harmful entity collides with player while vulnerable | Damage applied once and protection starts |  |  |
-| CD3 | Another collision occurs during protection window | No additional damage applied |  |  |
-| CD4 | Collision occurs immediately after protection ends | Damage is applied again |  |  |
-| CD5 | Player at 1 health collides with harmful entity | Health reaches fail / death threshold correctly |  |  |
+| ID | Inputs | Test Procedure | Expected outputs | Observed outputs | Pass/Fail |
+|---|---|---|---|---|---|
+| CD1 | Harmful entity does not touch player | Keep the player ship separated from all harmful entities during the observation period | No stress increase is applied; stress value and tier remain unchanged; no crash occurs | Stress value did not change; the displayed stress bar remained unchanged; no crash occurred | Pass |
+| CD2 | Harmful entity collides with player while no collision cooldown is active | Move the ship into one asteroid once while no cooldown is active | Stress increases by 20; stress cooldown starts/resets; stress tier is recalculated; no crash occurs unless stress reaches the maximum threshol | The displayed stress bar increased by one visible step after one asteroid collision; the ship remained alive | Pass |
+| CD3 | Another collision occurs during the active collision cooldown period | Stay in contact with the asteroid during active cooldown | No additional stress increase is applied during the active collision cooldown period | The displayed stress bar did not increase further while the ship remained in contact during the active collision cooldown period | Pass |
+| CD4 | Collision occurs immediately after protection ends | Collide again immediately after cooldown expires
+ | Stress increases again after the collision cooldown has ended; the stress bar rises again; stress cooldown starts/resets again | After the collision cooldown expired, the next collision increased the displayed stress bar again | Pass |
+| CD5 | Player is hit when stress is close enough to the maximum threshold that one more valid hit reaches or exceeds it | Raise stress near maximum, then trigger one more valid hit | Stress reaches the maximum threshold correctly; fail-state is triggered; normal play does not continue as if the ship survived | The final hit pushed stress to the maximum threshold, triggered the fail-state, and stopped normal play | Pass |
 
 ---
 

@@ -109,11 +109,14 @@ This file defines testable acceptance criteria for all User Stories in:
 
 ## Epic 5 - Level Progression
 
-### AC-5.1 (US-5.1 Time-Based Level Advancement)
+### AC-5.1 (US-5.1 Score-Based Level Advancement)
 
-- Given the run has started,
-- When elapsed time crosses configured thresholds (`90s`, `180s`),
-- Then level state increases to the expected stage.
+- Given the run is active and score is below `300000`,
+- When score reaches `300000`,
+- Then level state increases to `Level 2`.
+- Given the run is active and score is below `700000`,
+- When score reaches `700000`,
+- Then level state increases to `Level 3`.
 
 ### AC-5.2 (US-5.2 Difficulty Scaling)
 

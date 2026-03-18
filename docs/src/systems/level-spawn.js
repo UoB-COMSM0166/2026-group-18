@@ -12,30 +12,32 @@ const LEVEL_SCORE_THRESHOLDS = {
 const LEVEL_TRANSITION_FADE_IN_MS = 320;
 const LEVEL_TRANSITION_HOLD_MS = 900;
 const LEVEL_TRANSITION_HOLD_HINT = "HOLD SPACE TO CONTINUE";
+const LEVEL_TRANSITION_FRAME_COUNT = 16;
+const LEVEL_TRANSITION_FRAME_DURATION_MS = 80;
 let levelTransitionCard = null;
-const levelTransitionImageCache = {};
+const levelTransitionFramesCache = {};
 
 const LEVEL_TRANSITION_CONTENT = {
   1: {
     title: "LEVEL 1 BRIEFING",
     enemy: "New Enemy: Asteroids only (no enemy ships yet).",
-    weapon: "Weapon Tip: Hold UP to boost. Auto Laser fires itself. Press Z for Shotgun, V for Ultrasonic.",
-    skillImagePath: "assets/level1-skill.png",
-    skillImageHint: "Add image: assets/level1-skill.png"
+    weapon: "Weapon Tip: Hold \"UP,DOWN,LEFT,RIGHT\" to move. Auto Laser fires itself. Press Z for Shotgun, V for Ultrasonic.",
+    skillImagePath: "assets/level1-skill.gif",
+    skillImageHint: "Add image: assets/level1-skill.gif"
   },
   2: {
     title: "LEVEL 2 BRIEFING",
     enemy: "New Enemy: Type A Drone (blue). Fast chaser that fires straight bullets.",
     weapon: "Weapon Tip: Press X to launch a Missile (locks onto asteroids). Keep moving to dodge bullets.",
-    skillImagePath: "assets/level2-skill.png",
-    skillImageHint: "Add image: assets/level2-skill.png"
+    skillImagePath: "assets/level2-skill.gif",
+    skillImageHint: "Add image: assets/level2-skill.gif"
   },
   3: {
     title: "LEVEL 3 BRIEFING",
     enemy: "New Enemy: Type B Hunter (yellow). Slower but launches homing missiles.",
     weapon: "Weapon Tip: Press C to drop Mines. Lure enemies close, then clear space safely.",
-    skillImagePath: "assets/level3-skill.png",
-    skillImageHint: "Add image: assets/level3-skill.png"
+    skillImagePath: "assets/level3-skill.gif",
+    skillImageHint: "Add image: assets/level3-skill.gif"
   }
 };
 
@@ -49,29 +51,43 @@ function getLevelTransitionContent(targetLevel) {
   };
 }
 
-function getLevelTransitionSkillImage(path) {
-  if (!path) {
+function getLevelTransitionFrameSet(basePath) {
+  if (!basePath) {
     return null;
   }
-  var cacheItem = levelTransitionImageCache[path];
+
+  var baseNoExt = basePath.replace(/\.gif$/i, "");
+
+  var cacheItem = levelTransitionFramesCache[baseNoExt];
   if (!cacheItem) {
     cacheItem = {
-      state: "loading",
-      image: null
+      frames: [],
+      loaded: false,
+      loading: true,
+      error: false
     };
-    levelTransitionImageCache[path] = cacheItem;
-    loadImage(path, function(img) {
-      cacheItem.state = "ready";
-      cacheItem.image = img;
-    }, function() {
-      cacheItem.state = "error";
-      cacheItem.image = null;
-    });
+    levelTransitionFramesCache[baseNoExt] = cacheItem;
+
+    var loadedCount = 0;
+    for (var i = 0; i < LEVEL_TRANSITION_FRAME_COUNT; i++) {
+      (function(frameIndex) {
+        var path = baseNoExt + "-" + ("0" + frameIndex).slice(-2) + ".png";
+        loadImage(path, function(img) {
+          cacheItem.frames[frameIndex] = img;
+          loadedCount++;
+          if (loadedCount === LEVEL_TRANSITION_FRAME_COUNT) {
+            cacheItem.loaded = true;
+            cacheItem.loading = false;
+          }
+        }, function() {
+          cacheItem.error = true;
+          cacheItem.loading = false;
+        });
+      })(i);
+    }
   }
-  if (cacheItem.state === "ready") {
-    return cacheItem.image;
-  }
-  return null;
+
+  return cacheItem;
 }
 
 function triggerLevelTransition(targetLevel) {
@@ -147,7 +163,7 @@ function drawLevelTransitionCard() {
   var imageBoxHeight = 120;
   var imageBoxX = panelX + (panelWidth - imageBoxWidth) / 2;
   var imageBoxY = panelY + 146;
-  var skillImage = getLevelTransitionSkillImage(levelTransitionCard.skillImagePath);
+  var frameSet = getLevelTransitionFrameSet(levelTransitionCard.skillImagePath);
 
   push();
   noStroke();
@@ -175,9 +191,13 @@ function drawLevelTransitionCard() {
   fill(12, 24, 30, alpha);
   rect(imageBoxX, imageBoxY, imageBoxWidth, imageBoxHeight, 6);
 
-  if (skillImage) {
-    imageMode(CENTER);
-    image(skillImage, imageBoxX + imageBoxWidth / 2, imageBoxY + imageBoxHeight / 2, imageBoxWidth - 12, imageBoxHeight - 12);
+  if (frameSet && frameSet.loaded && frameSet.frames.length === LEVEL_TRANSITION_FRAME_COUNT) {
+    var frameIndex = Math.floor((millis() - levelTransitionCard.startedAt) / LEVEL_TRANSITION_FRAME_DURATION_MS) % LEVEL_TRANSITION_FRAME_COUNT;
+    var frameImage = frameSet.frames[frameIndex];
+    if (frameImage) {
+      imageMode(CENTER);
+      image(frameImage, imageBoxX + imageBoxWidth / 2, imageBoxY + imageBoxHeight / 2, imageBoxWidth - 12, imageBoxHeight - 12);
+    }
   } else {
     noStroke();
     fill(170, 230, 255, min(255, alpha + 30));

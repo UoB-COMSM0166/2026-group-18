@@ -23,7 +23,9 @@ const LEVEL_TRANSITION_CONTENT = {
     enemy: "New Enemy: Asteroids only (no enemy ships yet).",
     weapon: "Weapon Tip: Hold \"UP,DOWN,LEFT,RIGHT\" to move. Auto Laser fires itself. Press Z for Shotgun, V for Ultrasonic.",
     skillImagePath: "assets/level1-skill.gif",
-    skillImageHint: "Add image: assets/level1-skill.gif"
+    skillImageHint: "Add image: assets/level1-skill.gif",
+    skillImagePathSecondary: "assets/level1-skill-2.gif",
+    skillImageHintSecondary: "Add image: assets/level1-skill-2.gif"
   },
   2: {
     title: "LEVEL 2 BRIEFING",
@@ -47,7 +49,9 @@ function getLevelTransitionContent(targetLevel) {
     enemy: "New Enemy: Mixed hostile units incoming.",
     weapon: "Weapon Tip: Rotate weapons by cooldown and keep stress under control.",
     skillImagePath: "",
-    skillImageHint: ""
+    skillImageHint: "",
+    skillImagePathSecondary: "",
+    skillImageHintSecondary: ""
   };
 }
 
@@ -100,7 +104,9 @@ function triggerLevelTransition(targetLevel) {
     enemy: content.enemy,
     weapon: content.weapon,
     skillImagePath: content.skillImagePath,
-    skillImageHint: content.skillImageHint
+    skillImageHint: content.skillImageHint,
+    skillImagePathSecondary: content.skillImagePathSecondary,
+    skillImageHintSecondary: content.skillImageHintSecondary
   };
 }
 
@@ -159,11 +165,17 @@ function drawLevelTransitionCard() {
   var panelX = (width - panelWidth) / 2;
   var panelY = (height - panelHeight) / 2;
   var bodyWidth = panelWidth - 48;
-  var imageBoxWidth = min(280, panelWidth - 120);
+  var isDualSkillLayout = levelTransitionCard.level === 1;
+  var imageBoxSpacing = 16;
+  var imageBoxWidth = min(260, isDualSkillLayout ? (panelWidth - 140) / 2 : panelWidth - 120);
   var imageBoxHeight = 120;
-  var imageBoxX = panelX + (panelWidth - imageBoxWidth) / 2;
+  var imageContainerWidth = imageBoxWidth * (isDualSkillLayout ? 2 : 1) + (isDualSkillLayout ? imageBoxSpacing : 0);
+  var imageContainerX = panelX + (panelWidth - imageContainerWidth) / 2;
+  var imageBoxLeftX = imageContainerX;
+  var imageBoxRightX = imageContainerX + imageBoxWidth + imageBoxSpacing;
   var imageBoxY = panelY + 146;
   var frameSet = getLevelTransitionFrameSet(levelTransitionCard.skillImagePath);
+  var frameSetSecondary = getLevelTransitionFrameSet(levelTransitionCard.skillImagePathSecondary);
 
   push();
   noStroke();
@@ -189,21 +201,56 @@ function drawLevelTransitionCard() {
   stroke(80, 220, 255, alpha);
   strokeWeight(1.5);
   fill(12, 24, 30, alpha);
-  rect(imageBoxX, imageBoxY, imageBoxWidth, imageBoxHeight, 6);
+  rect(imageBoxLeftX, imageBoxY, imageBoxWidth, imageBoxHeight, 6);
+  if (isDualSkillLayout) {
+    rect(imageBoxRightX, imageBoxY, imageBoxWidth, imageBoxHeight, 6);
+  }
 
-  if (frameSet && frameSet.loaded && frameSet.frames.length === LEVEL_TRANSITION_FRAME_COUNT) {
-    var frameIndex = Math.floor((millis() - levelTransitionCard.startedAt) / LEVEL_TRANSITION_FRAME_DURATION_MS) % LEVEL_TRANSITION_FRAME_COUNT;
-    var frameImage = frameSet.frames[frameIndex];
-    if (frameImage) {
-      imageMode(CENTER);
-      image(frameImage, imageBoxX + imageBoxWidth / 2, imageBoxY + imageBoxHeight / 2, imageBoxWidth - 12, imageBoxHeight - 12);
+  if (isDualSkillLayout) {
+    if (frameSet && frameSet.loaded && frameSet.frames.length === LEVEL_TRANSITION_FRAME_COUNT) {
+      var frameIndex = Math.floor((millis() - levelTransitionCard.startedAt) / LEVEL_TRANSITION_FRAME_DURATION_MS) % LEVEL_TRANSITION_FRAME_COUNT;
+      var frameImage = frameSet.frames[frameIndex];
+      if (frameImage) {
+        imageMode(CENTER);
+        image(frameImage, imageBoxLeftX + imageBoxWidth / 2, imageBoxY + imageBoxHeight / 2, imageBoxWidth - 12, imageBoxHeight - 12);
+      }
+    } else {
+      noStroke();
+      fill(170, 230, 255, min(255, alpha + 30));
+      textAlign(CENTER, CENTER);
+      textSize(13);
+      text(levelTransitionCard.skillImageHint || "Skill image can be loaded here.", imageBoxLeftX + imageBoxWidth / 2, imageBoxY + imageBoxHeight / 2);
+    }
+
+    if (frameSetSecondary && frameSetSecondary.loaded && frameSetSecondary.frames.length === LEVEL_TRANSITION_FRAME_COUNT) {
+      var frameIndexSecondary = Math.floor((millis() - levelTransitionCard.startedAt) / LEVEL_TRANSITION_FRAME_DURATION_MS) % LEVEL_TRANSITION_FRAME_COUNT;
+      var frameImageSecondary = frameSetSecondary.frames[frameIndexSecondary];
+      if (frameImageSecondary) {
+        imageMode(CENTER);
+        image(frameImageSecondary, imageBoxRightX + imageBoxWidth / 2, imageBoxY + imageBoxHeight / 2, imageBoxWidth - 12, imageBoxHeight - 12);
+      }
+    } else {
+      noStroke();
+      fill(170, 230, 255, min(255, alpha + 30));
+      textAlign(CENTER, CENTER);
+      textSize(13);
+      text(levelTransitionCard.skillImageHintSecondary || "Skill image placeholder.", imageBoxRightX + imageBoxWidth / 2, imageBoxY + imageBoxHeight / 2);
     }
   } else {
-    noStroke();
-    fill(170, 230, 255, min(255, alpha + 30));
-    textAlign(CENTER, CENTER);
-    textSize(13);
-    text(levelTransitionCard.skillImageHint || "Skill image can be loaded here.", imageBoxX + imageBoxWidth / 2, imageBoxY + imageBoxHeight / 2);
+    if (frameSet && frameSet.loaded && frameSet.frames.length === LEVEL_TRANSITION_FRAME_COUNT) {
+      var frameIndex = Math.floor((millis() - levelTransitionCard.startedAt) / LEVEL_TRANSITION_FRAME_DURATION_MS) % LEVEL_TRANSITION_FRAME_COUNT;
+      var frameImage = frameSet.frames[frameIndex];
+      if (frameImage) {
+        imageMode(CENTER);
+        image(frameImage, imageBoxLeftX + imageBoxWidth / 2, imageBoxY + imageBoxHeight / 2, imageBoxWidth - 12, imageBoxHeight - 12);
+      }
+    } else {
+      noStroke();
+      fill(170, 230, 255, min(255, alpha + 30));
+      textAlign(CENTER, CENTER);
+      textSize(13);
+      text(levelTransitionCard.skillImageHint || "Skill image can be loaded here.", imageBoxLeftX + imageBoxWidth / 2, imageBoxY + imageBoxHeight / 2);
+    }
   }
 
   noStroke();

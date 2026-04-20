@@ -120,46 +120,29 @@ Our requirements were not static. After playtesting, we identified several probl
 
 ### Design Goals and Architectural Approach
 
-The design of our system was driven by one central requirement: the game’s novelty had to come from the **Stress mechanic**, not from a large number of unrelated features. This meant the architecture needed to support a clear relationship between gameplay events, changes in player state, and visible feedback. In our game, a collision is not just a collision: it must update stress, potentially change the handling tier, and communicate the result through the HUD. Because of this, we designed the game as a set of modular subsystems rather than a single monolithic loop.
+Early in the design process, we identified the core gameplay of this game as **the pressure system**, and we also made a lot of predictions about what might happen in the process: numerical design, operational gameplay, speed of feedback and so on. Finally, we decided to adopt the hybrid OO Design method to design our game, which means we divided the system into two layers: classifying **entity objects** by classes and implementing **operation control** by functions. This separation aligns with the use of UML class diagrams for structural modelling and sequence diagrams for behaviour (Fowler, 2004). And we have roughly divided the classes by drawing software: UMLetino. Now we have the diagram completely.
 
-Our architectural goal was to separate **core orchestration**, **entity behaviour**, **state calculation**, and **UI feedback**. This made the system easier to reason about, rebalance, and extend, and it also supported the two main engineering challenges identified earlier: the **data-driven stress state machine** and consistent balancing across different stress levels.
-
-**Figure X. High-level architecture (module decomposition).**  
-Source: [design/architecture-en.md](design/architecture-en.md), [docs/DEPENDENCY_GRAPH.md](docs/DEPENDENCY_GRAPH.md)
-
-```text
-docs/src/
-├── core/      (stress state machine and config)
-├── entities/  (ship, asteroid, enemy, projectile, pickup)
-├── input/     (player controls and weapon triggers)
-├── systems/   (game loop, level/progression, spawning)
-└── ui/        (menu and HUD feedback)
-```
 
 ### System Architecture
 
-At the highest level, the system is organised around a central game controller that coordinates update order, state transitions, and communication between subsystems. This controller manages the active run, processes frame updates, and ensures that gameplay events occur in a consistent sequence. Around this core, we separate responsibilities into entities such as the player, asteroids, enemies, pickups, and projectiles, supported by systems for stress calculation, progression, weapons, and HUD rendering.
+The part of the entity class includes all the **actual objects** in the game, such as the player-controlled aircraft, randomly generated meteorites and enemies, and items that can be picked up. These entities only need to hold their own **position, state, speed and behavior**. We let them manage themselves through encapsulation. The frame-by-frame scheduling, enemy generation judgment, collision resolution and interface update are coordinated by the functions of the control layer. In this structure, because most of the entities in the game are independent objects, the complexity of a single class is reduced a lot, and different subsystems can work more clearly during the game. This structure also makes the codebase easier to maintain. For example, the spawn and split logic is needed, and the game’s core pressure system is only responsible for converting the player’s collection events into a change in pressure and triggering certain mechanics when the pressure reaches a threshold. It allows new entity types or gameplay method to be added without significantly modifying existing components. We use a clearly defined interface to connect the entity object layer and the function implementation layer. The function control layer updates and plans the entity each frame, and the entity object layer provides the local state and behavior for the function control layer to process.
 
-This structure matters because the player’s experience depends on predictable ordering. If collision processing, stress updates, and HUD refreshes happen inconsistently, the mechanic feels unfair even if it is technically implemented. By keeping control flow centralised while delegating specialised behaviour to separate modules, the architecture supports both consistency and maintainability. It also allows thresholds, balancing parameters, and pressure from enemies or progression to be adjusted without rewriting unrelated code.
+The following picture shows all the **classes** in our game.
 
-Figure Y. System architecture overview (runtime flow).
-Source: docs/DEPENDENCY_GRAPH.md
+![(design/uml/class.png)]
 
 ### Class Design
 
-Our class design follows the same principle of responsibility separation. The Game controller coordinates the main loop and overall game state. The Player class encapsulates movement, control state, and interactions with weapons and damage. The Stress-related component acts as a single source of truth for the player’s current stress value and tier, translating raw stress into gameplay-relevant handling parameters. Other classes such as Asteroid, Enemy, Projectile, and Pickup represent domain entities with their own update and collision behaviour. Finally, the HUD/UI layer presents score, stress, level state, and game-state transitions to the player.
+In terms of more detailed class design, the Asteroid class represents objects with multi-stage destruction behavior, and the enemy is a local unit with different types and active shooting skills. The Pickup class is used to implement the recovery mechanism. Player related objects are responsible for moving, colliding and updating the state of the pressure value. Projectile classes are divided into laser, missile, mine and enemy missile. These skills also have their own behavior mode; each weapon class is responsible only for its own attack behavior. In the main file, these functions are used only as references and are not involved in the internal implementation. 
 
-The most important design decision was to avoid embedding stress logic throughout the codebase. Instead of letting each collision or movement function interpret stress differently, we treated stress as a dedicated system with fixed thresholds and parameter lookup. This keeps behaviour consistent, reduces duplication, and makes balancing easier because ranges and multipliers can be changed in one place rather than across multiple classes.
+The following picture shows all the **function** in our game.
+
+![(design/uml/function.png)]
 
 ### Behavioural Design
 
-While the class diagram shows the static structure of the system, the behavioural design explains how the most important gameplay events unfold over time. For our project, the two most important interactions are collision leading to stress increase and degraded handling, and pickup collection leading to stress reduction and recovered handling. These are represented as sequence diagrams because they involve multiple classes and cannot be explained adequately by static structure alone.
+In the behavior design, the system is organized around the main loop, which performs update, collision detection, feedback processing and state judgment in turn in each frame. For example, when the player’s bullet hits the meteorite, the system will directly affect the feel of player’s control, the meteorite split and other effects; When the player is hit by a meteorite or an enemy bullet, the system will increase the pressure value and determine whether the threshold has been reached. As the pressure gradually increases, the player needs to continue to play under high pressure (feedback is the operator's feel). We consider this design to be a core form of feedback for the game. The stress system, as our core system, acts as a bridge connecting different subsystems. Damage events increase stress, and items are picked up to decrease stress, which is then linked to operational parameters through thresholds to create a dynamic difficulty system based on the player's performance, so that the player is faced with a different game each time.
 
-The first behavioural path begins when a valid collision is detected. The collision system signals the player or game controller, which applies the consequence once, updates the stress value, resolves the new stress tier, and causes subsequent movement calculations to use the updated handling multipliers. The HUD is then refreshed so the player can see the new state. The second path follows the reverse pattern: when a recovery pickup is collected, stress is reduced, the tier is recalculated, and the player regains improved control. Together, these diagrams show how the central mechanic propagates through the system from event to state change to player-visible feedback.
-
-![Sequence diagram 1: Collision -> Stress Up -> Handling Degrades](design/uml/seq-collision.png)
-
-![Sequence diagram 2: Pickup -> Stress Down -> Handling Recovers](design/uml/seq-pickup.png)
 
 ### Design Rationale and Trade-offs
 

@@ -139,11 +139,11 @@ Transition into and out of stress-related gameplay state.
 
 | ID | Inputs | Expected outputs | Observed outputs | Pass/Fail |
 |---|---|---|---|---|
-| RS1 | Stress below threshold | No stressed state triggered |  |  |
-| RS2 | Stress reaches threshold | Stressed state is triggered |  |  |
-| RS3 | Recovery condition maintained for insufficient time | Stressed state remains active |  |  |
-| RS4 | Recovery condition maintained for required time | Stressed state clears / recovery completes |  |  |
-| RS5 | Recovery is interrupted by new damage / pressure | Recovery resets or stops according to game rule |  |  |
+| RS1 | Stress below threshold | No stressed state triggered | There is no trigger pressure state, the aircraft flight is relatively smooth and easy to control.| Pass |
+| RS2 | Stress reaches threshold | Stressed state is triggered | Beyond the threshold of the first stage, the aircraft taxiing distance is slightly far, and there is a clear feeling. When the threshold of the second stage is exceeded, the sense of control of the aircraft decreases significantly, the taxiing distance is far, and the difficulty of the plane is increased greatly. | Pass |
+| RS3 | Recovery condition maintained for insufficient time | Stressed state remains active | The negative effect of the aircraft continuously maintaining the current pressure phase when the pressure value does not return to the threshold value. | Pass |
+| RS4 | Recovery condition maintained for required time | Stressed state clears / recovery completes | By picking up items or returning to the pressure area of the previous stage over time, the color of the aircraft changes and the handling feel is significantly better, and the aircraft will no longer taxi for super long distances. | pass |
+| RS5 | Recovery is interrupted by new damage / pressure | Recovery resets or stops according to game rule | New damage or interference during recovery will terminate the recovery and reduce more stress, which is more demanding on the operation. | Pass |
 
 ---
 

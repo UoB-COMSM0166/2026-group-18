@@ -47,41 +47,43 @@ This makes the game novel because difficulty does not come only from faster enem
 
 ## Requirements
 
+The central aim of the requirements for this project is to prevent scope creep while keeping the project focused on one clear gameplay innovation. We therefore framed the game around the player’s struggle to survive under pressure: a space arcade shooter in which the player attempts to achieve the highest possible score while managing increasing stress. Our requirements describe the game through player-observable behaviour, make scope decisions explicit, and keep the system testable as the software evolves.
+
 ### Early Ideation
+During the ideation stage, we collected inspirations based on the types they are interested in respectively, and compared multiple directions through the inspiration list. 
+Inspiration sources: [requirements/inspiration.md](requirements/inspiration.md)
 
-At the start of the project, we focused on identifying a game concept that was both technically feasible and distinct enough to justify development. Rather than aiming for a large content-heavy game, we wanted a design that could be implemented effectively in **p5.js**, delivered within the module timeframe, and still provide a clear gameplay identity. This led us towards an arcade-style structure with a small number of interacting systems instead of a narrative-heavy or asset-heavy design. From this process, we selected an **Asteroids-style arena shooter** as the foundation because it offers a familiar, readable core loop while leaving room for a meaningful gameplay twist. 
-
-The key question in the ideation phase was not simply “what game should we make?”, but “what mechanic can make a simple game worth engineering well?”. The answer was the **Stress mechanic**. Instead of using damage only as a loss condition, we designed stress to act as a state variable that changes how the ship handles. Collisions increase the player’s stress level, and higher stress reduces control through fixed, predictable tiers. This gave the project a clear novelty while also creating a focused engineering challenge. 
-
-Our early ideation work was recorded through a structured set of weekly deliverables. In Week 2, we developed two candidate ideas and documented them for comparison before committing to a final direction. In Week 3, we also reviewed short videos explaining both ideas and recorded the reasoning behind our final selection. This helped ensure that the chosen concept was not the result of an unexamined preference, but of a visible decision process supported by comparison and discussion.
+We did not merely compare "which game is more interesting", but focused on evaluating four dimensions: gameplay novelty, feasibility of p5.js implementation, controllability of the MVP range, and whether it can form a clear engineering challenge. This comparison process helps us avoid choosing solutions with excessive content or those that are difficult to evaluate from the very beginning.
+| Candidate Idea | Main Appeal | Main Risk | Decision |
+|---|---|---|---|
+| TermiStone-inspired 2D platformer | Strong dual-state mechanic; players switch between elemental states to solve obstacles and terrain challenges. | Required complex level design, tutorial pacing, platforming feel, and a large amount of content. | Rejected as the main direction, but its state-based gameplay idea was transformed into the Stress system. |
+| Asteroids-style arena shooter | Focused core loop: rotate, thrust, dodge, shoot, and score; suitable for a stable MVP in p5.js. | Needed a clear twist to avoid becoming a simple clone of Asteroids. | Selected as the project foundation. |
+| Rage Game / precision survival reference | High intensity and strong risk-reward rhythm with a small ruleset. | Could become frustrating if difficulty was not carefully balanced. | Used as inspiration for pressure and survival pacing. |
+| Puzzle / exploration platformer references | Offered interesting ideas around discovery, state changes, and player learning. | Too dependent on content volume, level structure, and polish. | Used as secondary inspiration only. |
 
 **Evidence**
 - Two candidate ideas: [docs/ideas.md](docs/ideas.md)
-- Week 3 idea videos: [docs/video_links.md](docs/video_links.md)
-- Final concept selection rationale: [requirements/final-idea.md](requirements/final-idea.md)
-
-### Team Decision and Scope Control
-
-As a team, we decided what to develop by balancing three constraints: **novelty**, **feasibility**, and **scope control**. We wanted a game with an identifiable twist, but we also needed a design that could be implemented and tested reliably within the module. For this reason, we avoided ideas that depended on large amounts of bespoke content, complex AI from the beginning, or overly broad mechanics. Instead, we chose a concept where one central mechanic could influence movement, difficulty, scoring, and recovery at the same time. 
-
-This decision also shaped our MVP. We deliberately limited the first version of the game to one arena, three stress tiers, a visible stress meter, one recovery pickup type, and baseline asteroid splitting and scoring. More advanced functionality, such as extended enemy behaviour, was treated as stretch scope rather than essential scope. This was an important requirements decision because it prevented the project from turning into an uncontrolled feature list. By controlling scope early, we ensured that the core loop could be implemented, tested, and refined before optional features were added. 
-
-A key planning decision was to switch our primary implementation reference to a **p5.js Asteroids** project so that the game would align with the module’s required technology stack and remain feasible as a testable MVP. Earlier inspirations were retained only as design references for pacing, difficulty, and pattern ideas. This was an important scope-control decision because it reduced technical risk and kept the project focused on implementable mechanics rather than over-ambitious inspiration.
-
-**Evidence**
 - Final idea and design rationale: [requirements/final-idea.md](requirements/final-idea.md)
-- Inspiration sources: [requirements/inspiration.md](requirements/inspiration.md)
 
-**MVP / Stretch Goals / Scope Table (First-Principles)**
+### Feasibility Studies
 
-| First-Principles Requirement | MVP (Must Ship) | Stretch (If Time Allows) | Out of Scope (v1) |
+One early candidate was a 2D platform game inspired by TermiStone. Its core mechanic was a dual-state system in which the player switched between different elemental states and used state-specific abilities to overcome mechanisms, obstacles, and terrain. The idea was highly appealing during the selection stage, and every team member who tried it immediately said: “it should be our project!” We had even produced an inspiration video to explore the idea further.
+Week 3 idea videos: [docs/video_links.md](docs/video_links.md)
+
+However, further discussion showed that this platformer concept would rely on complex level design, carefully paced tutorials, precise platforming feel, and a large amount of content. Given the module timeframe and the constraints of implementing the game in p5.js, this direction introduced a high risk of scope expansion. 
+
+We therefore shifted the project foundation toward an Asteroids-style arena shooter, whose core loop is more focused: rotating, thrusting, dodging, shooting, and scoring. This made it more realistic to build a stable MVP first. At the same time, we preserved the original idea of state-influenced gameplay by reworking it into the current Stress system, where collisions and damage not only increase the risk of failure but also change the ship’s handling state. This became the core requirements trade-off: **reduce content scope while preserving mechanical novelty**.
+
+### Stakeholder and Top-level Need
+
+To ensure that the requirements came from the context of the project rather than from a simple feature list, we identified four main stakeholder groups. Players are the primary end users, and they mainly care about whether the controls are intuitive, whether the HUD is clear, whether the difficulty is fair, and whether the game runs smoothly. Game Developers are the people who build and maintain the system, so they care about modular structure, maintainability, extensibility, and testability. Course Instructors can be treated as surrogate stakeholders in this project, because they assess whether the requirements are clear, whether the design is reasonable, whether the process is evidence-based, and whether the requirements are traceable. Test Players help reveal usability issues, balancing problems, and gameplay defects that the development team may not notice themselves. From these stakeholders, we derived several top-level needs: clear onboarding and control clarity for players, a maintainable architecture for developers, a clear and traceable system for instructors, and iterative improvement based on feedback from test players.
+| Stakeholder | Top-Level Need | Related Epics | Evidence / Validation |
 |---|---|---|---|
-| A playable arcade core loop is required | One arena + baseline asteroid splitting and scoring | Additional arena layouts | Campaign / narrative mode |
-| The game needs one clear novelty that can be engineered and tested | Stress system: collisions increase stress | More stress interactions with extra systems | Multiple unrelated “twists” |
-| Stress effects must be readable and deterministic | Three fixed stress tiers that alter handling predictably | Finer balancing per tier | Dynamic/complex tier logic |
-| Player needs a way to recover control | One de-stress pickup type | More pickup categories | Large content-heavy item system |
-| Feedback must be visible for evaluation | Real-time stress meter (HUD) | Extra HUD analytics/details | Full UI overhaul |
-| Scope must remain controllable within module timeframe | Core loop + stress + recovery only | Advanced enemy behaviour / extra weapons | Feature-heavy expansion before core stabilises |
+| Players | Intuitive controls, clear HUD feedback, fair difficulty progression, and smooth gameplay. | Epic 1 - Core Gameplay Mechanics; Epic 2 - Stress System; Epic 5 - Level Progression; Epic 6 - User Interface and Feedback | Playtesting and Think Aloud feedback on onboarding, HUD clarity, weapon readiness, and difficulty pacing; SUS and NASA-TLX results used to assess usability and workload. |
+| Game Developers | Modular, maintainable, extensible, and testable system structure. | Epic 1 - Core Gameplay Mechanics; Epic 2 - Stress System; Epic 3 - Weapons System; Epic 4 - Enemy and Asteroid Behaviour; Epic 5 - Level Progression; Epic 6 - User Interface and Feedback | Modular implementation across `stress.js`, `game-loop.js`, `level-spawn.js`, `controls.js`, and `menu.js`; acceptance criteria and traceability matrix linking requirements to implementation files. |
+| Course Instructors | Clear requirements, justified design decisions, process evidence, and traceable development work. | All epics | Use-case modelling, user stories, acceptance criteria, requirement refinement evidence, GitHub issue / PR / commit links, and evaluation results. |
+| Test Players | Identify usability issues, balancing problems, and gameplay defects that the development team may overlook. | Epic 2 - Stress System; Epic 5 - Level Progression; Epic 6 - User Interface and Feedback | Weekly feedback and playtesting evidence led to requirement changes including score-based progression, HUD weapon states, level briefing cards, and enemy missile stress damage instead of instant death. |
+
 
 ### Epics and User Stories
 

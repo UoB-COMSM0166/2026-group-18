@@ -130,7 +130,7 @@ The part of the entity class includes all the **actual objects** in the game, su
 
 The following picture shows all the **classes** in our game.
 
-![(design/uml/class.png)
+![UML class diagram](design/uml/class.png)
 
 ### Class Design
 
@@ -138,25 +138,7 @@ In terms of more detailed class design, the Asteroid class represents objects wi
 
 The following picture shows all the **function** in our game.
 
-![(design/uml/function.png)
-
-
-
-### Design Rationale and Trade-offs
-
-The system was intentionally designed around discrete stress tiers rather than continuous degradation. This made the mechanic easier to communicate, easier to balance, and easier to verify. A continuous model might have felt smoother, but it would also have made the relationship between error and control loss harder for players to understand and harder for the team to test systematically. Fixed tiers allow the player to build a clearer mental model and allow the mechanic to be mapped directly to measurable acceptance criteria.
-
-A second design trade-off was scope. We deliberately kept the architecture focused on the systems necessary for the MVP: one arena, three stress tiers, core weapon behaviour, pickups, and progression logic. Optional enemy AI and more complex behaviour patterns were treated as extensions rather than assumptions built into the core structure. This helped us avoid overengineering and kept the design aligned with the playable core loop.
-
-### Link Between Design and Requirements
-
-Our design was closely tied to the requirements artefacts rather than created in isolation. The user stories required reliable control, understandable stress changes, readable HUD feedback, progression, and consistent collision handling. The acceptance criteria then made many of these behaviours measurable, including exact stress gains, recovery values, tier thresholds, and cooldown behaviour. The class structure and sequence diagrams were therefore designed to support these requirements directly: they provide a clear place for state management, a reliable flow for collisions and pickups, and a separation between gameplay logic and presentation.
-
-The design artefacts were produced as a formal Week 4 deliverable and included both a UML class diagram and sequence diagrams for the core gameplay interactions.
-
-**Design artefacts**
-- OO design documentation: [design/design.md](design/design.md)
-
+![](design/uml/function.png)
 
 ## Implementation
 

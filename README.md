@@ -142,74 +142,153 @@ The following picture shows all the **function** in our game.
 
 ## Implementation
 
-### Implementation Overview
+During the implementation of our game, we raise three main areas of challenge:
 
-Our implementation aimed to translate the project’s central idea — an **Asteroids-style arcade shooter with stress-driven handling degradation** — into a system that was both playable and maintainable. Rather than building the game as a collection of isolated features, we implemented it as a set of connected systems: player movement, collision handling, stress calculation, pickups, progression, weapons, enemies, and HUD feedback. This was important because the novelty of the game depends on interaction between systems rather than any single mechanic in isolation. A collision must not only register as damage, but also increase stress, update the player’s handling tier, and provide feedback that explains what has changed.
+1. reducing frustration caused by the instant-death mechanic while still maintaining tension through a stress system;
+2. replacing time-based level progression with score-based progression in order to improve pacing;
+3. expanding the range of weapons and enemies while preserving overall gameplay balance and creating clearer strategic differences between stages.
 
-Our implementation process therefore focused on establishing a robust MVP first and then refining it through testing and iteration. The MVP included one arena, three stress tiers, a visible stress meter, one recovery pickup type, asteroid splitting, scoring, and core player controls. Additional systems such as expanded weapons, enemy pressure, and progression were layered on afterwards. This phased approach allowed us to stabilise the central game loop before introducing extra complexity and kept the project aligned with scope control decisions made earlier.
 
-### Technical Challenge 1: Implementing the Stress State Machine
+### Challenge 1: Reducing frustration while maintaining tension through the stress system
 
-The first major technical challenge was implementing the **Stress system** in a way that was mechanically meaningful, predictable for players, and maintainable in code. A conventional arcade shooter could simply reduce health after a collision, but our game required collisions to affect the *quality of control* rather than only survival. Stress therefore had to function as a central gameplay state, influencing movement behaviour in real time while still remaining understandable through the UI.
+In the earliest version of the game, colliding with an asteroid caused immediate death. Although this made the game difficult, it also made it feel overly punishing, since a single mistake could end the entire run. Instead of creating meaningful challenge, this often led to frustration. To address this, we removed the instant-death mechanic and replaced it with a stress system.
 
-We addressed this by implementing stress as a **data-driven state machine** with a capped value, fixed thresholds, and tier-based handling multipliers. Stress increased by defined amounts for different events, such as asteroid collisions and enemy bullet hits, and decreased by fixed recovery values when the player collected pickups. The current stress value was then mapped to one of three tiers — **CALM**, **TENSE**, or **PANIC** — each of which applied different movement parameters to the player ship. This separated event handling from movement logic: collisions and pickups only needed to update stress, while movement code queried the current tier and applied the corresponding control behaviour.
+The stress system was built around three core elements: the current stress value, stress tiers, and a recovery cooldown. Stress increases when the player is hit by collisions or attacks, and the ship only crashes when stress reaches its upper limit. Recovery does not begin immediately after damage is taken; instead, there is a short cooldown before stress gradually decreases. We also added recovery pickups so that players could lower stress more quickly during intense situations. This made failure more gradual rather than being caused by one accidental mistake.
 
-This design solved several problems at once. First, it reduced duplication by making stress a single source of truth rather than scattering ad hoc logic across multiple systems. Second, it made balancing easier because threshold values and handling multipliers could be adjusted without rewriting unrelated code. Third, it improved fairness and readability, since the player’s loss of control was tied to fixed, visible states rather than unpredictable continuous change.
+A key design decision was that stress should affect more than survival. As stress rises, the handling of the ship becomes worse: turning slows down, thrust becomes weaker, and inertia becomes more noticeable. This allows the player to keep playing under pressure, but with increasing difficulty in control. In this way, the system preserves tension while making punishment feel fairer.
 
-A further challenge was update order within the frame loop. If collisions, stress calculation, movement updates, and HUD rendering were processed inconsistently, the player could experience delayed or confusing feedback. To avoid this, we structured the loop so that collisions and pickups were resolved first, stress was then recalculated, and only after that were movement and UI states updated. This ensured that the mechanic was experienced as one coherent chain: an event occurs, stress changes, control changes, and the new state becomes visible immediately.
+We also improved the user interface during testing. In earlier versions, the stress bar rose when the player took damage, but some players found this confusing. We therefore redesigned it into a more health-bar-like display and clearly labelled the current stress state. This made it easier for players to understand their level of danger during fast-paced gameplay. Overall, the stress system reduced frustration while keeping the sense of pressure in combat.
 
-### Technical Challenge 2: Balancing Progression and Gameplay Readability
+![Annotated game UI](implementation/challenge-1-ui.png)
 
-The second major technical challenge was balancing the game so that difficulty increased in a way that felt understandable rather than arbitrary. In principle, progression in an arcade shooter is simple: later stages should be harder than earlier ones. In practice, however, this became difficult because our game already includes an internal difficulty modifier through the Stress system. If the external difficulty curve rose too sharply at the same time that player control degraded, the result was frustration rather than meaningful challenge.
+### Challenge 2: Replacing time-based progression with score-based progression
 
-This problem became visible during playtesting. Weekly feedback showed recurring issues: new players did not always understand the controls or tutorial cues, weapon readiness and cooldown states were unclear, the ship’s nose direction was difficult to read during fast combat, and later progression produced a sharp difficulty spike. These findings showed that the problem was not purely numerical balancing. It was also a question of **gameplay readability**: players need to understand what is happening and why, otherwise even a technically correct system feels unfair.
+The second challenge was designing a progression system that created a sense of growth without harming the pace of the game. We divided the game into three stages so that players could gradually experience higher levels of difficulty. Rather than making these separate modes, we allowed players to move automatically into the next stage once they met certain conditions, unlocking new weapons and enemies along the way. This made progression feel more natural.
 
-To address this, we prioritised implementation work that improved both pacing and clarity. We refined onboarding and tutorial support, improved readiness and cooldown feedback, and identified progression as an area requiring redesign. In particular, the team moved away from the earlier **time-based progression** model and towards a **score-based progression** model, because score thresholds better reflected player performance and gave progression a clearer relationship to actual gameplay success. This was an important implementation decision because it showed that balancing was not solved by tweaking a single parameter, but by changing the underlying progression rule to better fit the structure of the game.
+Our first implementation used time-based advancement: players entered the next stage after surviving for 90 seconds. While simple, testing showed that this made the pace feel slow. The countdown display used to communicate progression also created problems. When it was large, it blocked the player’s view; when it was small, it was easy to miss. These issues suggested that survival time alone was not an effective progression condition for a fast-paced shooting game.
 
-From an engineering perspective, this challenge required us to treat balancing as an iterative implementation problem rather than as final-stage polish. Changes had to be tracked through issues, pull requests, commits, and later verification so that improvements were evidence-based rather than impressionistic. This also reduced the risk of regression: once a change improved clarity or pacing, it needed to be checked against the rest of the system to ensure it did not unintentionally damage the stress loop, combat flow, or HUD feedback.
+We therefore redesigned the system so that progression depended on score instead of time. Compared with a time-based system, score reflects player performance more directly and gives progression a clearer sense of purpose. To support this, we implemented a scoring model in which destroying asteroids awards points based on asteroid radius multiplied by 100, while enemy ships give fixed score values. This kept the system closely connected to the game’s core mechanics and made rewards for different targets easier to understand.
 
-### Implementation Outcomes
+After discussion and testing, we set two score thresholds: 300,000 and 700,000 points. Reaching them automatically advances the player to the next stage and unlocks new content. Compared with the original time-based design, this approach improved pacing and made progression feel more closely tied to player performance and achievement.
+### Challenge 3: Expanding weapons and enemies while preserving balance
 
-By the end of development, the implementation had produced a game in which the central mechanic was fully embedded in moment-to-moment play. Collisions and recovery pickups affect stress numerically, stress maps to defined tiers, tiers influence player handling, and the resulting state is reflected through the HUD and broader game flow. This demonstrates that the game’s novelty was implemented as a system-level behaviour rather than added as superficial flavour.
+The third challenge was expanding the game’s content without making it repetitive or damaging balance. To increase variety, we introduced new weapons and enemies progressively across different stages. This meant that difficulty increased not only through larger numbers, but also through new strategic demands.
 
-More importantly, the two technical challenges shaped the overall quality of the project. The **Stress state machine** gave the game a coherent internal logic and a controllable balancing structure, while the work on **progression and gameplay readability** showed the importance of iteration, player feedback, and evidence-based refinement. Together, these challenges turned the implementation phase from simple feature construction into a process of engineering, testing, and improving an interconnected game system.
+In the first stage, we replaced manual shooting with automatic shooting so that players could focus more on movement, dodging, and skill usage. We also added the shotgun and the ultrasonic ability. The shotgun was designed to deal with groups of small asteroids approaching from one direction, while ultrasonic was intended to clear fragmented debris. Because ultrasonic was highly effective, it was given a long cooldown to maintain balance.
 
+In the second stage, we introduced the missile weapon and the blue enemy ship. The blue ship fires bullets at the player, making it a more direct threat than asteroids. The missile was designed as a counter to these high-priority enemies. However, in the first version, missiles had no target-priority system and were often wasted on low-threat asteroids. After testing, we redesigned the targeting logic so that missiles update their target dynamically according to threat priority, allowing them to focus on enemy ships first.
+
+In the third stage, we introduced mines and the yellow enemy ship. The yellow ship moves towards the player and fires homing missiles, making it significantly more dangerous than the previous enemy type. Testing showed that this stage could become too punishing, so we reduced the yellow ship’s damage. At the same time, mines were designed as a trap-based weapon that works well against its movement behaviour, helping players manage pressure while other weapons are on cooldown.
+
+Through this staged design, each new mechanic was matched to a new type of threat. As a result, later gameplay became more complex because of changing strategic demands rather than simply higher numerical difficulty.
+
+| Weapon | Preview | Description |
+|---|---|---|
+| Shotgun | ![Shotgun](implementation/shotgun.png) | Fires seven pellets in a forward cone, making it effective against clusters of asteroids. |
+| Ultrasonic | ![Ultrasonic](implementation/ultrasonic.png) | Releases an ultrasonic wave around the ship, destroying nearby asteroids that are not newly spawned. |
+| Homing Missile | ![Homing Missile](implementation/homing-missile.png) | Launches a tracking projectile that prioritises high-threat enemies. |
+| Mine | ![Mine](implementation/mine.png) | Remains in place and detonates when a high-threat enemy comes into contact with it. |
 
 ## Evaluation
 
-Our evaluation aimed to answer three questions. First, could new players understand the rules and controls of the game quickly enough to play effectively? Second, did the game create the intended level of challenge without becoming confusing or unfair? Third, after making changes, could we verify that the implementation still behaved as intended? To answer these questions, we combined one **qualitative evaluation** method, one **quantitative evaluation** method, and a structured description of how the code was tested. Each method addressed a different aspect of quality: qualitative evaluation exposed usability problems and player misunderstandings, quantitative evaluation provided a measurable view of perceived workload, and code testing checked whether implemented behaviour remained correct across iterations.
-
-This approach also matched our broader development process. Evaluation was not treated as an activity carried out only at the end, but as part of an iterative cycle of testing, prioritising, and refining the game. The most useful outcome of evaluation was therefore not simply judging the build, but identifying which parts of the game needed redesign and then validating later improvements.
-
 ### Qualitative Evaluation: Think Aloud
 
-For our qualitative evaluation, we selected the **Think Aloud** method. This was appropriate because the most important risks in our game were not hidden technical failures, but failures of understanding. The central mechanic depends on players noticing when stress increases, recognising that handling has degraded, and understanding how to recover. If players cannot interpret those changes correctly, then the mechanic feels arbitrary rather than meaningful.
+In the qualitative evaluation, we focused on four questions: whether players could quickly understand the game rules and controls, whether they could correctly understand the stress system, whether they could judge the right timing for skill use, and whether they could accept the increase in difficulty in later stages. Since the original game had relatively simple gameplay but reliable code, and since our work mainly extended the gameplay rather than heavily modifying the codebase, this part of the evaluation mainly examined whether the newly introduced mechanics were clear, intuitive, and easy to understand from the player’s perspective.
 
-We structured the study around short gameplay tasks such as starting a run, moving and shooting, identifying stress changes after collisions, and reacting to recovery pickups. During each session, one team member acted as the facilitator while the others observed and recorded critical moments. Participants were encouraged to keep talking while playing, and when they fell silent they were prompted to explain what they were trying to do or what they believed had happened. This gave us direct access to the player’s mental model rather than forcing us to infer confusion only from visible mistakes.
+The results showed that the most obvious problems appeared in onboarding and controls. Some players could not immediately understand how to control the ship without additional guidance, and some even assumed that the game was a fixed-position shooter rather than one that required active movement for dodging and positioning. In addition, some players reported that the ship’s facing direction was not clear enough during fast-paced gameplay.
 
-The clearest findings were that some new players did not understand the controls or onboarding quickly enough, weapon readiness and cooldown feedback were unclear, the ship’s facing direction was not always easy to read during fast play, and later progression created too sharp a difficulty spike. These results showed that the main usability problems were concentrated around **gameplay readability** rather than around the basic existence of mechanics. In other words, the game often worked, but it did not always communicate itself clearly enough.
+The second major issue was the understandability of the stress system. Some players felt that the original design, in which the stress bar increased when the player was hit, was not intuitive. It was also not easy for them to notice that rising stress would reduce the ship’s handling performance. A third issue concerned weapon feedback: several players reported that early versions lacked clear cooldown indicators, making it difficult to tell whether a weapon was available. Finally, players showed relatively low acceptance of the earlier time-based stage progression system, suggesting that this progression method still had room for improvement in terms of pacing and acceptability.
 
-The qualitative evaluation directly informed development priorities. Issues related to onboarding, visual clarity, cooldown signalling, and progression were moved into higher-priority backlog items and linked to later verification work. This made the Think Aloud study more than a descriptive exercise: it became a mechanism for changing requirements and implementation.
+Overall, the qualitative evaluation showed that the main problems did not lie in the core mechanics themselves, but in onboarding, feedback visibility, and system understandability. Based on these findings, we improved the control guidance, the stress bar display, weapon cooldown feedback, and the stage progression system in order to improve readability and the experience for new players.
 
-### Quantitative Evaluation: NASA-TLX
+### Quantitative Evaluation: SUS and NASA-TLX
 
-For the quantitative evaluation, we selected the **NASA Task Load Index (NASA-TLX)**. We chose this instead of relying only on a general usability score because our game is fundamentally about tension, effort, and loss of control. Stress-driven handling degradation changes how demanding the game feels, so a workload measure was more closely aligned with the design goals than a broad usability score alone.
+### SUS Final Scores
 
-We used NASA-TLX after gameplay tasks to compare perceived workload under different conditions, particularly across different difficulty or progression states. This fit our project well because one of our central design questions was whether later gameplay created a satisfying increase in pressure or simply an excessive spike in workload. The method allowed us to think more precisely about whether increased challenge came from intended tension or from unclear feedback, visual overload, and control frustration.
+| Participant | Played Before | Contribution Sum | Final SUS Score |
+|---|---|---:|---:|
+| P1 | Y | 32 | 80 |
+| P2 | Y | 30 | 75 |
+| P3 | N | 30 | 75 |
+| P4 | N | 27 | 67.5 |
+| P5 | Y | 36 | 90 |
+| P6 | Y | 36 | 90 |
+| P7 | N | 22 | 55 |
+| P8 | Y | 36 | 90 |
+| P9 | N | 29 | 72.5 |
+| P10 | Y | 30 | 75 |
 
-This distinction mattered for design decisions. A harder game is not necessarily a worse game, but a harder game that feels unclear or unfair indicates a design problem rather than successful progression. NASA-TLX therefore helped us evaluate whether later stages were demanding in the right way. It also made iteration more defensible: instead of saying only that “players seemed frustrated”, we could compare workload across conditions and judge whether changes to progression, UI clarity, or onboarding reduced unnecessary effort.
+![SUS Chart](evaluation/SUS-Overall.png)
+
+### NASA-TLX Average Scores
+
+| Dimension | 10/3/2026 | 20/4/2026 |
+|---|---:|---:|
+| Mental | 60.5 | 34 |
+| Physical | 22 | 18 |
+| Temporal | 67.5 | 43 |
+| Performance | 56 | 42 |
+| Effort | 45 | 51 |
+| Frustration | 28 | 14 |
+
+![NASA-TLX Chart](evaluation/nasa-tlx-chart.png)
+
+To complement the qualitative results, we used the System Usability Scale (SUS) to measure overall perceptions of ease of use, learnability, and confidence. Our game achieved an average SUS score of **77.0**, indicating a generally positive level of usability.
+
+A further comparison revealed that participants with experience of similar games achieved an average score of **83.3**, whereas those without relevant experience averaged **67.5**. This suggests that the game is relatively intuitive for experienced players, but that novice players still face barriers in the learning process and in building confidence.
+
+Looking at the individual items, the lower scores were mainly related to players’ willingness to continue using the system, their comfort during operation, and their confidence in using it, rather than to system complexity, integration, or consistency. This suggests that the main issue is not that the system itself is structurally confusing, but that, for first-time players of this genre, the ship’s inertia, the pace of control, and the early-stage difficulty are still not sufficiently beginner-friendly. For example, two participants gave relatively low scores for Q1 and Q8, suggesting that the ship’s inertia made the controls feel less comfortable. Although inertia is a core part of the gameplay and should not be removed entirely, this result shows that players need better guidance, feedback, and difficulty adjustment in order to adapt more quickly.
+
+We also used **NASA-TLX** because our game is fundamentally concerned with tension, effort, and loss of control. Stress-driven handling degradation changes how demanding the game feels, so a workload measure was more closely aligned with our design goals than a broad usability score alone. NASA-TLX allowed us to judge whether later gameplay created satisfying pressure or simply excessive workload caused by unclear feedback, visual overload, or control frustration. The results showed that **temporal demand** was the highest-rated dimension, suggesting that the game created a relatively high level of pacing pressure and tension.
+
+We conducted a second round of testing with the first five players on **20/4/2026**. According to the **Wilcoxon signed-rank test**, NASA-TLX data showed decreases in both **mental demand** and **temporal demand**, suggesting that players experienced a lower cognitive burden and less pacing pressure in the later test. However, the statistical results for both SUS and NASA-TLX did not reach significance. For NASA-TLX, the result was approximately **p = 0.188**, indicating a downward trend but not a statistically significant difference with the current sample size. Similarly, the new SUS results also did not show a significant change.
+
+Overall, the SUS and NASA-TLX findings support the issues identified in the qualitative evaluation. Future improvements should focus on onboarding for novice players, feedback clarity, and the early gameplay experience, so as to reduce operational burden and improve player confidence.
 
 ### Code Testing
 
-In addition to user evaluation, we also tested the code itself throughout development. This was necessary because user feedback alone cannot guarantee that the implementation is correct or stable. Our testing focused on whether the game behaved consistently with the requirements and acceptance criteria, and whether later changes introduced regressions into existing systems.
+In addition to user evaluation, we also tested the code itself. We adopted a black-box testing approach and drew on the idea of equivalence partitioning, classifying inputs into valid and invalid cases and then comparing expected outputs with actual outputs. Based on our three main challenges, the testing focused on the stress-value system, the score and level-progression logic, and the activation, cooldown, and enemy-related behaviour of weapons.
 
-The first layer of testing was **manual functional testing** of the core gameplay loop. We repeatedly checked that the ship could move, rotate, shoot, collide, collect pickups, gain and lose stress, and transition correctly between gameplay states. Particular attention was given to the central mechanic: collisions needed to increase stress by the correct amount, pickups needed to reduce stress correctly, and handling changes needed to match the current stress tier. Because these behaviours were defined in measurable acceptance criteria, they could be checked directly against expected outcomes rather than only judged informally.
+### Code Testing: Stress System and Feedback
 
-The second layer was **regression testing after changes**. Whenever we adjusted progression, UI feedback, control clarity, or balancing, we checked that existing systems still worked as intended. For example, changing progression should not break stress updates, modifying feedback should not desynchronise the HUD from the actual game state, and onboarding improvements should not interfere with the core loop. Our weekly planning explicitly treated verification as part of the development workflow by linking work through the chain **Issue -> PR -> Commit -> Verification Evidence**. This made testing part of implementation rather than an afterthought.
+| Partition | Expected Output |
+|---|---|
+| Valid collision: player collides with an asteroid | Stress value increases correctly and HUD updates accordingly |
+| Valid hit: player is hit by an enemy projectile | Stress value increases correctly and HUD updates accordingly |
+| Valid recovery: player picks up a recovery item | Stress value decreases correctly |
+| Invalid recovery: no recovery item picked up | Stress value remains unchanged |
+| Valid cooldown end | Stress starts to recover naturally |
+| Invalid cooldown not finished | Stress does not recover naturally |
+| Valid tier change | Handling and colour feedback update correctly |
+| Valid upper limit reached | Player crashes and the game ends |
 
-The third layer was **cross-context testing**, especially where different screen sizes, devices, or input conditions could affect play. In practice, this meant checking not just whether the game worked in one ideal desktop setup, but whether the experience remained coherent in the contexts we expected players to encounter.
+### Code Testing: Scoring and Level Progression
 
-Overall, the combination of qualitative evaluation, quantitative evaluation, and code testing gave us a stronger basis for improvement than any one method alone. Think Aloud revealed how players misunderstood or struggled with the game, NASA-TLX provided a structured measure of workload and difficulty, and code testing ensured that later changes remained consistent with the intended design.
+| Partition | Expected Output |
+|---|---|
+| Valid asteroid destroyed | Score increases correctly according to radius × 100 |
+| Valid enemy destroyed | Score increases correctly according to fixed value |
+| Invalid scoring: no target destroyed | Score remains unchanged |
+| Valid progression condition: score ≥ 300000 | Enter Stage 2 |
+| Valid progression condition: score ≥ 700000 | Enter Stage 3 |
+| Invalid progression condition: score below threshold | Stage remains unchanged |
+
+### Code Testing: Weapon Activation, Cooldown, and Enemy Behaviour
+
+| Partition | Expected Output |
+|---|---|
+| Valid weapon activation | Weapon is successfully triggered |
+| Invalid weapon activation: cooldown not finished | Weapon cannot be triggered |
+| Invalid weapon activation: not unlocked | Weapon cannot be triggered |
+| Valid homing missile locks onto enemy | Prioritises high-threat enemies |
+| Valid homing missile locks onto asteroid | Locks onto a valid asteroid target |
+| Valid mine placement | Mine is placed successfully |
+| Invalid mine placement: maximum reached | No new mine is generated |
+| Valid blue ship spawn | Spawns correctly in Stage 2 and above |
+| Invalid blue ship spawn | Does not spawn before Stage 2 |
+| Valid yellow ship spawn | Spawns correctly in Stage 3 |
+| Invalid yellow ship spawn | Does not spawn before Stage 3 |
+
 
 
 ## Process

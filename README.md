@@ -296,20 +296,39 @@ In addition to user evaluation, we also tested the code itself. We adopted a bla
 In this project, our team consisted of five members who collaboratively developed a browser-based version of the classic game *Asteroids*. Throughout the development process, we adopted a combination of modular task allocation and collaborative development to ensure the completeness of the game, maintain code quality, and promote effective teamwork.
 
 To improve collaboration efficiency, we divided the overall system into several core modules, including the Game Loop, Collision System, Entities, UI/Menu, and Controls. Each team member was responsible for one core module, while also contributing to integration, testing, and optimization during the later stages. This approach ensured a balanced distribution of tasks as well as a cohesive and well-integrated system.
-WeChat chat record about the game
+
+<p align="center"><em>Figure: Team communication via WeChat</em></p>
+
+<p align="center">
+  <img src="materials/report-images/wechat-chat.jpg" width="500"/>
+</p>
 
 In terms of communication, we held multiple discussion meetings at the early stage of the project. These discussions mainly focused on the selection of the game, the design of difficulty progression, and potential innovations and improvements.
 Our first group meeting was conducted online and lasted for over an hour. During this meeting, we focused on addressing existing bugs, planning subsequent level design, and allocating responsibilities for each core module among team members.
-Team test game cooperation
+
+<p align="center"><em>Figure: Team members collaboratively testing the game</em></p>
+
+<p align="center">
+  <img src="materials/report-images/team-discussion.jpg" width="500"/>
+</p>
 
 We primarily used GitHub to support team development and collaboration, where our development activities and contributions were clearly recorded. Each team member worked on separate branches to implement features, and pull requests were used for code integration and review.
-The record of pull requests
+<p align="center"><em>Figure: The record of pull requests</em></p>
+
+<p align="center">
+  <img src="materials/report-images/workflow.png" width="500"/>
+</p>
 
 Our team adopted a structured project management approach combining Kanban boards, GitHub workflows, and progress tracking tools to support efficient collaboration throughout the project.
 We used a Kanban-based system to organize tasks and monitor progress. Tasks were clearly divided into stages such as backlog, to-do, in progress, testing, and done, allowing all team members to have a clear overview of the project status. Responsibilities were well defined, and tasks were assigned on a weekly basis, ensuring a balanced workload and clear deadlines for each member.
 
 In addition, GitHub was used as the primary platform for development and collaboration. Each team member worked on separate branches and submitted their changes through pull requests. All pull requests required approval from at least two team members before merging, ensuring code quality, consistency, and traceability. This workflow also promoted knowledge sharing and collaborative problem-solving within the team.
-Kanban Board Project Management
+
+<p align="center"><em>Figure: Kanban board for project management</em></p>
+
+<p align="center">
+  <img src="materials/report-images/kanban%20project.png" width="500"/>
+</p>
 
 All pull requests required approval from at least two team members before being merged. This process ensured that code quality was maintained and that all changes were reviewed collaboratively before further development continued.
 During the development process, we selected a range of tools to support both development and team collaboration:
@@ -338,9 +357,21 @@ The following table summarises the responsibilities and contributions of each te
 
 In the middle and later stages of the project, due to time constraints and geographical limitations, we gradually transitioned to online collaboration. We conducted Scrum-style stand-up meetings approximately twice a week using Microsoft Teams and WeChat voice calls. This short and frequent meeting format significantly improved communication efficiency.
 Compared to the earlier in-person meetings, which were more flexible and time-consuming, these online meetings were more structured and focused. They typically centered on current progress, existing issues, and the allocation of upcoming tasks, allowing the team to advance the development process in a more organized and efficient manner.
-burndown / progress chart
+
+<p align="center"><em>Figure: Burndown / progress chart of the project</em></p>
+
+<p align="center">
+  <img src="materials/report-images/burndown-chart.png" width="500"/>
+</p>
 
 While this approach helped meet deadlines, it also introduced periods of increased pressure and reduced consistency in the development process. During the development process, we tracked overall progress using a burndown chart. From the chart, it can be observed that the team's progress was not evenly distributed over time. In particular, during the mid-stage of development, a noticeable concentration of completed tasks occurred, indicating that team members tended to engage in “burst development” as deadlines approached.
+
+<p align="center"><em>Figure: Commit and branch history visualization</em></p>
+
+<p align="center">
+  <img src="materials/report-images/network.png" width="600"/>
+</p>
+
 Although this approach ensured that key milestones were met to some extent, it also introduced considerable time pressure. Nevertheless, in the final stages of the project, we successfully completed all planned tasks while overcoming various challenges, including several technical difficulties encountered during development.
 
 

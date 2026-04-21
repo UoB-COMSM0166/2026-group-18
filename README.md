@@ -129,7 +129,7 @@ The part of the entity class includes all the **actual objects** in the game, su
 
 The following picture shows all the **classes** in our game.
 
-![(design/uml/class.png)]
+![(design/uml/class.png)
 
 ### Class Design
 
@@ -137,11 +137,8 @@ In terms of more detailed class design, the Asteroid class represents objects wi
 
 The following picture shows all the **function** in our game.
 
-![(design/uml/function.png)]
+![(design/uml/function.png)
 
-### Behavioural Design
-
-In the behavior design, the system is organized around the main loop, which performs update, collision detection, feedback processing and state judgment in turn in each frame. For example, when the player’s bullet hits the meteorite, the system will directly affect the feel of player’s control, the meteorite split and other effects; When the player is hit by a meteorite or an enemy bullet, the system will increase the pressure value and determine whether the threshold has been reached. As the pressure gradually increases, the player needs to continue to play under high pressure (feedback is the operator's feel). We consider this design to be a core form of feedback for the game. The stress system, as our core system, acts as a bridge connecting different subsystems. Damage events increase stress, and items are picked up to decrease stress, which is then linked to operational parameters through thresholds to create a dynamic difficulty system based on the player's performance, so that the player is faced with a different game each time.
 
 
 ### Design Rationale and Trade-offs

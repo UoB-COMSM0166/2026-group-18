@@ -20,7 +20,7 @@ A browser-based Asteroids-style arcade shooter built in p5.js, centred on a Stre
 8. [Sustainability, Accessibility, and Ethics](#sustainability-accessibility-ethics)
 9. [Conclusion](#conclusion)
 10. [Contribution Statement](#contribution-statement)
-10. [AI statement](#references)
+10. [AI statement]()
 12. [References](#references)
 
 
@@ -293,70 +293,90 @@ In addition to user evaluation, we also tested the code itself. We adopted a bla
 
 ## Process
 
-Our development process was based on the idea that even a small game project needs explicit collaboration practices if it is to remain stable, testable, and improvable. From the beginning, we treated the project not as a collection of individual coding tasks, but as a shared software engineering effort. In practice, this meant combining regular team meetings, GitHub-based task tracking, incremental development, and retrospective reflection. Our goal was not to apply Agile in a formal industrial sense, but to adopt the parts most useful for a student team under time pressure: short iterations, visible work allocation, regular review, and willingness to revise priorities when evidence showed that earlier assumptions were wrong.
+In this project, our team consisted of five members who collaboratively developed a browser-based version of the classic game *Asteroids*. Throughout the development process, we adopted a combination of modular task allocation and collaborative development to ensure the completeness of the game, maintain code quality, and promote effective teamwork.
 
-### Teamwork and Meetings
+To improve collaboration efficiency, we divided the overall system into several core modules, including the Game Loop, Collision System, Entities, UI/Menu, and Controls. Each team member was responsible for one core module, while also contributing to integration, testing, and optimization during the later stages. This approach ensured a balanced distribution of tasks as well as a cohesive and well-integrated system.
+WeChat chat record about the game
 
-We worked together primarily through frequent in-person meetings, supported by shared online tools. In-person meetings were valuable because they made it easier to discuss gameplay ideas, sketch design changes, and resolve misunderstandings quickly. This was especially helpful in the early stages, when the team needed to develop a shared understanding of the concept and agree on a manageable scope.
+In terms of communication, we held multiple discussion meetings at the early stage of the project. These discussions mainly focused on the selection of the game, the design of difficulty progression, and potential innovations and improvements.
+Our first group meeting was conducted online and lasted for over an hour. During this meeting, we focused on addressing existing bugs, planning subsequent level design, and allocating responsibilities for each core module among team members.
+Team test game cooperation
 
-As development progressed, meetings became more structured. We organised work into short sprints and used meetings for three purposes: reviewing what had been completed, reflecting on what had or had not worked in the previous sprint, and planning the next priorities. This helped us avoid drifting into disconnected individual work and gave us regular moments to stop, compare progress, and decide whether the current backlog still reflected the most important project needs.
+We primarily used GitHub to support team development and collaboration, where our development activities and contributions were clearly recorded. Each team member worked on separate branches to implement features, and pull requests were used for code integration and review.
+The record of pull requests
 
-Our collaboration was also structured through weekly deliverables. These milestones helped the team maintain momentum and provided checkpoints for moving from process setup, to idea generation, to concept selection, and then to formal requirements and design work. This made the project easier to manage because each week produced a visible output rather than only informal discussion.
+Our team adopted a structured project management approach combining Kanban boards, GitHub workflows, and progress tracking tools to support efficient collaboration throughout the project.
+We used a Kanban-based system to organize tasks and monitor progress. Tasks were clearly divided into stages such as backlog, to-do, in progress, testing, and done, allowing all team members to have a clear overview of the project status. Responsibilities were well defined, and tasks were assigned on a weekly basis, ensuring a balanced workload and clear deadlines for each member.
 
-**Weekly milestone evidence**
-- Week 1: team process and inspiration research
-- Week 2: p5.js drawing app and two candidate ideas
-- Week 3: idea videos and final concept selection
-- Week 4: requirements documents and OO design artefacts
+In addition, GitHub was used as the primary platform for development and collaboration. Each team member worked on separate branches and submitted their changes through pull requests. All pull requests required approval from at least two team members before merging, ensuring code quality, consistency, and traceability. This workflow also promoted knowledge sharing and collaborative problem-solving within the team.
+Kanban Board Project Management
 
-### Tools and Methods
+All pull requests required approval from at least two team members before being merged. This process ensured that code quality was maintained and that all changes were reviewed collaboratively before further development continued.
+During the development process, we selected a range of tools to support both development and team collaboration:
+### The Usage of Different Tools
 
-Our main collaboration tools were **GitHub**, a **Kanban board**, shared documentation, and regular sprint-style meetings. GitHub was the central place for version control, code integration, and linking technical work to project decisions. We used **GitHub Projects** as our Kanban board to manage work visually and keep progress transparent. This helped us see which tasks were planned, in progress, blocked, or completed, and reduced the risk of duplicate or forgotten work.
+| Tool Name | Purpose | Usage |
+|-----------|---------|-------|
+| GitHub | Version control and code collaboration | Used branches and pull requests to manage and integrate code |
+| P5.js | Game development framework | Used to implement game rendering, animations and interactions |
+| Visual Studio Code | Development environment | Used for writing and debugging JavaScript code |
+| Kanban Board | Task management | Used to track task progress and allocate responsibilities |
+| Browser Developer Tools | Debugging tool | Used to identify runtime errors and performance issues |
 
-**Project management evidence**
-- Kanban board: see the **Projects** tab in this repository
-- Team workflow / Definition of Done / WIP rules: [docs/process.md](docs/process.md)
+To support the implementation of the project, we allocated tasks in a balanced and structured manner. This ensured that each team member was responsible for work of similar complexity and difficulty, avoiding an uneven distribution of workload across the team. This approach improved overall efficiency and ensured that all team members contributed equally to the development process.
+###  Content Introduction
 
-We also adopted an iterative Agile mindset rather than a fixed up-front plan. Instead of locking every design decision early, we repeatedly returned to the current playable build, current issues, and recent feedback to decide what to do next. This became particularly important later, when playtesting exposed onboarding, balancing, and progression problems that required us to revise both implementation and requirements.
+The following table summarises the responsibilities and contributions of each team member:
 
-Where appropriate, we also used lightweight paired discussion and live review when implementing or debugging uncertain areas. We did not apply pair programming rigidly, but the underlying principle was useful: difficult problems were often easier to solve when one person focused on implementation while another questioned assumptions, checked logic, or thought ahead about integration and side effects.
+| Member   | Assigned Module        | Contribution |
+|----------|------------------------|--------------|
+| Lin      | Game Loop            | Implementing stable frame rates and game state management |
+| Benyu    | Collision Detection  | Accurately handling interactions between bullets and asteroids |
+| Zhaohang | Entity System        | Managing objects such as the spaceship, bullets, and asteroids |
+| Bo       | Input Controls       | Handling keyboard input and ensuring responsive control mechanisms |
+| Yutong   | User Interface (UI/Menu) | Implementing menu transitions and displaying game states |
 
-### Roles and Responsibility
+In the middle and later stages of the project, due to time constraints and geographical limitations, we gradually transitioned to online collaboration. We conducted Scrum-style stand-up meetings approximately twice a week using Microsoft Teams and WeChat voice calls. This short and frequent meeting format significantly improved communication efficiency.
+Compared to the earlier in-person meetings, which were more flexible and time-consuming, these online meetings were more structured and focused. They typically centered on current progress, existing issues, and the allocation of upcoming tasks, allowing the team to advance the development process in a more organized and efficient manner.
+burndown / progress chart
 
-We did define team roles, but we found that static roles alone were not enough. Early on, roles were useful for creating ownership and ensuring that essential areas such as requirements, implementation, documentation, testing, and coordination were not ignored. This helped prevent the common student-project problem where everyone assumes someone else will take responsibility.
-
-However, one of the lessons of the project was that role definitions needed to adapt over time. As the project moved from ideation into implementation and then into evaluation and refinement, the most important tasks changed. A role structure that worked during requirements capture was not necessarily the best fit during balancing, testing, or report writing. We therefore re-evaluated responsibilities during retrospectives and redistributed work when necessary. This prevented workload concentration and helped the team respond when certain problems unexpectedly became urgent.
-
-In retrospect, this flexible approach worked better than a rigid fixed-role model. Clear responsibility was helpful, but collective ownership was equally important. When responsibilities became too isolated, integration slowed and misunderstandings increased. When responsibilities were clear but code and decisions remained shared, progress was more stable.
-
-### What Worked Well
-
-Several aspects of the process worked well. First, regular meetings and sprint checkpoints gave the team a stable rhythm and reduced the risk of long periods of invisible work followed by painful integration. Second, GitHub issues and Kanban made work visible and helped translate broad goals into smaller actionable tasks. Third, the team improved over time at linking development to evidence. In the later iteration plan, significant changes were expected to connect **Issue -> PR -> Commit -> Verification Evidence**, making the process more disciplined rather than purely informal.
-
-Another strength was our willingness to adapt after feedback. The weekly playtest summary did not just list problems; it transformed them into prioritised tasks such as fixing input conflicts, improving cooldown indicators, clarifying ship orientation, rebalancing Level 3, and replacing time-based progression with score-based thresholds. This showed that the process could convert evaluation into concrete development work rather than treating feedback as optional commentary.
-
-### What Did Not Work Well
-
-Not everything worked well. One of the earliest difficulties was **integration and version control**. In the first few sprints, bringing branches together was harder than expected. This exposed a common weakness in team projects: individual progress can look fine in isolation while the shared codebase becomes harder to merge and reason about. We had to improve naming conventions, code standards, and review habits before integration became smoother.
-
-A second weakness was that some assumptions about the game were initially too optimistic. Later feedback showed that onboarding was not clear enough for new players, some UI signals were not readable enough, and progression produced too sharp a difficulty spike. In process terms, this meant that our earlier backlog did not fully reflect user needs. Retrospective thinking was useful here because it pushed us to ask not only “what should we add next?” but also “which assumption has failed, and what needs to change because of it?”
-
-### Adaptation and Reflection
-
-The most important lesson from the process was that adaptation matters more than pretending the original plan was correct. Our project showed this most clearly in the later stages, when evidence from playtesting caused us to revise priorities, change progression logic, and place more emphasis on feedback clarity and onboarding. These were not minor adjustments: they changed both what we chose to build next and how we justified those choices.
-
-Looking back, our process was strongest when we treated teamwork itself as something that required design and iteration. Meetings, roles, and tools did not automatically produce good collaboration; they became useful only when we reflected on them honestly and changed them when they stopped helping. What worked best was combining structure with flexibility: enough process to make work visible and coordinated, but enough openness to admit when our current way of working was not producing the right outcome.
+While this approach helped meet deadlines, it also introduced periods of increased pressure and reduced consistency in the development process. During the development process, we tracked overall progress using a burndown chart. From the chart, it can be observed that the team's progress was not evenly distributed over time. In particular, during the mid-stage of development, a noticeable concentration of completed tasks occurred, indicating that team members tended to engage in “burst development” as deadlines approached.
+Although this approach ensured that key milestones were met to some extent, it also introduced considerable time pressure. Nevertheless, in the final stages of the project, we successfully completed all planned tasks while overcoming various challenges, including several technical difficulties encountered during development.
 
 
-## Sustainability, Accessibility, Privacy and Security
+## Sustainability, Technical, Social and Accessibility
 
-Our game is a lightweight, browser-based application built without accounts, cloud storage, or backend processing. This keeps deployment simple and reduces both operational complexity and resource overhead. From a sustainability perspective, the system benefits from a relatively small technical footprint: it runs directly in the browser, avoids unnecessary infrastructure, and does not depend on continuous server-side computation. While this does not make the project “green” by default, it does mean that the game is simpler to host, maintain, and run than a comparable system with persistent services or heavy data processing.
+### Sustainability:
+In this project, we aim to develop a game that focuses on user interaction and engagement. According to Becker et al. (2015), design decisions can significantly influence the long-term impact of a system. Based on this perspective, the game is designed to have a simple yet positive influence on user behavior, aligning with the principles outlined in the Karlskrona Manifesto for sustainability design.  
 
-From a privacy perspective, the current version collects no personal data and requires no user registration. This means there is no account information, profile data, or stored gameplay history to process or protect. As a result, privacy risk is reduced because the system does not handle sensitive user data beyond normal web-hosting exposure. Similarly, the security surface is smaller than in applications that rely on authentication, databases, or user-generated content. This is not a complete security strategy, but it is an important architectural choice: keeping the system simple limits the number of obvious points of failure.
+The game is not only intended for entertainment but also considers its broader impact on users. The Karlskrona Manifesto emphasizes that sustainability includes not only environmental aspects but also social and individual dimensions (Becker et al., 2015). Therefore, the game aims to provide a meaningful and engaging experience while taking these aspects into account.
 
-Accessibility was more directly relevant to moment-to-moment gameplay. Because the core mechanic depends on the player noticing degraded handling, readable HUD signals, clear ship orientation, and understandable feedback are not optional polish; they are necessary for the game to function fairly. Playtesting showed that unclear controls, weak readiness feedback, and poor visual readability quickly became usability problems. For that reason, we treated onboarding, HUD clarity, and interaction feedback as accessibility-related quality concerns rather than purely aesthetic issues.
+From an environmental perspective, the game was primarily developed using p5.js and does not rely on large-scale graphical processing or heavy server infrastructure. As a result, it consumes relatively low computational resources, which helps reduce energy consumption and, to some extent, carbon emissions. This aligns with the principles of sustainable and green software development.
 
-In future work, we would strengthen this area by adding support for alternative input methods, more configurable UI options, clearer onboarding for novice players, and more explicit accessibility settings. We would also look at stronger contrast control, clearer visual indicators, and broader device testing. These changes would move the project beyond basic usability towards a more inclusive and robust experience.
+### Technical:
+From a technical perspective, the game is designed with clear functionality and a simple structure. Duboc et al. (2019) emphasize the importance of understanding what we are building and how design decisions influence system behavior. Based on this principle, the game focuses on maintaining a design that is both understandable and purposeful.
+
+In addition, the implementation considers efficiency and resource usage. According to the Green Software Foundation (2023), green software patterns highlight the importance of reducing unnecessary computation, improving energy efficiency, and avoiding excessive complexity in system design. Therefore, the game is intentionally designed to remain lightweight and efficient, minimising resource consumption while maintaining functionality.
+
+During the design and task allocation stages, the game was divided into multiple independent components that could be developed individually. This approach facilitated efficient debugging, improved the overall development process, and allowed the team to refine the game design more effectively.
+
+At the same time, we ensured the stability of the game during multi-user or continuous play scenarios. By adopting standard development tools and practices, such as GitHub and version control mechanisms, we maintained code consistency and traceability. This not only supported effective collaboration among team members but also significantly improved overall code quality.
+
+### Social:
+From a social perspective, the game is designed to provide a simple and engaging experience for users. Sommerville (2020) explains that software systems should consider how they affect people and their interactions. Based on this, the game focuses on being accessible and easy to use.    
+
+As an entertainment application, the primary purpose of the game is to provide users with a means of relaxation and leisure, which can help reduce stress to some extent. In addition, the game is designed to be intuitive, allowing players to quickly understand the controls and gameplay. This significantly enhances the overall playability and user experience.
+
+### Accessibility and Ethics:
+From an ethical perspective, the game follows the basic principles of responsible software development. It does not collect or misuse user data and avoids violent or inappropriate content, thereby meeting fundamental ethical standards.
+
+According to the Green Software Foundation (2023), green software practitioner guidelines emphasize that software should minimize harm and respect users. In this context, the game provides a safe and appropriate environment for its audience.
+
+The game primarily relies on keyboard-based controls, which are relatively simple and accessible for most users. However, the control scheme is predominantly designed for right-hand operation, with movement and actions distributed in a way that may not be convenient for left-handed players. 
+
+To improve accessibility, future versions of the game could introduce customizable control settings, allowing users to adjust key mappings according to their preferences.
+
+These design choices align with multiple sustainability tags identified by the Green Software Foundation, demonstrating an awareness of the environmental impact of software systems.
 
 
 ## Conclusion
@@ -383,6 +403,19 @@ In future work, we would strengthen this area by adding support for alternative 
 - We also explored whether an embedded large language model could be used inside the project. In this experiment, I tested running a model through WebGPU in the browser and confirmed that this approach was technically possible. However, we decided not to continue with it because loading the online Qwen 0.5B model was too slow for practical use in our game context. As a result, this idea was investigated but not included in the final version of the project.
 
 - Overall, we learned to how to use AI in our project, and it's a valuable knowledge. In the mean time, we still write and read the code ourselves to help us understand what a project should be like.
+
+## Reference
+Becker, C., Betz, S., Chitchyan, R., Duboc, L., Easterbrook, S. M., Penzenstadler, B., Seyff, N. and Venters, C. C. (2015). Requirements: The key to sustainability. IEEE Software, 33(1), pp.56–65. Sustainability Design and Software: The Karlskrona Manifesto
+
+Becker, C., Betz, S., Chitchyan, R., Duboc, L., Easterbrook, S. M., Penzenstadler, B., Seyff, N. and Venters, C. C. (2015). Sustainability Design and Software: The Karlskrona Manifesto. Available at: https://www.karlskrona-manifesto.org (Accessed: 21 April 2026). Requirements: The key to sustainability
+
+Duboc, L., Penzenstadler, B. and Porras, J. (2019). Do we really know what we are building? In: Proceedings of the IEEE 27th International Requirements Engineering Conference. IEEE. Do we really know what we are building?
+
+Green Software Foundation (2023). Green Software Patterns. Available at: https://patterns.greensoftware.foundation/guide/suggested-tags (Accessed: 21 April 2026). Green Software Patterns (see the Catalogue part).
+
+Green Software Foundation (2023). Green Software Practitioner. Available at: https://learn.greensoftware.foundation (Accessed: 21 April 2026). Engineering software products
+
+Sommerville, I. (2020). Engineering Software Products. London: Pearson. Green Software Practitioner, from Green Software Foundation.
 
 
 ## Additional Marks

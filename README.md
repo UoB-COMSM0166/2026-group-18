@@ -84,32 +84,105 @@ To ensure that the requirements came from the context of the project rather than
 | Course Instructors | Clear requirements, justified design decisions, process evidence, and traceable development work. | All epics | Use-case modelling, user stories, acceptance criteria, requirement refinement evidence, GitHub issue / PR / commit links, and evaluation results. |
 | Test Players | Identify usability issues, balancing problems, and gameplay defects that the development team may overlook. | Epic 2 - Stress System; Epic 5 - Level Progression; Epic 6 - User Interface and Feedback | Weekly feedback and playtesting evidence led to requirement changes including score-based progression, HUD weapon states, level briefing cards, and enemy missile stress damage instead of instant death. |
 
-
 ### Epics and User Stories
 
-We summarised requirements into six epics to keep scope manageable and implementation traceable: core gameplay mechanics, stress system, weapons system, enemy and asteroid behaviour, level progression, and UI/feedback. This structure let us split development into clear functional areas while keeping the stress system as the central design driver. In practice, other epics were specified not as isolated features, but as systems that either increase stress pressure, respond to stress state changes, or help the player recover from stress.
+Around these needs, we organized the project into six epics, as shown in Figure X, and then defined user stories from those epics.
 
-From these epics, we derived player-centred user stories to define expected gameplay value before discussing implementation detail. The key stories include precise ship control, consistent collision outcomes, understandable stress gain and recovery, predictable tier-based handling changes, reliable weapon use with clear cooldown constraints, readable HUD information, and meaningful progression through increasing challenge. Writing stories in this format helped the team align decisions around player experience and provided a direct bridge from requirements to acceptance criteria and testing.
+<p align="center"><em>Figure: Six Implementable Epics</em></p>
 
-Evidence sources for this section are documented in `requirements/epics.md` and `requirements/user-stories.md`, with supporting requirement checks in `requirements/acceptance-criteria.md`.
+<p align="center">
+  <img src="materials/requirements/epics.jpg" width="500"/>
+</p>
 
-![Game snapshot](docs/asteroids.jpg)
+The user stories were structured around player value. Stories about ship control, collision consistency, and HUD readability address learnability for new players and fairness during play. Stories about stress gain, stress recovery, and tier-based handling changes define the central twist of the project. Stories about weapon cooldowns, enemy pressure, and level progression support challenge depth and long-term motivation for more experienced players. This organization means that stress is not merely an internal numeric system, but a central design driver across the requirements layer.
+
 
 ### Use Case Modelling
 
-We used **use-case modelling** to represent the game as a set of player-observable interactions rather than only internal modules. The primary actor is the **player**, and the system-level use cases include: starting a run, controlling movement, firing weapons, colliding with hazards, collecting stress-recovery pickups, progressing through levels, and reaching a game-over state. Modelling the game this way clarified system boundaries and made each requirement easier to trace to gameplay behaviour.
+We then used **use-case modelling** to describe system behaviour from the perspective of player-observable interactions. The final model contains only one actor, the Player, which keeps the system boundary focused on the single-player gameplay loop.
 
-This model was especially valuable because several key events are cross-system by nature. A single collision is not just a physics event: it also triggers stress updates, potentially changes handling tier, and must immediately provide readable feedback through the HUD. By framing these interactions as linked use cases, we preserved an end-to-end view of player experience, which then informed our UML sequence diagrams, implementation planning, and acceptance criteria.
+<p align="center"><em>Figure: Use case diagram</em></p>
 
-![Use case diagram](design/uml/use-case-diagram.png)
+<p align="center">
+  <img src="materials/requirements/use-case-diagram.jpg" width="500"/>
+</p>
 
-*Figure X. Use-case diagram showing player-system interactions in the stress-driven gameplay loop.*
+Although developers, instructors and test players are also stakeholders, the use-case diagram only retains players as actors because the goal of this diagram is to describe runtime system interactions rather than project management relationships.
+
+### Use-Case Specification Tables
+
+Our use-case model is built around two core use cases: Start and Play a Standard Run and Handle Stress through Collision and Recovery. The first covers the complete flow from the main menu, through the level briefing, into active play, survival through movement and weapons, score-based progression, and finally the game-over state. The second focuses on the core gameplay chain of this project: collisions and hits increase stress, stress changes the HUD and handling state, cyan recovery pickups reduce stress, and passive decay helps the player regain control when they avoid further damage.
+
+<p align="center">
+  <b>Table x</b><br>
+  <i>Start and Play a Standard Run</i><br>
+</p>
+
+| Use-Case Section | Content |
+|---|---|
+| **Use Case Name** | **Start and Play a Standard Run** |
+| **Brief Description** | The player starts from the main menu, reads the level briefing, plays the main survival loop, progresses through score-based levels, and eventually reaches the game-over state. |
+| **Primary Actor** | Player |
+| **Preconditions** | The game page is loaded and the main menu is visible. |
+| **Basic Flow** | 1. The player enters the main menu.<br>2. The system shows `START` and `ABOUT`.<br>3. The player selects `START` using the menu keys.<br>4. The system displays the Level 1 briefing card.<br>5. The player holds `Space` to continue.<br>6. The system dismisses the briefing card and resumes active gameplay.<br>7. The player rotates and boosts the ship to avoid hazards.<br>8. The automatic laser fires while energy is available.<br>9. The player may use available secondary weapons.<br>10. The system updates score, level, stress, HUD, and weapon status during play.<br>11. When the score reaches a level threshold, the system displays the next level briefing card.<br>12. The player continues into the next level with increased pressure.<br>13. If stress reaches `100` after damage, the ship crashes and explodes.<br>14. The system shows the `GAME OVER` page with final score and telemetry summary.<br>15. The player presses any key to return to the main menu. |
+| **Alternative Flows** | **A1.** At Step 3, the player selects `ABOUT`; the system shows the game description, collision test link, and `BACK` option.<br>**A2.** At Step 5 or Step 11, the player does not hold `Space`; the system remains on the briefing card.<br>**A3.** During Step 9, the player attempts to use a locked weapon; the HUD shows `LOCKED` and no weapon is fired.<br>**A4.** During Step 9, the player attempts to use a cooling weapon; the HUD shows `COOLING` and no weapon is fired.<br>**A5.** During Step 9, the player attempts to use a weapon at its active limit; the HUD shows `LIMIT` and no weapon is fired. |
+| **Postconditions** | The run either ends with the `GAME OVER` page and the player returning to the main menu, or continues in active gameplay if the crash condition has not been reached. |
+
+<p align="center">
+  <b>Table Use Case B</b><br>
+  <i>Handle Stress through Collision and Recovery</i><br>
+</p>
+
+| Use-Case Section | Content |
+|---|---|
+| **Use Case Name** | **Handle Stress through Collision and Recovery** |
+| **Brief Description** | The player’s stress increases when hazards cause damage, decreases through recovery pickups or passive decay, and affects both HUD feedback and ship handling. |
+| **Primary Actor** | Player |
+| **Preconditions** | A run is active and the player ship is present in the arena. |
+| **Basic Flow** | 1. The player controls the ship during active gameplay.<br>2. The ship collides with an asteroid or is hit by enemy fire.<br>3. The system increases stress based on the damage source: asteroid `+20`, enemy bullet `+12`, enemy missile `+30`.<br>4. The system updates the stress bar, colour feedback, numeric stress value, and handling label.<br>5. If stress reaches a higher tier, ship handling becomes weaker.<br>6. The player adapts by avoiding further damage.<br>7. A cyan recovery pickup appears in the arena.<br>8. The player collects the pickup.<br>9. The system reduces stress by `20`.<br>10. The HUD and ship handling update to reflect the new stress state.<br>11. If the player avoids further damage, stress decays passively after the cooldown period. |
+| **Alternative Flows** | **B1.** At Step 2, collision cooldown is active; the system prevents repeated stress gain from rapid repeated contact.<br>**B2.** At Step 3, stress reaches `100`; the ship crashes and the game-over flow begins.<br>**B3.** At Step 7, the player does not collect a pickup; the player continues under the current stress state.<br>**B4.** At Step 11, the player takes damage again before passive decay has time to reduce stress; stress increases and the cooldown resets. |
+| **Postconditions** | The player either remains in active play with an updated stress state, regains partial control through recovery, or crashes if stress reaches `100`. |
+
+These use-case specifications informed the later sequence diagrams in the design section, especially the collision-to-stress path and the pickup-to-recovery path - both paths require coordinated behaviour across gameplay, HUD, and state-management subsystems.
 
 ### Acceptance Criteria and Iterative Refinement
 
-To make the requirements testable, we translated the user stories into **acceptance criteria** using a **Given / When / Then** structure. This allowed us to specify important mechanics in measurable terms rather than vague descriptions. For example, collisions and enemy hits increase stress by defined amounts, recovery pickups reduce stress by a fixed value, and the three stress tiers correspond to specific ranges and handling multipliers. Cooldowns, weapon use, HUD updates, and progression rules were also expressed as concrete, checkable behaviour. This made the requirements useful not only for planning, but also for implementation and later validation. 
+To make the requirements directly checkable, we further translated the user stories into acceptance criteria in a Given / When / Then format. For example:
 
-Our requirements were not static. After playtesting, we identified several problems at the requirements level, including unclear onboarding, poor readiness feedback, difficulty spikes, and progression issues. As a result, we refined parts of the backlog and updated requirements to better match user needs. One important example was the decision to move progression away from the earlier **time-based** model towards a **score-based** model, showing that requirements were revised in response to evidence rather than treated as fixed from the outset. This iterative refinement was essential because it demonstrated that the requirements artefacts actively guided development rather than existing only as documentation. 
+| AC ID | Given | When | Then |
+|---|---|---|---|
+| AC-2.1 | Stress is below `100` | The ship collides with an asteroid | Stress increases by `20` |
+| AC-2.1 | Stress is below `100` | The ship is hit by an enemy bullet | Stress increases by `12` |
+| AC-2.1 | Stress is below `100` | The ship is hit by an enemy missile | Stress increases by `30` |
+| AC-2.2 | A recovery pickup is collected | Collection is processed | Stress decreases by `20` without going below `0` |
+| AC-2.3 | Stress is in range `40-74` | Handling parameters are applied | The tier becomes `TENSE` and handling is reduced |
+| AC-3.3 | A weapon is cooling down | The player attempts to use it | No weapon is fired and the HUD shows `COOLING` |
+| AC-5.1 | Score reaches `300000` | Level update runs | The game advances to Level 2 |
+| AC-5.1 | Score reaches `700000` | Level update runs | The game advances to Level 3 |
+
+In this way, the most important behaviours of the project could be written as verifiable conditions.
+The requirements were also refined through feedback from playtesting, Think Aloud sessions, weekly feedback, and workload evaluation. The table below summarises the most important requirement changes.
+
+![Requirement refinement evidence](requirements/refinement-evidence-table.png)
+
+At the same time, we maintained a traceability matrix to connect requirements, stories, acceptance criteria, implementation evidence, and evaluation evidence. This meant that the requirements were not only planning documents, but also a basis for later implementation and validation.
+
+```
+flowchart LR
+    A["Stakeholder Need<br/>Novice players need clearer weapon-state feedback"]
+    B["User Story<br/>US-3.3 Cooldown, Limit, and Lock Rules"]
+    C["Acceptance Criteria<br/>AC-3.3 shows READY / COOLING / LIMIT / LOCKED"]
+    D["Implementation Task<br/>Improve weapon readiness visibility in HUD"]
+    E["Validation Evidence<br/>Playtesting feedback + manual HUD checks"]
+
+    A --> B --> C --> D --> E
+```
+
+The requirements for this project were not fixed. Playtesting, Think Aloud sessions, and weekly feedback all showed that some initial requirement definitions needed to be revised. Based on this evidence, we made several key adjustments:
+- We changed progression from time-based progression to score-based progression;
+- We made READY, COOLING, LIMIT, and LOCKED states explicit in the HUD, and improved onboarding through level briefing cards;
+- We changed enemy missiles so that they increase stress instead of causing instant death.
+This shows that the requirements artefacts in this project were not static records. They actively guided development and supported ongoing design refinement.
 
 **Evidence for acceptance criteria and iterative refinement**
 - Acceptance criteria are documented using Given/When/Then in [requirements/acceptance-criteria.md](requirements/acceptance-criteria.md), including stress gain/recovery tiers, weapon cooldown rules, HUD updates, and progression checks.
@@ -172,6 +245,7 @@ Our first implementation used time-based advancement: players entered the next s
 We therefore redesigned the system so that progression depended on score instead of time. Compared with a time-based system, score reflects player performance more directly and gives progression a clearer sense of purpose. To support this, we implemented a scoring model in which destroying asteroids awards points based on asteroid radius multiplied by 100, while enemy ships give fixed score values. This kept the system closely connected to the game’s core mechanics and made rewards for different targets easier to understand.
 
 After discussion and testing, we set two score thresholds: 300,000 and 700,000 points. Reaching them automatically advances the player to the next stage and unlocks new content. Compared with the original time-based design, this approach improved pacing and made progression feel more closely tied to player performance and achievement.
+
 ### Challenge 3: Expanding weapons and enemies while preserving balance
 
 The third challenge was expanding the game’s content without making it repetitive or damaging balance. To increase variety, we introduced new weapons and enemies progressively across different stages. This meant that difficulty increased not only through larger numbers, but also through new strategic demands.

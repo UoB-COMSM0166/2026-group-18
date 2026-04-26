@@ -1,5 +1,11 @@
 # Keep Calm, Captain!
 
+<p align="center">
+  <img src="materials/game-documentation/keepcalm-captain.png" alt="header.jpg" style="width:100%"/>
+    <br>
+  </a>
+</p>
+
 A browser-based Asteroids-style arcade shooter built in p5.js, centred on a Stress mechanic that changes how the ship handles during play. Instead of treating damage as a simple health reduction, our game turns collisions into a controllability problem: taking hits raises the player’s Stress meter, and higher stress degrades ship handling in fixed, predictable tiers. This transforms the core loop from simple survival into risk management: play aggressively to score more, or play safely to preserve precision and control
 
 - [Play the game](https://uob-comsm0166.github.io/2026-group-18/)
@@ -47,13 +53,15 @@ This makes the game novel because difficulty does not come only from faster enem
 
 ## Requirements
 
-The central aim of the requirements for this project is to prevent scope creep while keeping the project focused on one clear gameplay innovation. We therefore framed the game around the player’s struggle to survive under pressure: a space arcade shooter in which the player attempts to achieve the highest possible score while managing increasing stress. Our requirements describe the game through player-observable behaviour, make scope decisions explicit, and keep the system testable as the software evolves.
+The central aim of the requirements for this project is to prevent scope creep while keeping the project focused on one clear gameplay innovation. We therefore framed the game around the player’s struggle to survive under pressure: a space arcade shooter in which the player attempts to achieve the highest possible score while managing increasing stress. 
+According to Ludewig(2003)'s idea, software artefacts should be understood as models rather than reality itself. We treated our requirements as revisable models of player needs: they describe the game through player-observable behaviour, make scope decisions explicit, and remain open to refinement when evaluation evidence reveals mismatch with actual play experience.
 
 ### Early Ideation
-During the ideation stage, we collected inspirations based on the types they are interested in respectively, and compared multiple directions through the inspiration list. 
-Inspiration sources: [requirements/inspiration.md](requirements/inspiration.md)
+
+During the ideation stage, we collected inspirations based on the types they are interested in respectively, and compared multiple directions through the [inspiration list](materials/requirements/inspiration.md).
 
 We did not merely compare "which game is more interesting", but focused on evaluating four dimensions: gameplay novelty, feasibility of p5.js implementation, controllability of the MVP range, and whether it can form a clear engineering challenge. This comparison process helps us avoid choosing solutions with excessive content or those that are difficult to evaluate from the very beginning.
+
 | Candidate Idea | Main Appeal | Main Risk | Decision |
 |---|---|---|---|
 | TermiStone-inspired 2D platformer | Strong dual-state mechanic; players switch between elemental states to solve obstacles and terrain challenges. | Required complex level design, tutorial pacing, platforming feel, and a large amount of content. | Rejected as the main direction, but its state-based gameplay idea was transformed into the Stress system. |
@@ -67,22 +75,22 @@ We did not merely compare "which game is more interesting", but focused on evalu
 
 ### Feasibility Studies
 
-One early candidate was a 2D platform game inspired by TermiStone. Its core mechanic was a dual-state system in which the player switched between different elemental states and used state-specific abilities to overcome mechanisms, obstacles, and terrain. The idea was highly appealing during the selection stage, and every team member who tried it immediately said: “it should be our project!” We had even produced an inspiration video to explore the idea further.
-Week 3 idea videos: [docs/video_links.md](docs/video_links.md)
+One early candidate was a 2D platform game inspired by TermiStone. Its core mechanic was a dual-state system in which the player switched between different elemental states and used state-specific abilities to overcome mechanisms, obstacles, and terrain. The idea was highly appealing during the selection stage, and every team member who tried it immediately said: “it should be our project!” We had even produced an [inspiration video](https://www.youtube.com/watch?v=za6nsWXRI2Y) to explore the idea further.
 
-However, further discussion showed that this platformer concept would rely on complex level design, carefully paced tutorials, precise platforming feel, and a large amount of content. Given the module timeframe and the constraints of implementing the game in p5.js, this direction introduced a high risk of scope expansion. 
+However, according to the requirements of this project, we found that this platformer concept would rely on complex level design, carefully paced tutorials, precise platforming feel, and a large amount of content. Given the module timeframe and the constraints of implementing the game in p5.js, this direction introduced a high risk of scope expansion. 
 
-We therefore shifted the project foundation toward an Asteroids-style arena shooter, whose core loop is more focused: rotating, thrusting, dodging, shooting, and scoring. This made it more realistic to build a stable MVP first. At the same time, we preserved the original idea of state-influenced gameplay by reworking it into the current Stress system, where collisions and damage not only increase the risk of failure but also change the ship’s handling state. This became the core requirements trade-off: **reduce content scope while preserving mechanical novelty**.
+We therefore switched the project foundation toward an Asteroids-style arena shooter, whose core loop is more focused: rotating, thrusting, dodging, shooting, and scoring. This made it more realistic to build a stable MVP first. At the same time, we preserved the original idea of state-influenced gameplay by reworking it into the current Stress system, where collisions and damage not only increase the risk of failure but also change the ship’s handling state. This became the core requirements trade-off: **reduce content scope while preserving mechanical novelty**.
 
 ### Stakeholder and Top-level Need
 
-To ensure that the requirements came from the context of the project rather than from a simple feature list, we identified four main stakeholder groups. Players are the primary end users, and they mainly care about whether the controls are intuitive, whether the HUD is clear, whether the difficulty is fair, and whether the game runs smoothly. Game Developers are the people who build and maintain the system, so they care about modular structure, maintainability, extensibility, and testability. Course Instructors can be treated as surrogate stakeholders in this project, because they assess whether the requirements are clear, whether the design is reasonable, whether the process is evidence-based, and whether the requirements are traceable. Test Players help reveal usability issues, balancing problems, and gameplay defects that the development team may not notice themselves. From these stakeholders, we derived several top-level needs: clear onboarding and control clarity for players, a maintainable architecture for developers, a clear and traceable system for instructors, and iterative improvement based on feedback from test players.
+To avoid treating requirements as a simple feature list, we used stakeholder analysis to connect requirements to the context of the game. The stakeholder onion model suggests that stakeholders should be identified around the product or service itself rather than only around the development team (Alexander and Beus-Dukic, 2009). Based on this theory, we identified four main stakeholder groups: Players are the primary users and can be understood as both normal operators and functional beneficiaries: they interact directly with the game and benefit from an enjoyable, fair, and understandable play experience. Therefore, what they want to focus on is intuitive controls, clear HUD feedback, fair difficulty, and smooth gameplay. Game Developers are close to the product during this duration, so their care about modular structure, maintainability, extensibility, and testability. Course Instructors act as surrogate and assessment stakeholders: their responsibility is judging whether our project is clear, justified, traceable, and supported by evidence. Playtesters provide feedback by revealing usability issues, balancing problems, and gameplay defects that the development team may not notice. From these stakeholders, we derived several top-level needs([Figure]).
+
 | Stakeholder | Top-Level Need | Related Epics | Evidence / Validation |
 |---|---|---|---|
-| Players | Intuitive controls, clear HUD feedback, fair difficulty progression, and smooth gameplay. | Epic 1 - Core Gameplay Mechanics; Epic 2 - Stress System; Epic 5 - Level Progression; Epic 6 - User Interface and Feedback | Playtesting and Think Aloud feedback on onboarding, HUD clarity, weapon readiness, and difficulty pacing; SUS and NASA-TLX results used to assess usability and workload. |
-| Game Developers | Modular, maintainable, extensible, and testable system structure. | Epic 1 - Core Gameplay Mechanics; Epic 2 - Stress System; Epic 3 - Weapons System; Epic 4 - Enemy and Asteroid Behaviour; Epic 5 - Level Progression; Epic 6 - User Interface and Feedback | Modular implementation across `stress.js`, `game-loop.js`, `level-spawn.js`, `controls.js`, and `menu.js`; acceptance criteria and traceability matrix linking requirements to implementation files. |
-| Course Instructors | Clear requirements, justified design decisions, process evidence, and traceable development work. | All epics | Use-case modelling, user stories, acceptance criteria, requirement refinement evidence, GitHub issue / PR / commit links, and evaluation results. |
-| Test Players | Identify usability issues, balancing problems, and gameplay defects that the development team may overlook. | Epic 2 - Stress System; Epic 5 - Level Progression; Epic 6 - User Interface and Feedback | Weekly feedback and playtesting evidence led to requirement changes including score-based progression, HUD weapon states, level briefing cards, and enemy missile stress damage instead of instant death. |
+| Players | Intuitive controls, clear HUD feedback, fair difficulty progression, and smooth gameplay | Epic 1 - Core Gameplay Mechanics; Epic 2 - Stress System; Epic 5 - Level Progression; Epic 6 - User Interface and Feedback | Playtesting and Think Aloud feedback on onboarding, HUD clarity, weapon readiness, and difficulty pacing; SUS and NASA-TLX results used to assess usability and workload. |
+| Game Developers | Modular, maintainable, extensible, and testable system structure | Epic 1 - Core Gameplay Mechanics; Epic 2 - Stress System; Epic 3 - Weapons System; Epic 4 - Enemy and Asteroid Behaviour; Epic 5 - Level Progression; Epic 6 - User Interface and Feedback | Modular implementation across `stress.js`, `game-loop.js`, `level-spawn.js`, `controls.js`, and `menu.js`; acceptance criteria and traceability matrix linking requirements to implementation files. |
+| Course Instructors | Clear requirements, justified design decisions, process evidence, and traceable development work | All epics | Use-case modelling, user stories, acceptance criteria, requirement refinement evidence, GitHub issue / PR / commit links, and evaluation results. |
+| Playtesters | Identify usability issues, balancing problems, and gameplay defects that the development team may overlook | Epic 2 - Stress System; Epic 5 - Level Progression; Epic 6 - User Interface and Feedback | Weekly feedback and playtesting evidence led to requirement changes including score-based progression, HUD weapon states, level briefing cards, and enemy missile stress damage instead of instant death. |
 
 ### Epics and User Stories
 
@@ -91,15 +99,15 @@ Around these needs, we organized the project into six epics, as shown in Figure 
 <p align="center"><em>Figure: Six Implementable Epics</em></p>
 
 <p align="center">
-  <img src="materials/requirements/epics.jpg" width="500"/>
+  <img src="materials/requirements/implementable-epics-relationship.png" width="500"/>
 </p>
 
-The user stories were structured around player value. Stories about ship control, collision consistency, and HUD readability address learnability for new players and fairness during play. Stories about stress gain, stress recovery, and tier-based handling changes define the central twist of the project. Stories about weapon cooldowns, enemy pressure, and level progression support challenge depth and long-term motivation for more experienced players. This organization means that stress is not merely an internal numeric system, but a central design driver across the requirements layer.
+The user stories were structured around player value. Stories about ship control, collision consistency, and HUD readability address learnability for new players and fairness during play. Stories about stress gain, stress recovery, and tier-based handling changes define the central twist of the project. Stories about weapon cooldowns, enemy pressure, and level progression support challenge depth and long-term motivation for more experienced players. This organization means that stress is a central design driver across the requirements layer.
 
 
 ### Use Case Modelling
 
-We then used **use-case modelling** to describe system behaviour from the perspective of player-observable interactions. The final model contains only one actor, the Player, which keeps the system boundary focused on the single-player gameplay loop.
+We then used **use-case modelling** to describe system behaviour from the perspective of player-observable interactions. The final model contains only one actor, which is  the Player. It keeps the system boundary focused on the single-player gameplay loop.
 
 <p align="center"><em>Figure: Use case diagram</em></p>
 
@@ -147,7 +155,7 @@ These use-case specifications informed the later sequence diagrams in the design
 
 ### Acceptance Criteria and Iterative Refinement
 
-To make the requirements directly checkable, we further translated the user stories into acceptance criteria in a Given / When / Then format. For example:
+To make the requirements directly checkable, we further translated the user stories into [acceptance criteria](materials/requirements/acceptance-criteria.md) in a Given / When / Then format. For example:
 
 | AC ID | Given | When | Then |
 |---|---|---|---|
@@ -165,38 +173,19 @@ The requirements were also refined through feedback from playtesting, Think Alou
 
 ![Requirement refinement evidence](requirements/refinement-evidence-table.png)
 
-At the same time, we maintained a traceability matrix to connect requirements, stories, acceptance criteria, implementation evidence, and evaluation evidence. This meant that the requirements were not only planning documents, but also a basis for later implementation and validation.
-
-```
-flowchart LR
-    A["Stakeholder Need<br/>Novice players need clearer weapon-state feedback"]
-    B["User Story<br/>US-3.3 Cooldown, Limit, and Lock Rules"]
-    C["Acceptance Criteria<br/>AC-3.3 shows READY / COOLING / LIMIT / LOCKED"]
-    D["Implementation Task<br/>Improve weapon readiness visibility in HUD"]
-    E["Validation Evidence<br/>Playtesting feedback + manual HUD checks"]
-
-    A --> B --> C --> D --> E
-```
-
-The requirements for this project were not fixed. Playtesting, Think Aloud sessions, and weekly feedback all showed that some initial requirement definitions needed to be revised. Based on this evidence, we made several key adjustments:
+The requirements for this project were not fixed. Playtesting, Think Aloud sessions, and [weekly feedback](materials/evaluation/weekly-feedback/2026-03-10-weekly-feedback-and-goals.md) all showed that some initial requirement definitions needed to be revised. Based on this evidence, we made several key adjustments:
 - We changed progression from time-based progression to score-based progression;
 - We made READY, COOLING, LIMIT, and LOCKED states explicit in the HUD, and improved onboarding through level briefing cards;
 - We changed enemy missiles so that they increase stress instead of causing instant death.
 This shows that the requirements artefacts in this project were not static records. They actively guided development and supported ongoing design refinement.
 
-**Evidence for acceptance criteria and iterative refinement**
-- Acceptance criteria are documented using Given/When/Then in [requirements/acceptance-criteria.md](requirements/acceptance-criteria.md), including stress gain/recovery tiers, weapon cooldown rules, HUD updates, and progression checks.
-- Weekly playtest findings and iteration priorities are recorded in [evaluation/weekly-feedback/2026-03-10-weekly-feedback-and-goals.md](evaluation/weekly-feedback/2026-03-10-weekly-feedback-and-goals.md), covering onboarding problems, readiness feedback issues, and difficulty spikes.
-- Requirement-change evidence for progression is captured in [requirements/user-stories.md](requirements/user-stories.md), where US-5.1 is updated to score-based level advancement after playtesting.
-- The same change is tracked as an iteration action item (“Replace time-based progression with score-based progression”) in [evaluation/weekly-feedback/2026-03-10-weekly-feedback-and-goals.md](evaluation/weekly-feedback/2026-03-10-weekly-feedback-and-goals.md).
-- End-to-end requirement traceability (Requirement -> Story -> AC -> Issue/PR/Commit -> Evaluation) is maintained in [requirements/traceability-matrix.md](requirements/traceability-matrix.md), showing that requirement updates were linked to implementation and verification activity.
 
 
 ## Design
 
 ### Design Goals and Architectural Approach
 
-Early in the design process, we identified the core gameplay of this game as **the pressure system**, and we also made a lot of predictions about what might happen in the process: numerical design, operational gameplay, speed of feedback and so on. Finally, we decided to adopt the hybrid OO Design method to design our game, which means we divided the system into two layers: classifying **entity objects** by classes and implementing **operation control** by functions. This separation aligns with the use of UML class diagrams for structural modelling and sequence diagrams for behaviour (Fowler, 2004). And we have roughly divided the classes by drawing software: UMLetino. Now we have the diagram completely.
+Early in the design process, we identified the core gameplay of this game as **the stress system**, and we also made a lot of predictions about what might happen in the process: numerical design, operational gameplay, speed of feedback and so on. Finally, we decided to adopt the hybrid OO Design method to design our game, which means we divided the system into two layers: classifying **entity objects** by classes and implementing **operation control** by functions. This separation aligns with the use of UML class diagrams for structural modelling and sequence diagrams for behaviour (Fowler, 2004). And we have roughly divided the classes by drawing software: UMLetino. Now we have the diagram completely.
 
 
 ### System Architecture
@@ -206,14 +195,24 @@ The part of the entity class includes all the **actual objects** in the game, su
 The following picture shows all the **classes** in our game.
 
 ![UML class diagram](design/uml/class.png)
+<p align="center">
+  <b>Figure x</b><br>
+  <i>All the Class</i><br>
+  <img src="materials/design/uml/class.png" width="500"/>
+</p>
 
 ### Class Design
 
 In terms of more detailed class design, the Asteroid class represents objects with multi-stage destruction behavior, and the enemy is a local unit with different types and active shooting skills. The Pickup class is used to implement the recovery mechanism. Player related objects are responsible for moving, colliding and updating the state of the pressure value. Projectile classes are divided into laser, missile, mine and enemy missile. These skills also have their own behavior mode; each weapon class is responsible only for its own attack behavior. In the main file, these functions are used only as references and are not involved in the internal implementation. 
 
-The following picture shows all the **function** in our game.
+The following picture shows all the [function](materials/design/uml/class.png) in our game.
+<p align="center">
+  <b>Figure x</b><br>
+  <i>Functions in the Game</i><br>
+  <img src="materials/design/uml/function.png" width="500"/>
+</p>
 
-![](design/uml/function.png)
+
 
 ## Implementation
 
@@ -512,6 +511,8 @@ These design choices align with multiple sustainability tags identified by the G
 - Overall, we learned to how to use AI in our project, and it's a valuable knowledge. In the mean time, we still write and read the code ourselves to help us understand what a project should be like.
 
 ## Reference
+Alexander, I. and Beus-Dukic, L. (2009) Discovering Requirements: How to Specify Products and Services. Chichester: Wiley.
+
 Becker, C., Betz, S., Chitchyan, R., Duboc, L., Easterbrook, S. M., Penzenstadler, B., Seyff, N. and Venters, C. C. (2015). Requirements: The key to sustainability. IEEE Software, 33(1), pp.56–65. Sustainability Design and Software: The Karlskrona Manifesto
 
 Becker, C., Betz, S., Chitchyan, R., Duboc, L., Easterbrook, S. M., Penzenstadler, B., Seyff, N. and Venters, C. C. (2015). Sustainability Design and Software: The Karlskrona Manifesto. Available at: https://www.karlskrona-manifesto.org (Accessed: 21 April 2026). Requirements: The key to sustainability
@@ -521,6 +522,8 @@ Duboc, L., Penzenstadler, B. and Porras, J. (2019). Do we really know what we ar
 Green Software Foundation (2023). Green Software Patterns. Available at: https://patterns.greensoftware.foundation/guide/suggested-tags (Accessed: 21 April 2026). Green Software Patterns (see the Catalogue part).
 
 Green Software Foundation (2023). Green Software Practitioner. Available at: https://learn.greensoftware.foundation (Accessed: 21 April 2026). Engineering software products
+
+Ludewig, J. (2003) ‘Models in software engineering – an introduction’, Software and Systems Modeling, 2, pp. 5–14. doi:10.1007/s10270-003-0020-3.
 
 Sommerville, I. (2020). Engineering Software Products. London: Pearson. Green Software Practitioner, from Green Software Foundation.
 

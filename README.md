@@ -194,18 +194,18 @@ The part of the entity class includes all the **actual objects** in the game, su
 
 The following picture shows all the **classes** in our game.
 
-![UML class diagram](design/uml/class.png)
 <p align="center">
   <b>Figure x</b><br>
-  <i>All the Class</i><br>
-  <img src="materials/design/uml/class.png" width="500"/>
+  <i>All the Classes</i><br>
+  <img src="materials/design/uml/class.png" width:100%/>
 </p>
 
 ### Class Design
 
 In terms of more detailed class design, the Asteroid class represents objects with multi-stage destruction behavior, and the enemy is a local unit with different types and active shooting skills. The Pickup class is used to implement the recovery mechanism. Player related objects are responsible for moving, colliding and updating the state of the pressure value. Projectile classes are divided into laser, missile, mine and enemy missile. These skills also have their own behavior mode; each weapon class is responsible only for its own attack behavior. In the main file, these functions are used only as references and are not involved in the internal implementation. 
 
-The following picture shows all the [function](materials/design/uml/class.png) in our game.
+The following picture shows all the [function](materials/design/uml/functions.png) in our game.
+
 <p align="center">
   <b>Figure x</b><br>
   <i>Functions in the Game</i><br>
@@ -233,7 +233,11 @@ A key design decision was that stress should affect more than survival. As stres
 
 We also improved the user interface during testing. In earlier versions, the stress bar rose when the player took damage, but some players found this confusing. We therefore redesigned it into a more health-bar-like display and clearly labelled the current stress state. This made it easier for players to understand their level of danger during fast-paced gameplay. Overall, the stress system reduced frustration while keeping the sense of pressure in combat.
 
-![Annotated game UI](implementation/challenge-1-ui.png)
+<p align="center">
+  <b>Figure x</b><br>
+  <i>Annotated game UI</i><br>
+  <img src="materials/implementation/challenge-1-ui.png" width="500"/>
+</p>
 
 ### Challenge 2: Replacing time-based progression with score-based progression
 
@@ -418,17 +422,8 @@ During the development process, we selected a range of tools to support both dev
 | Browser Developer Tools | Debugging tool | Used to identify runtime errors and performance issues |
 
 To support the implementation of the project, we allocated tasks in a balanced and structured manner. This ensured that each team member was responsible for work of similar complexity and difficulty, avoiding an uneven distribution of workload across the team. This approach improved overall efficiency and ensured that all team members contributed equally to the development process.
+
 ###  Content Introduction
-
-The following table summarises the responsibilities and contributions of each team member:
-
-| Member   | Assigned Module        | Contribution |
-|----------|------------------------|--------------|
-| Lin      | Game Loop            | Implementing stable frame rates and game state management |
-| Benyu    | Collision Detection  | Accurately handling interactions between bullets and asteroids |
-| Zhaohang | Entity System        | Managing objects such as the spaceship, bullets, and asteroids |
-| Bo       | Input Controls       | Handling keyboard input and ensuring responsive control mechanisms |
-| Yutong   | User Interface (UI/Menu) | Implementing menu transitions and displaying game states |
 
 In the middle and later stages of the project, due to time constraints and geographical limitations, we gradually transitioned to online collaboration. We conducted Scrum-style stand-up meetings approximately twice a week using Microsoft Teams and WeChat voice calls. This short and frequent meeting format significantly improved communication efficiency.
 Compared to the earlier in-person meetings, which were more flexible and time-consuming, these online meetings were more structured and focused. They typically centered on current progress, existing issues, and the allocation of upcoming tasks, allowing the team to advance the development process in a more organized and efficient manner.
@@ -452,14 +447,16 @@ Although this approach ensured that key milestones were met to some extent, it a
 
 ## Sustainability, Technical, Social and Accessibility
 
-### Sustainability:
+### Sustainability
+
 In this project, we aim to develop a game that focuses on user interaction and engagement. According to Becker et al. (2015), design decisions can significantly influence the long-term impact of a system. Based on this perspective, the game is designed to have a simple yet positive influence on user behavior, aligning with the principles outlined in the Karlskrona Manifesto for sustainability design.  
 
 The game is not only intended for entertainment but also considers its broader impact on users. The Karlskrona Manifesto emphasizes that sustainability includes not only environmental aspects but also social and individual dimensions (Becker et al., 2015). Therefore, the game aims to provide a meaningful and engaging experience while taking these aspects into account.
 
 From an environmental perspective, the game was primarily developed using p5.js and does not rely on large-scale graphical processing or heavy server infrastructure. As a result, it consumes relatively low computational resources, which helps reduce energy consumption and, to some extent, carbon emissions. This aligns with the principles of sustainable and green software development.
 
-### Technical:
+### Technical
+
 From a technical perspective, the game is designed with clear functionality and a simple structure. Duboc et al. (2019) emphasize the importance of understanding what we are building and how design decisions influence system behavior. Based on this principle, the game focuses on maintaining a design that is both understandable and purposeful.
 
 In addition, the implementation considers efficiency and resource usage. According to the Green Software Foundation (2023), green software patterns highlight the importance of reducing unnecessary computation, improving energy efficiency, and avoiding excessive complexity in system design. Therefore, the game is intentionally designed to remain lightweight and efficient, minimising resource consumption while maintaining functionality.
@@ -468,12 +465,14 @@ During the design and task allocation stages, the game was divided into multiple
 
 At the same time, we ensured the stability of the game during multi-user or continuous play scenarios. By adopting standard development tools and practices, such as GitHub and version control mechanisms, we maintained code consistency and traceability. This not only supported effective collaboration among team members but also significantly improved overall code quality.
 
-### Social:
+### Social
+
 From a social perspective, the game is designed to provide a simple and engaging experience for users. Sommerville (2020) explains that software systems should consider how they affect people and their interactions. Based on this, the game focuses on being accessible and easy to use.    
 
 As an entertainment application, the primary purpose of the game is to provide users with a means of relaxation and leisure, which can help reduce stress to some extent. In addition, the game is designed to be intuitive, allowing players to quickly understand the controls and gameplay. This significantly enhances the overall playability and user experience.
 
-### Accessibility and Ethics:
+### Accessibility and Ethics
+
 From an ethical perspective, the game follows the basic principles of responsible software development. It does not collect or misuse user data and avoids violent or inappropriate content, thereby meeting fundamental ethical standards.
 
 According to the Green Software Foundation (2023), green software practitioner guidelines emphasize that software should minimize harm and respect users. In this context, the game provides a safe and appropriate environment for its audience.
@@ -494,7 +493,17 @@ These design choices align with multiple sustainability tags identified by the G
 
 ## Contribution Statement
 
-- Provide a table of everyone's contribution, which *may* be used to weight individual grades. We expect that the contribution will be split evenly across team-members in most cases. Please let us know as soon as possible if there are any issues with teamwork as soon as they are apparent and we will do our best to help your team work harmoniously together.
+The following table summarises the responsibilities and contributions of each team member:
+
+| **Member** | **Assigned Module** | **Key Contributions** | **Contribution %** |
+|---|---|---|---|---:|
+| Lin | Game Loop | Project management, Game state management, update flow, and runtime stability | 20% |
+| Bo | Collision Detection | Interaction handling between game objects | 20% |
+| Zhaohang | Entity System | Management of in-game objects and object structure | 20% |
+| Benyu | Input Controls | Player input handling and control responsiveness | 20% |
+| Yutong | User Interface (UI/Menu) | Menu flow, screen transitions, and game-state presentation | 20% |
+
+All members also contributed to group discussions, iterative decision-making, and the overall refinement of the project deliverables.
 
 ## AI Statement
 
@@ -511,6 +520,7 @@ These design choices align with multiple sustainability tags identified by the G
 - Overall, we learned to how to use AI in our project, and it's a valuable knowledge. In the mean time, we still write and read the code ourselves to help us understand what a project should be like.
 
 ## Reference
+
 Alexander, I. and Beus-Dukic, L. (2009) Discovering Requirements: How to Specify Products and Services. Chichester: Wiley.
 
 Becker, C., Betz, S., Chitchyan, R., Duboc, L., Easterbrook, S. M., Penzenstadler, B., Seyff, N. and Venters, C. C. (2015). Requirements: The key to sustainability. IEEE Software, 33(1), pp.56–65. Sustainability Design and Software: The Karlskrona Manifesto

@@ -10,9 +10,12 @@ A browser-based Asteroids-style arcade shooter built in p5.js, centred on a Stre
 
 - [Play the game](https://uob-comsm0166.github.io/2026-group-18/)
 - Demo video: (link)
-- Final idea: [requirements/final-idea.md](requirements/final-idea.md)
+- Final idea: [materials/requirements/final-idea.md](materials/requirements/final-idea.md)
 
-![Screenshot/GIF here]
+<p align="center">
+  <b>Figure 1: Gameplay Screenshot</b><br>
+  <img src="docs/asteroids.jpg" width="500"/>
+</p>
 
 
 ## Contents
@@ -32,8 +35,10 @@ A browser-based Asteroids-style arcade shooter built in p5.js, centred on a Stre
 
 ## Our Group
 
-GROUP PHOTO.
-![1ea16c65c7c97f326304811ae963f9b3](https://github.com/user-attachments/assets/4f3012f3-9d78-4dff-8d98-3e032d17ac7d)
+<p align="center">
+  <b>Figure 2: Group Photo</b><br>
+  <img src="https://github.com/user-attachments/assets/4f3012f3-9d78-4dff-8d98-3e032d17ac7d" width="500"/>
+</p>
 
 | Group member | Email | GitHub Username | Role |
 |---|---|---|---|
@@ -69,21 +74,17 @@ We did not merely compare "which game is more interesting", but focused on evalu
 | Rage Game / precision survival reference | High intensity and strong risk-reward rhythm with a small ruleset. | Could become frustrating if difficulty was not carefully balanced. | Used as inspiration for pressure and survival pacing. |
 | Puzzle / exploration platformer references | Offered interesting ideas around discovery, state changes, and player learning. | Too dependent on content volume, level structure, and polish. | Used as secondary inspiration only. |
 
-**Evidence**
-- Two candidate ideas: [docs/ideas.md](docs/ideas.md)
-- Final idea and design rationale: [requirements/final-idea.md](requirements/final-idea.md)
-
 ### Feasibility Studies
 
 One early candidate was a 2D platform game inspired by TermiStone. Its core mechanic was a dual-state system in which the player switched between different elemental states and used state-specific abilities to overcome mechanisms, obstacles, and terrain. The idea was highly appealing during the selection stage, and every team member who tried it immediately said: “it should be our project!” We had even produced an [inspiration video](https://www.youtube.com/watch?v=za6nsWXRI2Y) to explore the idea further.
 
 However, according to the requirements of this project, we found that this platformer concept would rely on complex level design, carefully paced tutorials, precise platforming feel, and a large amount of content. Given the module timeframe and the constraints of implementing the game in p5.js, this direction introduced a high risk of scope expansion. 
 
-We therefore switched the project foundation toward an Asteroids-style arena shooter, whose core loop is more focused: rotating, thrusting, dodging, shooting, and scoring. This made it more realistic to build a stable MVP first. At the same time, we preserved the original idea of state-influenced gameplay by reworking it into the current Stress system, where collisions and damage not only increase the risk of failure but also change the ship’s handling state. This became the core requirements trade-off: **reduce content scope while preserving mechanical novelty**.
+We therefore switched the project foundation toward an [Asteroids-style arena shooter](materials/requirements/final-idea.md), whose core loop is more focused: rotating, thrusting, dodging, shooting, and scoring. This made it more realistic to build a stable MVP first. At the same time, we preserved the original idea of state-influenced gameplay by reworking it into the current Stress system, where collisions and damage not only increase the risk of failure but also change the ship’s handling state. This became the core requirements trade-off: **reduce content scope while preserving mechanical novelty**.
 
 ### Stakeholder and Top-level Need
 
-To avoid treating requirements as a simple feature list, we used stakeholder analysis to connect requirements to the context of the game. The stakeholder onion model suggests that stakeholders should be identified around the product or service itself rather than only around the development team (Alexander and Beus-Dukic, 2009). Based on this theory, we identified four main stakeholder groups: Players are the primary users and can be understood as both normal operators and functional beneficiaries: they interact directly with the game and benefit from an enjoyable, fair, and understandable play experience. Therefore, what they want to focus on is intuitive controls, clear HUD feedback, fair difficulty, and smooth gameplay. Game Developers are close to the product during this duration, so their care about modular structure, maintainability, extensibility, and testability. Course Instructors act as surrogate and assessment stakeholders: their responsibility is judging whether our project is clear, justified, traceable, and supported by evidence. Playtesters provide feedback by revealing usability issues, balancing problems, and gameplay defects that the development team may not notice. From these stakeholders, we derived several top-level needs([Figure]).
+To avoid treating requirements as a simple feature list, we used stakeholder analysis to connect requirements to the context of the game. The stakeholder onion model suggests that stakeholders should be identified around the product or service itself rather than only around the development team (Alexander and Beus-Dukic, 2009). Based on this theory, we identified four main stakeholder groups: Players are the primary users and can be understood as both normal operators and functional beneficiaries: they interact directly with the game and benefit from an enjoyable, fair, and understandable play experience. Therefore, what they want to focus on is intuitive controls, clear HUD feedback, fair difficulty, and smooth gameplay. Game Developers are close to the product during this duration, so their care about modular structure, maintainability, extensibility, and testability. Course Instructors act as surrogate and assessment stakeholders: their responsibility is judging whether our project is clear, justified, traceable, and supported by evidence. Playtesters provide feedback by revealing usability issues, balancing problems, and gameplay defects that the development team may not notice. From these stakeholders, we derived several top-level needs, summarized below.
 
 | Stakeholder | Top-Level Need | Related Epics | Evidence / Validation |
 |---|---|---|---|
@@ -94,11 +95,10 @@ To avoid treating requirements as a simple feature list, we used stakeholder ana
 
 ### Epics and User Stories
 
-Around these needs, we organized the project into six epics, as shown in Figure X, and then defined user stories from those epics.
-
-<p align="center"><em>Figure: Six Implementable Epics</em></p>
+Around these needs, we organized the project into six epics, as shown in Figure 3, and then defined user stories from those epics.
 
 <p align="center">
+  <b>Figure 3: Six Implementable Epics</b><br>
   <img src="materials/requirements/implementable-epics-relationship.png" width="500"/>
 </p>
 
@@ -109,10 +109,9 @@ The user stories were structured around player value. Stories about ship control
 
 We then used **use-case modelling** to describe system behaviour from the perspective of player-observable interactions. The final model contains only one actor, which is  the Player. It keeps the system boundary focused on the single-player gameplay loop.
 
-<p align="center"><em>Figure: Use case diagram</em></p>
-
 <p align="center">
-  <img src="materials/requirements/use-case-diagram.jpg" width="500"/>
+  <b>Figure 4: Use Case Diagram</b><br>
+  <img src="materials/requirements/use-case-diagram.png" width="500"/>
 </p>
 
 Although developers, instructors and test players are also stakeholders, the use-case diagram only retains players as actors because the goal of this diagram is to describe runtime system interactions rather than project management relationships.
@@ -171,7 +170,10 @@ To make the requirements directly checkable, we further translated the user stor
 In this way, the most important behaviours of the project could be written as verifiable conditions.
 The requirements were also refined through feedback from playtesting, Think Aloud sessions, weekly feedback, and workload evaluation. The table below summarises the most important requirement changes.
 
-![Requirement refinement evidence](requirements/refinement-evidence-table.png)
+<p align="center">
+  <b>Figure 5: Requirement Refinement Evidence</b><br>
+  <img src="materials/requirements/refinement-evidence-table.png" width="500"/>
+</p>
 
 The requirements for this project were not fixed. Playtesting, Think Aloud sessions, and [weekly feedback](materials/evaluation/weekly-feedback/2026-03-10-weekly-feedback-and-goals.md) all showed that some initial requirement definitions needed to be revised. Based on this evidence, we made several key adjustments:
 - We changed progression from time-based progression to score-based progression;
@@ -195,20 +197,18 @@ The part of the entity class includes all the **actual objects** in the game, su
 The following picture shows all the **classes** in our game.
 
 <p align="center">
-  <b>Figure x</b><br>
-  <i>All the Classes</i><br>
-  <img src="materials/design/uml/class.png" width:100%/>
+  <b>Figure 6: All the Classes</b><br>
+  <img src="materials/design/uml/class.png" width="500"/>
 </p>
 
 ### Class Design
 
 In terms of more detailed class design, the Asteroid class represents objects with multi-stage destruction behavior, and the enemy is a local unit with different types and active shooting skills. The Pickup class is used to implement the recovery mechanism. Player related objects are responsible for moving, colliding and updating the state of the pressure value. Projectile classes are divided into laser, missile, mine and enemy missile. These skills also have their own behavior mode; each weapon class is responsible only for its own attack behavior. In the main file, these functions are used only as references and are not involved in the internal implementation. 
 
-The following picture shows all the [function](materials/design/uml/functions.png) in our game.
+The following picture shows the main functions in our game.
 
 <p align="center">
-  <b>Figure x</b><br>
-  <i>Functions in the Game</i><br>
+  <b>Figure 7: Functions in the Game</b><br>
   <img src="materials/design/uml/function.png" width="500"/>
 </p>
 
@@ -234,8 +234,7 @@ A key design decision was that stress should affect more than survival. As stres
 We also improved the user interface during testing. In earlier versions, the stress bar rose when the player took damage, but some players found this confusing. We therefore redesigned it into a more health-bar-like display and clearly labelled the current stress state. This made it easier for players to understand their level of danger during fast-paced gameplay. Overall, the stress system reduced frustration while keeping the sense of pressure in combat.
 
 <p align="center">
-  <b>Figure x</b><br>
-  <i>Annotated game UI</i><br>
+  <b>Figure 8: Annotated Game UI</b><br>
   <img src="materials/implementation/challenge-1-ui.png" width="500"/>
 </p>
 
@@ -263,10 +262,10 @@ Through this staged design, each new mechanic was matched to a new type of threa
 
 | Weapon | Preview | Description |
 |---|---|---|
-| Shotgun | ![Shotgun](implementation/shotgun.png) | Fires seven pellets in a forward cone, making it effective against clusters of asteroids. |
-| Ultrasonic | ![Ultrasonic](implementation/ultrasonic.png) | Releases an ultrasonic wave around the ship, destroying nearby asteroids that are not newly spawned. |
-| Homing Missile | ![Homing Missile](implementation/homing-missile.png) | Launches a tracking projectile that prioritises high-threat enemies. |
-| Mine | ![Mine](implementation/mine.png) | Remains in place and detonates when a high-threat enemy comes into contact with it. |
+| Shotgun | ![Shotgun](materials/implementation/shotgun.png) | Fires seven pellets in a forward cone, making it effective against clusters of asteroids. |
+| Ultrasonic | ![Ultrasonic](materials/implementation/ultrasonic.png) | Releases an ultrasonic wave around the ship, destroying nearby asteroids that are not newly spawned. |
+| Homing Missile | ![Homing Missile](materials/implementation/homing-missile.png) | Launches a tracking projectile that prioritises high-threat enemies. |
+| Mine | ![Mine](materials/implementation/mine.png) | Remains in place and detonates when a high-threat enemy comes into contact with it. |
 
 ## Evaluation
 
@@ -297,7 +296,10 @@ Overall, the qualitative evaluation showed that the main problems did not lie in
 | P9 | N | 29 | 72.5 |
 | P10 | Y | 30 | 75 |
 
-![SUS Chart](evaluation/SUS-Overall.png)
+<p align="center">
+  <b>Figure 9: SUS Overall Chart</b><br>
+  <img src="materials/evaluation/SUS-Overall.png" width="500"/>
+</p>
 
 ### NASA-TLX Average Scores
 
@@ -310,7 +312,10 @@ Overall, the qualitative evaluation showed that the main problems did not lie in
 | Effort | 45 | 51 |
 | Frustration | 28 | 14 |
 
-![NASA-TLX Chart](evaluation/nasa-tlx-chart.png)
+<p align="center">
+  <b>Figure 10: NASA-TLX Chart</b><br>
+  <img src="materials/evaluation/nasa-tlx-chart.png" width="500"/>
+</p>
 
 To complement the qualitative results, we used the System Usability Scale (SUS) to measure overall perceptions of ease of use, learnability, and confidence. Our game achieved an average SUS score of **77.0**, indicating a generally positive level of usability.
 
@@ -376,26 +381,23 @@ In this project, our team consisted of five members who collaboratively develope
 
 To improve collaboration efficiency, we divided the overall system into several core modules, including the Game Loop, Collision System, Entities, UI/Menu, and Controls. Each team member was responsible for one core module, while also contributing to integration, testing, and optimization during the later stages. This approach ensured a balanced distribution of tasks as well as a cohesive and well-integrated system.
 
-<p align="center"><em>Figure: Team communication via WeChat</em></p>
-
 <p align="center">
-  <img src="materials/report-images/wechat-chat.jpg" width="500"/>
+  <b>Figure 11: Team Communication via WeChat</b><br>
+  <img src="materials/process/wechat-chat.jpg" width="500"/>
 </p>
 
 In terms of communication, we held multiple discussion meetings at the early stage of the project. These discussions mainly focused on the selection of the game, the design of difficulty progression, and potential innovations and improvements.
 Our first group meeting was conducted online and lasted for over an hour. During this meeting, we focused on addressing existing bugs, planning subsequent level design, and allocating responsibilities for each core module among team members.
 
-<p align="center"><em>Figure: Team members collaboratively testing the game</em></p>
-
 <p align="center">
-  <img src="materials/report-images/team-discussion.jpg" width="500"/>
+  <b>Figure 12: Team Members Collaboratively Testing the Game</b><br>
+  <img src="materials/process/team-discussion.jpg" width="500"/>
 </p>
 
 We primarily used GitHub to support team development and collaboration, where our development activities and contributions were clearly recorded. Each team member worked on separate branches to implement features, and pull requests were used for code integration and review.
-<p align="center"><em>Figure: The record of pull requests</em></p>
-
 <p align="center">
-  <img src="materials/report-images/workflow.png" width="500"/>
+  <b>Figure 13: The Record of Pull Requests</b><br>
+  <img src="materials/process/workflow.png" width="500"/>
 </p>
 
 Our team adopted a structured project management approach combining Kanban boards, GitHub workflows, and progress tracking tools to support efficient collaboration throughout the project.
@@ -403,10 +405,9 @@ We used a Kanban-based system to organize tasks and monitor progress. Tasks were
 
 In addition, GitHub was used as the primary platform for development and collaboration. Each team member worked on separate branches and submitted their changes through pull requests. All pull requests required approval from at least two team members before merging, ensuring code quality, consistency, and traceability. This workflow also promoted knowledge sharing and collaborative problem-solving within the team.
 
-<p align="center"><em>Figure: Kanban board for project management</em></p>
-
 <p align="center">
-  <img src="materials/report-images/kanban%20project.png" width="500"/>
+  <b>Figure 14: Kanban Board for Project Management</b><br>
+  <img src="materials/process/kanban%20project.png" width="500"/>
 </p>
 
 All pull requests required approval from at least two team members before being merged. This process ensured that code quality was maintained and that all changes were reviewed collaboratively before further development continued.
@@ -428,18 +429,16 @@ To support the implementation of the project, we allocated tasks in a balanced a
 In the middle and later stages of the project, due to time constraints and geographical limitations, we gradually transitioned to online collaboration. We conducted Scrum-style stand-up meetings approximately twice a week using Microsoft Teams and WeChat voice calls. This short and frequent meeting format significantly improved communication efficiency.
 Compared to the earlier in-person meetings, which were more flexible and time-consuming, these online meetings were more structured and focused. They typically centered on current progress, existing issues, and the allocation of upcoming tasks, allowing the team to advance the development process in a more organized and efficient manner.
 
-<p align="center"><em>Figure: Burndown / progress chart of the project</em></p>
-
 <p align="center">
-  <img src="materials/report-images/burndown-chart.png" width="500"/>
+  <b>Figure 15: Burndown / Progress Chart of the Project</b><br>
+  <img src="materials/process/burndown-chart.png" width="500"/>
 </p>
 
 While this approach helped meet deadlines, it also introduced periods of increased pressure and reduced consistency in the development process. During the development process, we tracked overall progress using a burndown chart. From the chart, it can be observed that the team's progress was not evenly distributed over time. In particular, during the mid-stage of development, a noticeable concentration of completed tasks occurred, indicating that team members tended to engage in “burst development” as deadlines approached.
 
-<p align="center"><em>Figure: Commit and branch history visualization</em></p>
-
 <p align="center">
-  <img src="materials/report-images/network.png" width="600"/>
+  <b>Figure 16: Commit and Branch History Visualization</b><br>
+  <img src="materials/process/network.png" width="600"/>
 </p>
 
 Although this approach ensured that key milestones were met to some extent, it also introduced considerable time pressure. Nevertheless, in the final stages of the project, we successfully completed all planned tasks while overcoming various challenges, including several technical difficulties encountered during development.

@@ -298,6 +298,10 @@ Overall, the qualitative evaluation has shown that the main problems were not th
   <img src="materials/evaluation/SUS-Overall.png" width="500"/>
 </p>
 
+<p align="center">
+  <img src="materials/evaluation/sus_score_comparison_first_five.png" width="500"/>
+</p>
+
 ### NASA-TLX Average Scores
 
 | Dimension | 10/3/2026 | 20/4/2026 |
@@ -312,6 +316,10 @@ Overall, the qualitative evaluation has shown that the main problems were not th
 <p align="center">
   <b>Figure 10: NASA-TLX Chart</b><br>
   <img src="materials/evaluation/nasa-tlx-chart.png" width="500"/>
+</p>
+
+<p align="center">
+  <img src="materials/evaluation/nasa_tlx_dimension_comparison_first_five.png" width="500"/>
 </p>
 
 We had also done two quantitative evaluation to verify our thoughts. 

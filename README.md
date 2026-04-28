@@ -190,25 +190,27 @@ This shows that the requirements artefacts in this project were not static recor
 
 ### Design Goals and Architectural Approach
 
-Early in the design process, we identified the core gameplay of this game as **the stress system**, and we also made a lot of predictions about what might happen in the process: numerical design, operational gameplay, speed of feedback and so on. Finally, we decided to adopt the hybrid OO Design method to design our game, which means we divided the system into two layers: classifying **entity objects** by classes and implementing **operation control** by functions. This separation aligns with the use of UML class diagrams for structural modelling and sequence diagrams for behaviour (Fowler, 2004). And we have roughly divided the classes by drawing software: UMLetino. Now we have the diagram completely.
-
+At the beginning of the programme, we ensured to put our core gameplay of this game as the **pressure system**, and we made lots of predictions about the situation that might happening during the process. For example: the numerical design, gameplay operation, the speed of feedback and so on. In the end, we confirmed that use a **hybrid OO-design** approach to design the game, which means divided the system into two layers: **classifying entity objects** by classes and implementing **operation control** by functions. This separation aligns with the use of UML class diagrams for structural modelling and sequence diagrams for behaviour (Fowler, 2004). And we have roughly divided the classes by drawing software: UMLetino. Now we have the diagram completely.
 
 ### System Architecture
 
-The part of the entity class includes all the **actual objects** in the game, such as the player-controlled aircraft, randomly generated meteorites and enemies, and items that can be picked up. These entities only need to hold their own **position, state, speed and behavior**. We let them manage themselves through encapsulation. The frame-by-frame scheduling, enemy generation judgment, collision resolution and interface update are coordinated by the functions of the control layer. In this structure, because most of the entities in the game are independent objects, the complexity of a single class is reduced a lot, and different subsystems can work more clearly during the game. This structure also makes the codebase easier to maintain. For example, the spawn and split logic is needed, and the game’s core pressure system is only responsible for converting the player’s collection events into a change in pressure and triggering certain mechanics when the pressure reaches a threshold. It allows new entity types or gameplay method to be added without significantly modifying existing components. We use a clearly defined interface to connect the entity object layer and the function implementation layer. The function control layer updates and plans the entity each frame, and the entity object layer provides the local state and behavior for the function control layer to process.
-
+The part of the entity class, which is including all the objects that player can see during the game, such as the player-controlled aircraft, randomly generated enemies and items that can be picked up. These entities only need to hold their own position, state, speed and behavior. We let them manage themselves through **encapsulation**. The frame-by-frame scheduling, enemy generation judgment, collision resolution and interface update are coordinated by the functions of the control layer. In this structure, because most of the entities in the game are independent objects, the complexity of a single class is reduced a lot, and different subsystems can work more clearly during the game. This structure also makes the codebase easier to maintain. For example, the spawn and split logic is needed, and the game’s core pressure system is only responsible for converting the player’s collection events into a change in pressure and triggering certain mechanics when the pressure reaches a threshold. It allows new entity types or gameplay method to be added without significantly modifying existing components. We use a clearly defined interface to connect the entity object layer and the function implementation layer. The function control layer updates and plans the entity each frame, and the entity object layer provides the local state and behavior for the function control layer to process.
 The following picture shows all the **classes** in our game.
-
-<p align="center">
-  <b>Figure 6: All the Classes</b><br>
-  <img src="materials/design/uml/class.png" width="500"/>
-</p>
 
 ### Class Design
 
 In terms of more detailed class design, the Asteroid class represents objects with multi-stage destruction behavior, and the enemy is a local unit with different types and active shooting skills. The Pickup class is used to implement the recovery mechanism. Player related objects are responsible for moving, colliding and updating the state of the pressure value. Projectile classes are divided into laser, missile, mine and enemy missile. These skills also have their own behavior mode; each weapon class is responsible only for its own attack behavior. In the main file, these functions are used only as references and are not involved in the internal implementation. 
 
 The following picture shows the main functions in our game.
+
+<p align="center">
+  <b>Figure 6: All the Classes</b><br>
+  <img src="materials/design/uml/class.png" width="500"/>
+</p>
+
+### Behaviour
+
+In the behavior design, the system is organized around the **main loop**, which performs update, collision detection, feedback processing and state judgment in turn during each frame. For example, when the player accidentally touches a meteorite, the system will directly affect the feel of player’s control, the meteorite split and other effects; When the player is hit by a meteorite or an enemy bullet, the system will increase the pressure value and determine whether the threshold has been reached. As the pressure gradually increases, the player needs to continue to play under high pressure (feedback is the operator's feel). We consider this design to be a core form of feedback for the game. The stress system, as our core system, acts as a **bridge** connecting different subsystems. Damage events increase stress, and items are picked up to decrease stress, which is then linked to operational parameters through thresholds to create a dynamic difficulty system based on the player's performance, so that the player is faced with a different game each time.
 
 <p align="center">
   <b>Figure 7: Functions in the Game</b><br>

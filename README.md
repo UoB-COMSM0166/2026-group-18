@@ -384,41 +384,40 @@ In our final evaluation part, we need to test our code itself. We adopted a blac
 
 ## Process
 
-In this project, our team consisted of five members who collaboratively developed a browser-based version of the classic game *Asteroids*. Throughout the development process, we adopted a combination of modular task allocation and collaborative development to ensure the completeness of the game, maintain code quality, and promote effective teamwork.
+In our project, the team consists of five people to jointly develop a classic game based on the browser Asteroide. During the whole game development process, we adopted a combination of modular division of labour and collaborative development to ensure the complete development of the whole game and the quality assurance of the code. The team has the close coorperation.
 
-To improve collaboration efficiency, we divided the overall system into several core modules, including the Game Loop, Collision System, Entities, UI/Menu, and Controls. Each team member was responsible for one core module, while also contributing to integration, testing, and optimization during the later stages. This approach ensured a balanced distribution of tasks as well as a cohesive and well-integrated system.
+In order to improve the efficiency of group collaboration, the five of us divided the whole game system into multiple core modules, including: Game Loop, Collision System, Entities, UI/Menu and Controls. It can ensure that each of the five people is responsible for a core module and participates in the overall testing and optimisation in the later assembly stage, so as to achieve the balance and integrity of task allocation.
 
 <p align="center">
   <b>Figure 11: Team Communication via WeChat</b><br>
   <img src="materials/process/wechat-chat.jpg" width="500"/>
 </p>
 
-In terms of communication, we held multiple discussion meetings at the early stage of the project. These discussions mainly focused on the selection of the game, the design of difficulty progression, and potential innovations and improvements.
-Our first group meeting was conducted online and lasted for over an hour. During this meeting, we focused on addressing existing bugs, planning subsequent level design, and allocating responsibilities for each core module among team members.
+In terms of communication, we held many seminars at the beginning of this project. The direction of the discussion was mainly aimed at the selected game, the improvement of the difficulty of the game, and the innovation and transformation of the game. The first meeting of five people in our group was held online. The meeting lasted for more than an hour. The content of the meeting focused on the repair of game bugs, the level design of the follow-up game, and the core module content that everyone was responsible for .
 
 <p align="center">
   <b>Figure 12: Team Members Collaboratively Testing the Game</b><br>
   <img src="materials/process/team-discussion.jpg" width="500"/>
 </p>
 
-We primarily used GitHub to support team development and collaboration, where our development activities and contributions were clearly recorded. Each team member worked on separate branches to implement features, and pull requests were used for code integration and review.
+During the development process, we have selected a series of tools to support our development and collaboration:
+
 <p align="center">
   <b>Figure 13: The Record of Pull Requests</b><br>
   <img src="materials/process/workflow.png" width="500"/>
 </p>
 
-Our team adopted a structured project management approach combining Kanban boards, GitHub workflows, and progress tracking tools to support efficient collaboration throughout the project.
-We used a Kanban-based system to organize tasks and monitor progress. Tasks were clearly divided into stages such as backlog, to-do, in progress, testing, and done, allowing all team members to have a clear overview of the project status. Responsibilities were well defined, and tasks were assigned on a weekly basis, ensuring a balanced workload and clear deadlines for each member.
+Our team adopted a structured project management approach, integrating Kanban, GitHub workflows, and progress tracking tools to support efficient collaboration throughout the project. 
 
-In addition, GitHub was used as the primary platform for development and collaboration. Each team member worked on separate branches and submitted their changes through pull requests. All pull requests required approval from at least two team members before merging, ensuring code quality, consistency, and traceability. This workflow also promoted knowledge sharing and collaborative problem-solving within the team.
+We use a kanban-based system to organize tasks and monitor progress. Tasks are clearly divided into stages such as backlog, to-do, in progress, testing, and completed, allowing all team members to have a clear understanding of the project status. Responsibilities are clearly defined, and tasks are assigned weekly to ensure a balanced workload for each member and clear deadlines.
 
 <p align="center">
   <b>Figure 14: Kanban Board for Project Management</b><br>
   <img src="materials/process/kanban%20project.png" width="500"/>
 </p>
 
-All pull requests required approval from at least two team members before being merged. This process ensured that code quality was maintained and that all changes were reviewed collaboratively before further development continued.
-During the development process, we selected a range of tools to support both development and team collaboration:
+We mainly realise team development and collaboration on GitHub, and the traces of our collaboration and development can be clearly seen on GitHub. Each of our members develops functions on an independent branch and uses pull request to review the code. The process of each pr requires at least two members to review and pass, and then the next code writing can be carried out.
+
 ### The Usage of Different Tools
 
 | Tool Name | Purpose | Usage |
@@ -429,65 +428,67 @@ During the development process, we selected a range of tools to support both dev
 | Kanban Board | Task management | Used to track task progress and allocate responsibilities |
 | Browser Developer Tools | Debugging tool | Used to identify runtime errors and performance issues |
 
-To support the implementation of the project, we allocated tasks in a balanced and structured manner. This ensured that each team member was responsible for work of similar complexity and difficulty, avoiding an uneven distribution of workload across the team. This approach improved overall efficiency and ensured that all team members contributed equally to the development process.
+To realise this project, we have made a reasonable distribution of tasks, so that each member can share the similar difficulty and complexity.
+
+Work allocation to ensure everybody pays an effort to the project, so that every one can have a contribution.
 
 ###  Content Introduction
 
-In the middle and later stages of the project, due to time constraints and geographical limitations, we gradually transitioned to online collaboration. We conducted Scrum-style stand-up meetings approximately twice a week using Microsoft Teams and WeChat voice calls. This short and frequent meeting format significantly improved communication efficiency.
-Compared to the earlier in-person meetings, which were more flexible and time-consuming, these online meetings were more structured and focused. They typically centered on current progress, existing issues, and the allocation of upcoming tasks, allowing the team to advance the development process in a more organized and efficient manner.
+| Members| Assigned Module | Contirbution |
+|--------|-----------------|--------------|
+| Lin      |  Game Loop           |  Implementing stable frame rates and game state management |
+| Benyu    | Collision Detection  | Accurately handling interactions between bullets and asteroids |
+| Zhaohang | Entity System        | Managing objects such as the spaceship, bullets, and asteroids |
+| Bo       | Input Controls       | Handling keyboard input and ensuring responsive control mechanisms |
+| Yutong   | User Interface (UI/Menu) | Implementing menu transitions and displaying game states |
+
+In the middle and late stages of the project, due to time schedule and geographical restrictions, we gradually turned to online collaboration and held Scrum-like meetings through Microsoft Teams and WeChat voice calls, about twice a week. This short-term and frequent meeting mode has significantly improved the efficiency of communication. Unlike the relatively free and long offline discussions in the early days, these online meetings are more structured and usually revolve around "current progress, problems and next task allocation", so that the team can promote the development progress more clearly.
 
 <p align="center">
   <b>Figure 15: Burndown / Progress Chart of the Project</b><br>
   <img src="materials/process/burndown-chart.png" width="500"/>
 </p>
 
-While this approach helped meet deadlines, it also introduced periods of increased pressure and reduced consistency in the development process. During the development process, we tracked overall progress using a burndown chart. From the chart, it can be observed that the team's progress was not evenly distributed over time. In particular, during the mid-stage of development, a noticeable concentration of completed tasks occurred, indicating that team members tended to engage in “burst development” as deadlines approached.
+During the project development process, we tracked the overall progress through the burnout diagram. It can be seen from the figure that the team's work progress is uneven in time, especially in the mid-term stage, where there is obvious centralised completion of tasks, which shows that members tend to carry out "sudden development" when the deadline is approaching.
 
 <p align="center">
   <b>Figure 16: Commit and Branch History Visualization</b><br>
   <img src="materials/process/network.png" width="600"/>
 </p>
 
-Although this approach ensured that key milestones were met to some extent, it also introduced considerable time pressure. Nevertheless, in the final stages of the project, we successfully completed all planned tasks while overcoming various challenges, including several technical difficulties encountered during development.
+Although this method ensures the completion of stage goals to a certain extent, it also brings greater time pressure. 
 
+However, in the final stage of the project, we successfully completed all the planned tasks and overcame various challenges, including several technical difficulties encountered during the development process.
 
 ## Sustainability, Technical, Social and Accessibility
 
 ### Sustainability
 
-In this project, we aim to develop a game that focuses on user interaction and engagement. According to Becker et al. (2015), design decisions can significantly influence the long-term impact of a system. Based on this perspective, the game is designed to have a simple yet positive influence on user behavior, aligning with the principles outlined in the Karlskrona Manifesto for sustainability design.  
+In our project, we want to develop a game that focusses on user interaction and participation. According to Becker et al. (2015), design decision-making will affect the long-term impact of the system. Based on this, this game aims to have a simple but positive impact on user behaviour.
 
-The game is not only intended for entertainment but also considers its broader impact on users. The Karlskrona Manifesto emphasizes that sustainability includes not only environmental aspects but also social and individual dimensions (Becker et al., 2015). Therefore, the game aims to provide a meaningful and engaging experience while taking these aspects into account.
+This game is not only for entertainment but also takes into account its broader impact on users. The Karls Kruner Declaration emphasises that sustainability includes not only environmental aspects, but also social and personal aspects. Therefore, this game aims to provide a meaningful experience while keeping these aspects in mind.
 
-From an environmental perspective, the game was primarily developed using p5.js and does not rely on large-scale graphical processing or heavy server infrastructure. As a result, it consumes relatively low computational resources, which helps reduce energy consumption and, to some extent, carbon emissions. This aligns with the principles of sustainable and green software development.
+Most of the games are developed using p5.js, do not rely on large-scale data graphics processing and large-scale server support, and reduce carbon emissions to a certain extent, combining the basic concept of green software development.
 
 ### Technical
 
-From a technical perspective, the game is designed with clear functionality and a simple structure. Duboc et al. (2019) emphasize the importance of understanding what we are building and how design decisions influence system behavior. Based on this principle, the game focuses on maintaining a design that is both understandable and purposeful.
+From a technical point of view, the design of this game has clear functionality and concise structure. Duboc et al. (2019) pointed out that we should have a clear understanding of what we have built and how our design decisions affect the whole system. Based on this, this game focusses on maintaining the understandability and purposefulness of the design.
 
-In addition, the implementation considers efficiency and resource usage. According to the Green Software Foundation (2023), green software patterns highlight the importance of reducing unnecessary computation, improving energy efficiency, and avoiding excessive complexity in system design. Therefore, the game is intentionally designed to remain lightweight and efficient, minimising resource consumption while maintaining functionality.
+The game will also consider efficiency and resource utilisation during the implementation process. The green software model emphasises the importance of reducing unnecessary calculations and making the system more efficient. Therefore, the game is designed to be simple to operate and avoid unnecessary complexity. 
 
-During the design and task allocation stages, the game was divided into multiple independent components that could be developed individually. This approach facilitated efficient debugging, improved the overall development process, and allowed the team to refine the game design more effectively.
-
-At the same time, we ensured the stability of the game during multi-user or continuous play scenarios. By adopting standard development tools and practices, such as GitHub and version control mechanisms, we maintained code consistency and traceability. This not only supported effective collaboration among team members but also significantly improved overall code quality.
+When we designed the game and arranged the tasks, we divided the game into multiple independent parts completed by one person, fixed the bugs of the game, and better developed the design of the game. While developing, it also ensures the stability of the game when multiplayer is online. We use standard development tools and game development processes (such as GitHub and version control mechanisms) to ensure the consistency and traceability of the code. It is not only conducive to teamwork but also improves the quality of the code.
 
 ### Social
 
-From a social perspective, the game is designed to provide a simple and engaging experience for users. Sommerville (2020) explains that software systems should consider how they affect people and their interactions. Based on this, the game focuses on being accessible and easy to use.    
+From a social perspective, this game aims to provide users with a simple and fascinating experience. Sommerville (2020) pointed out that software systems should consider their impact on people and the interaction between them. Based on this, this game focusses on ease of use and accessibility.
 
-As an entertainment application, the primary purpose of the game is to provide users with a means of relaxation and leisure, which can help reduce stress to some extent. In addition, the game is designed to be intuitive, allowing players to quickly understand the controls and gameplay. This significantly enhances the overall playability and user experience.
+As an entertainment application, the purpose of the game itself is to provide users with relaxation and pastime entertainment, which can relieve stress to a certain extent. The most important thing is that the design of our game is intuitive, and players can get started quickly, which greatly improves the playability of the game.
 
 ### Accessibility and Ethics
 
-From an ethical perspective, the game follows the basic principles of responsible software development. It does not collect or misuse user data and avoids violent or inappropriate content, thereby meeting fundamental ethical standards.
+In another sides, the game follows basic principles of responsible software use. It does not collect or misuse user data, and it avoids any violent or inappropriate content, meeting Fundamental ethical standards. The Green Software Practitioner highlights that software should minimise harm and respect users. In this context, the game provides a safe and appropriate environment for its audience.  
 
-According to the Green Software Foundation (2023), green software practitioner guidelines emphasize that software should minimize harm and respect users. In this context, the game provides a safe and appropriate environment for its audience.
-
-The game primarily relies on keyboard-based controls, which are relatively simple and accessible for most users. However, the control scheme is predominantly designed for right-hand operation, with movement and actions distributed in a way that may not be convenient for left-handed players. 
-
-To improve accessibility, future versions of the game could introduce customizable control settings, allowing users to adjust key mappings according to their preferences.
-
-These design choices align with multiple sustainability tags identified by the Green Software Foundation, demonstrating an awareness of the environmental impact of software systems.
+This game mainly relies on keyboard operation, and the operation method is relatively simple, which is favourable to most users. However, the movement mode we mainly use is concentrated in the right hand, and the left hand is used to release skills, which is a little unfriendly for players who are used to left-handed control. We will upgrade the game in the future to improve accessibility.
 
 
 ## Conclusion

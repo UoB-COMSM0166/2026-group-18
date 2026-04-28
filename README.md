@@ -1,4 +1,4 @@
-# Keep Calm, Captain!
+﻿# Keep Calm, Captain!
 
 Here's our game. We built an Asteroids-style shooter with a twist — collisions don't just damage you, they mess with your controls. Get hit too much and your ship handles terribly. Collect pickups to calm down. Play it [here](https://uob-comsm0166.github.io/2026-group-18/) and see for yourself.
 
@@ -42,9 +42,14 @@ GROUP PHOTO.
 
 ## Introduction
 
-Our game is a browser-based **Asteroids-style arcade shooter** developed in **p5.js**. It is based on the classic arcade formula of navigating a spaceship through an arena, avoiding hazards, and surviving while scoring points. However, rather than simply recreating *Asteroids*, we introduced a mechanic that changes the player’s relationship with control and risk. The central twist of our game is a **Stress system**: whenever the player collides with hazards or takes damage, their **Stress meter** increases, and higher stress reduces the ship’s handling in clear, predictable tiers. At low stress, the ship responds normally; at higher stress, turning, thrust, and drift control become noticeably worse. Players can partially recover by collecting **de-stress pickups**, creating a constant trade-off between aggressive play for a higher score and careful play to preserve precision and control.
+ We made this Asteroids-style shooter in p5.js. The basic idea is pretty familiar — you fly a spaceship around, dodge stuff, shoot things, and try to survive while getting the highest score possible. But we wanted to do something a bit different with the core mechanic.
 
-This makes the game novel because difficulty does not come only from faster enemies or more obstacles, but from the player’s own performance and state. The challenge becomes psychological as well as mechanical: mistakes do not just reduce survival chances, they directly affect how it feels to play. We designed this twist to create a more dynamic risk–reward loop while still keeping the game readable and fair through fixed thresholds and visible UI feedback. From a software engineering perspective, this mechanic also gave us a strong technical focus, particularly in implementing a **data-driven stress state machine** and balancing movement behaviour across different stress levels.
+The main twist is what we call the **Stress system**. Every time you crash into something or get hit, your stress goes up. And here's the thing — when you're stressed, your ship just doesn't handle as well. We're talking slower turning, clunkier thrust, that kind of thing. It's split into clear tiers so you always know what you're dealing with. There's also these pickup items that help you calm down a bit.
+
+This creates this interesting balance where you have to think about whether it's worth playing aggressively to rack up points, or playing it safe to keep your ship feeling nice and responsive. The difficulty doesn't just come from enemies getting faster or more obstacles appearing — it comes from how well you're doing. Mess up too much and the game literally feels harder to play.
+
+We also made sure the stress thresholds are fixed and the UI shows your stress level clearly, so it stays fair and readable. On the technical side, building the stress state machine and tuning how the ship moves at different stress levels was actually pretty challenging and gave us a solid focus for the development side of things.
+
 
 
 ## Requirements
@@ -341,3 +346,5 @@ You can delete this section in your own repo, it's just here for information. in
 - **Documentation** of code (5% of report grade)
   - Organise your code so that it could easily be picked up by another team in the future and developed further.
   - Is your repo clearly organised? Is code well commented throughout?
+
+

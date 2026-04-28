@@ -61,8 +61,7 @@ This makes the game novel because difficulty does not come only from faster enem
 
 ## Requirements
 
-The central aim of the requirements for this project is to prevent scope creep while keeping the project focused on one clear gameplay innovation. We therefore framed the game around the player’s struggle to survive under pressure: a space arcade shooter in which the player attempts to achieve the highest possible score while managing increasing stress. 
-According to Ludewig(2003)'s idea, software artefacts should be understood as models rather than reality itself. We treated our requirements as revisable models of player needs: they describe the game through player-observable behaviour, make scope decisions explicit, and remain open to refinement when evaluation evidence reveals mismatch with actual play experience.
+According to Ludewig(2003)'s idea, software artefacts should be understood as models rather than reality itself. We treated requirements as revisable models of player needs: they describe the game through player-observable behaviour, make scope decisions explicit, and remain open to refinement when evaluation evidence reveals mismatch with actual play experience. Therefore, we framed the game around the player’s struggle to survive under pressure: a space arcade shooter in which the player attempts to achieve the highest possible score while managing increasing stress.
 
 ### Early Ideation
 
@@ -70,119 +69,107 @@ During the ideation stage, we collected inspirations based on the types they are
 
 We did not merely compare "which game is more interesting", but focused on evaluating four dimensions: gameplay novelty, feasibility of p5.js implementation, controllability of the MVP range, and whether it can form a clear engineering challenge. This comparison process helps us avoid choosing solutions with excessive content or those that are difficult to evaluate from the very beginning.
 
-| Candidate Idea | Main Appeal | Main Risk | Decision |
-|---|---|---|---|
-| TermiStone-inspired 2D platformer | Strong dual-state mechanic; players switch between elemental states to solve obstacles and terrain challenges. | Required complex level design, tutorial pacing, platforming feel, and a large amount of content. | Rejected as the main direction, but its state-based gameplay idea was transformed into the Stress system. |
-| Asteroids-style arena shooter | Focused core loop: rotate, thrust, dodge, shoot, and score; suitable for a stable MVP in p5.js. | Needed a clear twist to avoid becoming a simple clone of Asteroids. | Selected as the project foundation. |
-| Rage Game / precision survival reference | High intensity and strong risk-reward rhythm with a small ruleset. | Could become frustrating if difficulty was not carefully balanced. | Used as inspiration for pressure and survival pacing. |
-| Puzzle / exploration platformer references | Offered interesting ideas around discovery, state changes, and player learning. | Too dependent on content volume, level structure, and polish. | Used as secondary inspiration only. |
+<p align="center">
+  <b>Figure 3</b><br>
+  <i>Candidate Idea Comparison</i><br>
+  <img src="materials/requirements/candidate-idea-comparison.png" style="width:80%"/>
+</p>
 
 ### Feasibility Studies
 
-One early candidate was a 2D platform game inspired by TermiStone. Its core mechanic was a dual-state system in which the player switched between different elemental states and used state-specific abilities to overcome mechanisms, obstacles, and terrain. The idea was highly appealing during the selection stage, and every team member who tried it immediately said: “it should be our project!” We had even produced an [inspiration video](https://www.youtube.com/watch?v=za6nsWXRI2Y) to explore the idea further.
+One early game idea was inspired by TermiStone - a 2D platform game, whose core mechanic is a dual-state system. The player need to switch different elemental states and use state-specific abilities to overcome difficult in it. This idea was highly appealing and every team member who tried it would immediately say: “it should be our project!” We had even produced an [inspiration video](https://www.youtube.com/watch?v=za6nsWXRI2Y) to explore the inspiration further.
 
-However, according to the requirements of this project, we found that this platformer concept would rely on complex level design, carefully paced tutorials, precise platforming feel, and a large amount of content. Given the module timeframe and the constraints of implementing the game in p5.js, this direction introduced a high risk of scope expansion. 
+However, after considering the project requirements, we argued that this idea would be too difficult to achieve within the available time. Such a platformer game would heavily rely on complex level design, careful paced tutorials, precise movement feel, and amount of content, which introduced a high risk of scope expansion. 
 
-We therefore switched the project foundation toward an [Asteroids-style arena shooter](materials/requirements/final-idea.md), whose core loop is more focused: rotating, thrusting, dodging, shooting, and scoring. This made it more realistic to build a stable MVP first. At the same time, we preserved the original idea of state-influenced gameplay by reworking it into the current Stress system, where collisions and damage not only increase the risk of failure but also change the ship’s handling state. This became the core requirements trade-off: **reduce content scope while preserving mechanical novelty**.
+Therefore we changed the project foundation toward an [Asteroids-style arena shooter](materials/requirements/final-idea.md) instead, because whose core loop was more realistic for a p5.js project: rotating, thrusting, dodging, shooting, and scoring. At the same time, we preserved the original idea of state-influenced gameplay - reworked it into **Stress system**. This twist turns the game from simple survival into risk management..
 
 ### Stakeholder and Top-level Need
 
-To avoid treating requirements as a simple feature list, we used stakeholder analysis to connect requirements to the context of the game. The stakeholder onion model suggests that stakeholders should be identified around the product or service itself rather than only around the development team (Alexander and Beus-Dukic, 2009). Based on this theory, we identified four main stakeholder groups: Players are the primary users and can be understood as both normal operators and functional beneficiaries: they interact directly with the game and benefit from an enjoyable, fair, and understandable play experience. Therefore, what they want to focus on is intuitive controls, clear HUD feedback, fair difficulty, and smooth gameplay. Game Developers are close to the product during this duration, so their care about modular structure, maintainability, extensibility, and testability. Course Instructors act as surrogate and assessment stakeholders: their responsibility is judging whether our project is clear, justified, traceable, and supported by evidence. Playtesters provide feedback by revealing usability issues, balancing problems, and gameplay defects that the development team may not notice. From these stakeholders, we derived several top-level needs, summarized below.
+The stakeholder onion model suggests that stakeholders should be identified around the product or service itself rather than only around the development team (Alexander and Beus-Dukic, 2009). Based on this theory, we used stakeholder analysis to connect requirements to the context of the game and identified four main stakeholder groups later: 
 
-| Stakeholder | Top-Level Need | Related Epics | Evidence / Validation |
-|---|---|---|---|
-| Players | Intuitive controls, clear HUD feedback, fair difficulty progression, and smooth gameplay | Epic 1 - Core Gameplay Mechanics; Epic 2 - Stress System; Epic 5 - Level Progression; Epic 6 - User Interface and Feedback | Playtesting and Think Aloud feedback on onboarding, HUD clarity, weapon readiness, and difficulty pacing; SUS and NASA-TLX results used to assess usability and workload. |
-| Game Developers | Modular, maintainable, extensible, and testable system structure | Epic 1 - Core Gameplay Mechanics; Epic 2 - Stress System; Epic 3 - Weapons System; Epic 4 - Enemy and Asteroid Behaviour; Epic 5 - Level Progression; Epic 6 - User Interface and Feedback | Modular implementation across `stress.js`, `game-loop.js`, `level-spawn.js`, `controls.js`, and `menu.js`; acceptance criteria and traceability matrix linking requirements to implementation files. |
-| Course Instructors | Clear requirements, justified design decisions, process evidence, and traceable development work | All epics | Use-case modelling, user stories, acceptance criteria, requirement refinement evidence, GitHub issue / PR / commit links, and evaluation results. |
-| Playtesters | Identify usability issues, balancing problems, and gameplay defects that the development team may overlook | Epic 2 - Stress System; Epic 5 - Level Progression; Epic 6 - User Interface and Feedback | Weekly feedback and playtesting evidence led to requirement changes including score-based progression, HUD weapon states, level briefing cards, and enemy missile stress damage instead of instant death. |
+- **Players** are the primary users. They interact directly with the game and benefit from an enjoyable, fair, and understandable play experience. Their main needs are intuitive controIs, clear HUD feedback, fair difficulty, and smooth gameplay. 
+- **Game Developers** are close to the product during development, so their care about modular structure, maintainability, extensibility, and testability. 
+- **Course Instructors** act as surrogate and assessment stakeholders. Their responsibility is to judge whether the project has clear requirements, justified decisions, traceable evidence. 
+- **Playtesters** provide feedback by finding usability issues, balancing problems, and gameplay defects that the team might miss ourselves. 
+
+From these stakeholders, we derived several top-level needs table which is summarized below.
+
+<p align="center">
+  <b>Table 1</b><br>
+  <i>Top-level Needs Based on Stakeholders</i>
+  <img src="materials/requirements/stakeholder-top-level-needs.png" style="width:80%"/>
+</p>
+
 
 ### Epics and User Stories
 
-Around these needs, we organized the project into six epics, as shown in Figure 3, and then defined user stories from those epics.
+Around these needs, we organized the project into 6 epics, as shown in Figure 4, and then defined user stories under each epics.
 
 <p align="center">
-  <b>Figure 3: Six Implementable Epics</b><br>
-  <img src="materials/requirements/implementable-epics-relationship.png" width="500"/>
+  <b>Figure 4</b><br>
+  <i>Six Implementable Epics</i><br>
+  <img src="materials/requirements/implementable-epics-relationship.png" style="width:80%"/>
 </p>
 
-The user stories were structured around player value. Stories about ship control, collision consistency, and HUD readability address learnability for new players and fairness during play. Stories about stress gain, stress recovery, and tier-based handling changes define the central twist of the project. Stories about weapon cooldowns, enemy pressure, and level progression support challenge depth and long-term motivation for more experienced players. This organization means that stress is a central design driver across the requirements layer.
-
+The user stories were structured based on the player value. Some stories focus on ship control, collision consistency, and HUD readability, which made new players better understand the whole game and feel fair. Other stories define the core twist - stress system, which includes stress gain, stress recovery, and tier-based handling changes. We also defined stories for weapon cooldowns, enemy pressure, and level progression, which increased depth and motivation for experienced players. Overall, this means that **stress system** is a central design driver across the requirements layer.
 
 ### Use Case Modelling
 
-We then used **use-case modelling** to describe system behaviour from the perspective of player-observable interactions. The final model contains only one actor, which is  the Player. It keeps the system boundary focused on the single-player gameplay loop.
+Our team then use **Use-case modelling** to describe system behaviour from the perspective of players' interactions. The final model contains only one actor: **Player**. It keeps the system boundary focused on the single-player gameplay loop.
 
 <p align="center">
-  <b>Figure 4: Use Case Diagram</b><br>
-  <img src="materials/requirements/use-case-diagram.png" width="500"/>
+  <b>Figure 5</b><br>
+  <i>The Use-case Diagram</i><br>
+  <img src="materials/requirements/use-case-diagram.png" style="width:80%"/>
 </p>
 
-Although developers, instructors and test players are also stakeholders, the use-case diagram only retains players as actors because the goal of this diagram is to describe runtime system interactions rather than project management relationships.
+The reason why the use-case diagram only retains players as actors is that the goal of this diagram is to describe runtime system interactions between the player and the game system.
 
 ### Use-Case Specification Tables
 
-Our use-case model is built around two core use cases: Start and Play a Standard Run and Handle Stress through Collision and Recovery. The first covers the complete flow from the main menu, through the level briefing, into active play, survival through movement and weapons, score-based progression, and finally the game-over state. The second focuses on the core gameplay chain of this project: collisions and hits increase stress, stress changes the HUD and handling state, cyan recovery pickups reduce stress, and passive decay helps the player regain control when they avoid further damage.
+There are two core use-case specification tables: The first is **Start and Play a Standard Run**, which covers the full player journey from the main menu and level briefing, into active gameplay, then through movement, weapons, etc. and finally into the game-over state.
 
 <p align="center">
   <b>Table x</b><br>
-  <i>Start and Play a Standard Run</i><br>
+  <i>Use Case A - Start and Play a Standard Run</i><br>
+  <img src="materials/requirements/use-case-standard-run-table.png" style="width:80%"/>
 </p>
 
-| Use-Case Section | Content |
-|---|---|
-| **Use Case Name** | **Start and Play a Standard Run** |
-| **Brief Description** | The player starts from the main menu, reads the level briefing, plays the main survival loop, progresses through score-based levels, and eventually reaches the game-over state. |
-| **Primary Actor** | Player |
-| **Preconditions** | The game page is loaded and the main menu is visible. |
-| **Basic Flow** | 1. The player enters the main menu.<br>2. The system shows `START` and `ABOUT`.<br>3. The player selects `START` using the menu keys.<br>4. The system displays the Level 1 briefing card.<br>5. The player holds `Space` to continue.<br>6. The system dismisses the briefing card and resumes active gameplay.<br>7. The player rotates and boosts the ship to avoid hazards.<br>8. The automatic laser fires while energy is available.<br>9. The player may use available secondary weapons.<br>10. The system updates score, level, stress, HUD, and weapon status during play.<br>11. When the score reaches a level threshold, the system displays the next level briefing card.<br>12. The player continues into the next level with increased pressure.<br>13. If stress reaches `100` after damage, the ship crashes and explodes.<br>14. The system shows the `GAME OVER` page with final score and telemetry summary.<br>15. The player presses any key to return to the main menu. |
-| **Alternative Flows** | **A1.** At Step 3, the player selects `ABOUT`; the system shows the game description, collision test link, and `BACK` option.<br>**A2.** At Step 5 or Step 11, the player does not hold `Space`; the system remains on the briefing card.<br>**A3.** During Step 9, the player attempts to use a locked weapon; the HUD shows `LOCKED` and no weapon is fired.<br>**A4.** During Step 9, the player attempts to use a cooling weapon; the HUD shows `COOLING` and no weapon is fired.<br>**A5.** During Step 9, the player attempts to use a weapon at its active limit; the HUD shows `LIMIT` and no weapon is fired. |
-| **Postconditions** | The run either ends with the `GAME OVER` page and the player returning to the main menu, or continues in active gameplay if the crash condition has not been reached. |
+The second is **Handle Stress through Collision and Recovery**. This focuses on the core gameplay mechanic: collisions and hits increase stress, stress changes the HUD and ship handling, recovery pickups reduce stress, and passive decay helps the player regain control when they avoid further damage.
 
 <p align="center">
-  <b>Table Use Case B</b><br>
-  <i>Handle Stress through Collision and Recovery</i><br>
+  <b>Table x</b><br>
+  <i>Use Case B - Handle Stress through Collision and Recovery</i><br>
+  <img src="materials/requirements/use-case-stress-recovery-table.png" style="width:80%"/>
 </p>
-
-| Use-Case Section | Content |
-|---|---|
-| **Use Case Name** | **Handle Stress through Collision and Recovery** |
-| **Brief Description** | The player’s stress increases when hazards cause damage, decreases through recovery pickups or passive decay, and affects both HUD feedback and ship handling. |
-| **Primary Actor** | Player |
-| **Preconditions** | A run is active and the player ship is present in the arena. |
-| **Basic Flow** | 1. The player controls the ship during active gameplay.<br>2. The ship collides with an asteroid or is hit by enemy fire.<br>3. The system increases stress based on the damage source: asteroid `+20`, enemy bullet `+12`, enemy missile `+30`.<br>4. The system updates the stress bar, colour feedback, numeric stress value, and handling label.<br>5. If stress reaches a higher tier, ship handling becomes weaker.<br>6. The player adapts by avoiding further damage.<br>7. A cyan recovery pickup appears in the arena.<br>8. The player collects the pickup.<br>9. The system reduces stress by `20`.<br>10. The HUD and ship handling update to reflect the new stress state.<br>11. If the player avoids further damage, stress decays passively after the cooldown period. |
-| **Alternative Flows** | **B1.** At Step 2, collision cooldown is active; the system prevents repeated stress gain from rapid repeated contact.<br>**B2.** At Step 3, stress reaches `100`; the ship crashes and the game-over flow begins.<br>**B3.** At Step 7, the player does not collect a pickup; the player continues under the current stress state.<br>**B4.** At Step 11, the player takes damage again before passive decay has time to reduce stress; stress increases and the cooldown resets. |
-| **Postconditions** | The player either remains in active play with an updated stress state, regains partial control through recovery, or crashes if stress reaches `100`. |
 
 These use-case specifications informed the later sequence diagrams in the design section, especially the collision-to-stress path and the pickup-to-recovery path - both paths require coordinated behaviour across gameplay, HUD, and state-management subsystems.
 
 ### Acceptance Criteria and Iterative Refinement
 
-To make the requirements directly checkable, we further translated the user stories into [acceptance criteria](materials/requirements/acceptance-criteria.md) in a Given / When / Then format. For example:
-
-| AC ID | Given | When | Then |
-|---|---|---|---|
-| AC-2.1 | Stress is below `100` | The ship collides with an asteroid | Stress increases by `20` |
-| AC-2.1 | Stress is below `100` | The ship is hit by an enemy bullet | Stress increases by `12` |
-| AC-2.1 | Stress is below `100` | The ship is hit by an enemy missile | Stress increases by `30` |
-| AC-2.2 | A recovery pickup is collected | Collection is processed | Stress decreases by `20` without going below `0` |
-| AC-2.3 | Stress is in range `40-74` | Handling parameters are applied | The tier becomes `TENSE` and handling is reduced |
-| AC-3.3 | A weapon is cooling down | The player attempts to use it | No weapon is fired and the HUD shows `COOLING` |
-| AC-5.1 | Score reaches `300000` | Level update runs | The game advances to Level 2 |
-| AC-5.1 | Score reaches `700000` | Level update runs | The game advances to Level 3 |
-
-In this way, the most important behaviours of the project could be written as verifiable conditions.
-The requirements were also refined through feedback from playtesting, Think Aloud sessions, weekly feedback, and workload evaluation. The table below summarises the most important requirement changes.
+If the story is merely staying at the level of "user stories", all of the project would become uncheckable. That is the reason we further refined the requirements into "verifiable and testable rules" - [acceptance criteria](materials/requirements/acceptance-criteria.md) in a Given / When / Then format. For example:
 
 <p align="center">
-  <b>Figure 5: Requirement Refinement Evidence</b><br>
-  <img src="materials/requirements/refinement-evidence-table.png" width="500"/>
+  <b>Figure 6</b><br>
+  <i>Acceptance Criteria Examples</i><br>
+  <img src="materials/requirements/acceptance-criteria-examples.png" style="width:80%"/>
 </p>
 
-The requirements for this project were not fixed. Playtesting, Think Aloud sessions, and [weekly feedback](materials/evaluation/weekly-feedback/2026-03-10-weekly-feedback-and-goals.md) all showed that some initial requirement definitions needed to be revised. Based on this evidence, we made several key adjustments:
-- We changed progression from time-based progression to score-based progression;
-- We made READY, COOLING, LIMIT, and LOCKED states explicit in the HUD, and improved onboarding through level briefing cards;
-- We changed enemy missiles so that they increase stress instead of causing instant death.
-This shows that the requirements artefacts in this project were not static records. They actively guided development and supported ongoing design refinement.
+In this way, the most important behaviours of the project could be written as verifiable conditions. The requirements are modified through feedback from playtesting, Think Aloud sessions, [weekly feedback](materials/evaluation/weekly-feedback/2026-03-10-weekly-feedback-and-goals.md), etc. The table x below summarised the most important requirement changes.
+
+<p align="center">
+  <b>Figure 7</b><br>
+  <i>Requirement Refinement Evidence</i><br>
+  <img src="materials/requirements/refinement-evidence-table.png" style="width:80%"/>
+</p>
+
+According to these evidence, we made several key adjustments:
+
+- We changed progression from **time-based progression** to **score-based progression**;
+- We made `READY`, `COOLING`, `LIMIT`, and `LOCKED` states explicit in the HUD, and improved onboarding through **level briefing cards**;
+- We changed enemy missiles so that they **increase stress** instead of **causing instant death**.
+
+These changes show that the requirements artefacts in this project were not static records, but guided development and supported ongoing design refinement.
 
 
 

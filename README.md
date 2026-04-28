@@ -1,5 +1,8 @@
 # Keep Calm, Captain!
 
+Here's our game. We built an Asteroids-style shooter with a twist — collisions don't just damage you, they mess with your controls. Get hit too much and your ship handles terribly. Collect pickups to calm down. Play it [here](https://uob-comsm0166.github.io/2026-group-18/) and see for yourself.
+
+Built in p5.js, the game centres on a **Stress mechanic** that degrades ship handling in fixed, predictable tiers as your stress meter rises. This transforms the core loop from simple survival into risk management: play aggressively to score more, or play safely to preserve precision and control.
 <p align="center">
   <img src="materials/game-documentation/keepcalm-captain.png" alt="header.jpg" style="width:100%"/>
     <br>
@@ -29,7 +32,7 @@ A browser-based Asteroids-style arcade shooter built in p5.js, centred on a Stre
 8. [Sustainability, Accessibility, and Ethics](#sustainability-accessibility-ethics)
 9. [Conclusion](#conclusion)
 10. [Contribution Statement](#contribution-statement)
-10. [AI statement]()
+10. [AI statement](#AI statement)
 12. [References](#references)
 
 
@@ -187,25 +190,27 @@ This shows that the requirements artefacts in this project were not static recor
 
 ### Design Goals and Architectural Approach
 
-Early in the design process, we identified the core gameplay of this game as **the stress system**, and we also made a lot of predictions about what might happen in the process: numerical design, operational gameplay, speed of feedback and so on. Finally, we decided to adopt the hybrid OO Design method to design our game, which means we divided the system into two layers: classifying **entity objects** by classes and implementing **operation control** by functions. This separation aligns with the use of UML class diagrams for structural modelling and sequence diagrams for behaviour (Fowler, 2004). And we have roughly divided the classes by drawing software: UMLetino. Now we have the diagram completely.
-
+At the beginning of the programme, we ensured to put our core gameplay of this game as the **pressure system**, and we made lots of predictions about the situation that might happening during the process. For example: the numerical design, gameplay operation, the speed of feedback and so on. In the end, we confirmed that use a **hybrid OO-design** approach to design the game, which means divided the system into two layers: **classifying entity objects** by classes and implementing **operation control** by functions. This separation aligns with the use of UML class diagrams for structural modelling and sequence diagrams for behaviour (Fowler, 2004). And we have roughly divided the classes by drawing software: UMLetino. Now we have the diagram completely.
 
 ### System Architecture
 
-The part of the entity class includes all the **actual objects** in the game, such as the player-controlled aircraft, randomly generated meteorites and enemies, and items that can be picked up. These entities only need to hold their own **position, state, speed and behavior**. We let them manage themselves through encapsulation. The frame-by-frame scheduling, enemy generation judgment, collision resolution and interface update are coordinated by the functions of the control layer. In this structure, because most of the entities in the game are independent objects, the complexity of a single class is reduced a lot, and different subsystems can work more clearly during the game. This structure also makes the codebase easier to maintain. For example, the spawn and split logic is needed, and the game’s core pressure system is only responsible for converting the player’s collection events into a change in pressure and triggering certain mechanics when the pressure reaches a threshold. It allows new entity types or gameplay method to be added without significantly modifying existing components. We use a clearly defined interface to connect the entity object layer and the function implementation layer. The function control layer updates and plans the entity each frame, and the entity object layer provides the local state and behavior for the function control layer to process.
-
+The part of the entity class, which is including all the objects that player can see during the game, such as the player-controlled aircraft, randomly generated enemies and items that can be picked up. These entities only need to hold their own position, state, speed and behavior. We let them manage themselves through **encapsulation**. The frame-by-frame scheduling, enemy generation judgment, collision resolution and interface update are coordinated by the functions of the control layer. In this structure, because most of the entities in the game are independent objects, the complexity of a single class is reduced a lot, and different subsystems can work more clearly during the game. This structure also makes the codebase easier to maintain. For example, the spawn and split logic is needed, and the game’s core pressure system is only responsible for converting the player’s collection events into a change in pressure and triggering certain mechanics when the pressure reaches a threshold. It allows new entity types or gameplay method to be added without significantly modifying existing components. We use a clearly defined interface to connect the entity object layer and the function implementation layer. The function control layer updates and plans the entity each frame, and the entity object layer provides the local state and behavior for the function control layer to process.
 The following picture shows all the **classes** in our game.
-
-<p align="center">
-  <b>Figure 6: All the Classes</b><br>
-  <img src="materials/design/uml/class.png" width="500"/>
-</p>
 
 ### Class Design
 
 In terms of more detailed class design, the Asteroid class represents objects with multi-stage destruction behavior, and the enemy is a local unit with different types and active shooting skills. The Pickup class is used to implement the recovery mechanism. Player related objects are responsible for moving, colliding and updating the state of the pressure value. Projectile classes are divided into laser, missile, mine and enemy missile. These skills also have their own behavior mode; each weapon class is responsible only for its own attack behavior. In the main file, these functions are used only as references and are not involved in the internal implementation. 
 
 The following picture shows the main functions in our game.
+
+<p align="center">
+  <b>Figure 6: All the Classes</b><br>
+  <img src="materials/design/uml/class.png" width="500"/>
+</p>
+
+### Behaviour
+
+In the behavior design, the system is organized around the **main loop**, which performs update, collision detection, feedback processing and state judgment in turn during each frame. For example, when the player accidentally touches a meteorite, the system will directly affect the feel of player’s control, the meteorite split and other effects; When the player is hit by a meteorite or an enemy bullet, the system will increase the pressure value and determine whether the threshold has been reached. As the pressure gradually increases, the player needs to continue to play under high pressure (feedback is the operator's feel). We consider this design to be a core form of feedback for the game. The stress system, as our core system, acts as a **bridge** connecting different subsystems. Damage events increase stress, and items are picked up to decrease stress, which is then linked to operational parameters through thresholds to create a dynamic difficulty system based on the player's performance, so that the player is faced with a different game each time.
 
 <p align="center">
   <b>Figure 7: Functions in the Game</b><br>
@@ -216,49 +221,46 @@ The following picture shows the main functions in our game.
 
 ## Implementation
 
-During the implementation of our game, we raise three main areas of challenge:
+During the implementation, we have designed 3 challenges:
 
-1. reducing frustration caused by the instant-death mechanic while still maintaining tension through a stress system;
-2. replacing time-based level progression with score-based progression in order to improve pacing;
-3. expanding the range of weapons and enemies while preserving overall gameplay balance and creating clearer strategic differences between stages.
+1. Creating the stress system instead of instant death;
+2. Replacing time-based level upgrade system by score-based;
+3. Adding new weapons and enemies to increase diversity;
 
+### Challenge 1: Creating the stress system instead of instant death
 
-### Challenge 1: Reducing frustration while maintaining tension through the stress system
+In the earliest version of our game, the ship will collide with asteroid causing instant death. We considered this as over-frustrating punishment, and decided to change it. Instead, we designed a stress system. 
 
-In the earliest version of the game, colliding with an asteroid caused immediate death. Although this made the game difficult, it also made it feel overly punishing, since a single mistake could end the entire run. Instead of creating meaningful challenge, this often led to frustration. To address this, we removed the instant-death mechanic and replaced it with a stress system.
+The stress system is constructed by three core species: the stress bar and current stress value, self recovery cooldown, and recovery item. Stress value is initially 0 and will only increase when crash with an asteroid. Once the value reaches 100, the ship will be destroyed. There are two ways to recover, either self recovery, or taking the recovery item. The self recovery cooldown will immediately start right after a collision or an attack. Self recovery will start at a constant rate if there is no extra contact between ship and enemies or asteroids. Similar to the recovery items, they will constantly appear without any influence. 
 
-The stress system was built around three core elements: the current stress value, stress tiers, and a recovery cooldown. Stress increases when the player is hit by collisions or attacks, and the ship only crashes when stress reaches its upper limit. Recovery does not begin immediately after damage is taken; instead, there is a short cooldown before stress gradually decreases. We also added recovery pickups so that players could lower stress more quickly during intense situations. This made failure more gradual rather than being caused by one accidental mistake.
+The other key design is on the handling performance degradation. As stress rise, the handling system of the ship will synchronous declines. In detail, turnings slows down, weaker thrusts, and more significant inertia. This is how our stress system punishing collision, by increasing difficulties in controlling and keep players under reasonable pressure. 
 
-A key design decision was that stress should affect more than survival. As stress rises, the handling of the ship becomes worse: turning slows down, thrust becomes weaker, and inertia becomes more noticeable. This allows the player to keep playing under pressure, but with increasing difficulty in control. In this way, the system preserves tension while making punishment feel fairer.
-
-We also improved the user interface during testing. In earlier versions, the stress bar rose when the player took damage, but some players found this confusing. We therefore redesigned it into a more health-bar-like display and clearly labelled the current stress state. This made it easier for players to understand their level of danger during fast-paced gameplay. Overall, the stress system reduced frustration while keeping the sense of pressure in combat.
+We also improved the game UI after testing. In the earlier version, the stress bar rose when the ship crashed, in which some of the tester feels unintuitive. We then redesigned it into a HP-like bar. In addition, we also changed the shape of our ship to give a clearer ship facing view, and adding colors to both ship and bar in order to tell players the stress conditions more directly. 
 
 <p align="center">
   <b>Figure 8: Annotated Game UI</b><br>
   <img src="materials/implementation/challenge-1-ui.png" width="500"/>
 </p>
 
-### Challenge 2: Replacing time-based progression with score-based progression
+### Challenge 2: Replacing time-based level upgrade system by score-based
 
-The second challenge was designing a progression system that created a sense of growth without harming the pace of the game. We divided the game into three stages so that players could gradually experience higher levels of difficulty. Rather than making these separate modes, we allowed players to move automatically into the next stage once they met certain conditions, unlocking new weapons and enemies along the way. This made progression feel more natural.
+The second challenge was to design an effective level progression system. We planed to create levels of difficulties so that we can guarantee everyone have their suitable experience, no matter they prefer challenging or relaxing, having good or poor skills on this type of game. We have inserted new weapons and enemies to make it more interesting. 
 
-Our first implementation used time-based advancement: players entered the next stage after surviving for 90 seconds. While simple, testing showed that this made the pace feel slow. The countdown display used to communicate progression also created problems. When it was large, it blocked the player’s view; when it was small, it was easy to miss. These issues suggested that survival time alone was not an effective progression condition for a fast-paced shooting game.
+Our first version of the system was a time-based system: players can access to next stage when they have survived 90 seconds in the current stage. However during testing, most players declared that the system was dilatory and endless. The countdown display also cause complex problems: when it’s large, it blocked the view; when it’s small, it was easy to miss. These results implies that we need a better level upgrade system. 
 
-We therefore redesigned the system so that progression depended on score instead of time. Compared with a time-based system, score reflects player performance more directly and gives progression a clearer sense of purpose. To support this, we implemented a scoring model in which destroying asteroids awards points based on asteroid radius multiplied by 100, while enemy ships give fixed score values. This kept the system closely connected to the game’s core mechanics and made rewards for different targets easier to understand.
+Therefore we redesigned the system into a score-based version, destroying asteroids and enemies to earn scores. Compare to the time-based system, this version leading players to hit rather than dodge. In order to accomplish this, we set up a scoring model in which gain scores of asteroids according to their radius and scores of enemy ships are fixed values. This kept the system closely connected to the shooting game concept. 
 
-After discussion and testing, we set two score thresholds: 300,000 and 700,000 points. Reaching them automatically advances the player to the next stage and unlocks new content. Compared with the original time-based design, this approach improved pacing and made progression feel more closely tied to player performance and achievement.
+After testing and discussing, we set the two level threshold: 30000 and 700000 points. It will automatically upgrade level when reaching them, and also unlock new contents. 
 
-### Challenge 3: Expanding weapons and enemies while preserving balance
+### Challenge 3: Adding new weapons and enemies to increase diversity
 
-The third challenge was expanding the game’s content without making it repetitive or damaging balance. To increase variety, we introduced new weapons and enemies progressively across different stages. This meant that difficulty increased not only through larger numbers, but also through new strategic demands.
+The third challenge was to expand the game content without affecting game balance. This makes our game more diverse and less boring, which in other way, attracting more players to try and stay. 
 
-In the first stage, we replaced manual shooting with automatic shooting so that players could focus more on movement, dodging, and skill usage. We also added the shotgun and the ultrasonic ability. The shotgun was designed to deal with groups of small asteroids approaching from one direction, while ultrasonic was intended to clear fragmented debris. Because ultrasonic was highly effective, it was given a long cooldown to maintain balance.
+Generally we replaced the manual shooting by automatically shooting since some players reported that they kept pressing space which cause unnecessary work. We also added shotguns and ultrasonic in the first stage. The shotgun is designed to deal with multiples of asteroids coming from the ship’s front, while ultrasonic is to coop with wild range of small asteroids, so that players can destroy asteroids smaller than particular size. Since the ultrasonic is too powerful, we give it a rather longer cooldown to maintain balance. 
 
-In the second stage, we introduced the missile weapon and the blue enemy ship. The blue ship fires bullets at the player, making it a more direct threat than asteroids. The missile was designed as a counter to these high-priority enemies. However, in the first version, missiles had no target-priority system and were often wasted on low-threat asteroids. After testing, we redesigned the targeting logic so that missiles update their target dynamically according to threat priority, allowing them to focus on enemy ships first.
+In the second stage, we provided a new missile weapon and new enemy blue ship. The blue ship injects missiles to our ship, which makes it more threatening. The homing missile is designed to counter these threats. However in the earlier version, the homing missile doesn’t have a target priority, which players complained a lot. We then wrote several if loops to test which target it was, and allow them to target the higher priority ships first. 
 
-In the third stage, we introduced mines and the yellow enemy ship. The yellow ship moves towards the player and fires homing missiles, making it significantly more dangerous than the previous enemy type. Testing showed that this stage could become too punishing, so we reduced the yellow ship’s damage. At the same time, mines were designed as a trap-based weapon that works well against its movement behaviour, helping players manage pressure while other weapons are on cooldown.
-
-Through this staged design, each new mechanic was matched to a new type of threat. As a result, later gameplay became more complex because of changing strategic demands rather than simply higher numerical difficulty.
+In the third stage, we introduced mines and yellow ship enemies. The yellow ships move towards our ship and fire homing missile as well. This is a more dangerous than the previous blue enemy, and the mines are their counters. However, it seems that the yellow ships can shoot the missile to us before it steps on a mine, hence we have to lower the damage per missile to make it less punishing.  
 
 | Weapon | Preview | Description |
 |---|---|---|
@@ -271,13 +273,13 @@ Through this staged design, each new mechanic was matched to a new type of threa
 
 ### Qualitative Evaluation: Think Aloud
 
-In the qualitative evaluation, we focused on four questions: whether players could quickly understand the game rules and controls, whether they could correctly understand the stress system, whether they could judge the right timing for skill use, and whether they could accept the increase in difficulty in later stages. Since the original game had relatively simple gameplay but reliable code, and since our work mainly extended the gameplay rather than heavily modifying the codebase, this part of the evaluation mainly examined whether the newly introduced mechanics were clear, intuitive, and easy to understand from the player’s perspective.
+In the qualitative evaluation, since the original game has a relatively simple gameplay and a reliable code, we focused on all possible problems of our changes on the challenges. In other words, can players understand game rules and controls, would they correctly understand the stress system, whether they could judge the right timing to use skills, and will they accept the increase in difficulties in level upgrade system. 
 
-The results showed that the most obvious problems appeared in onboarding and controls. Some players could not immediately understand how to control the ship without additional guidance, and some even assumed that the game was a fixed-position shooter rather than one that required active movement for dodging and positioning. In addition, some players reported that the ship’s facing direction was not clear enough during fast-paced gameplay.
+The results tells us there are several problems. The main one is the onboarding and controls. Some players cannot understand how to control our ship without additional guidance. Some even reported that the game was a fixed position shooter rather than dodging asteroids. This implies that, in the earlier version, our game didn’t have a clear tutorial on controls, which we had improved in the latest version. In addition, some testers told us that the ship’s facing direction is unclear during the fast paced game.
 
-The second major issue was the understandability of the stress system. Some players felt that the original design, in which the stress bar increased when the player was hit, was not intuitive. It was also not easy for them to notice that rising stress would reduce the ship’s handling performance. A third issue concerned weapon feedback: several players reported that early versions lacked clear cooldown indicators, making it difficult to tell whether a weapon was available. Finally, players showed relatively low acceptance of the earlier time-based stage progression system, suggesting that this progression method still had room for improvement in terms of pacing and acceptability.
+The second major issue was the understandability of our stress system. Our original design was an increasing stress bar, which was unintuitive to some of the testers. Also, the results of increasing stress, as in the handling performance degrading, were not clearly pointed out. There was a similar problem in the third challenge on weapons and enemies, which was the cooldown indicator. Hence this problem can be analyzed as: For the new mechanism we have introduced, we need clearer indicators to let players know what has changed.
 
-Overall, the qualitative evaluation showed that the main problems did not lie in the core mechanics themselves, but in onboarding, feedback visibility, and system understandability. Based on these findings, we improved the control guidance, the stress bar display, weapon cooldown feedback, and the stage progression system in order to improve readability and the experience for new players.
+Overall, the qualitative evaluation has shown that the main problems were not the mechanisms themselves, but on the onboarding, feedback visibility, and system understandabilities. Based on these results, we need to improve, especially for new players, readabilities and gaming experiences. 
 
 ### Quantitative Evaluation: SUS and NASA-TLX
 
@@ -301,6 +303,10 @@ Overall, the qualitative evaluation showed that the main problems did not lie in
   <img src="materials/evaluation/SUS-Overall.png" width="500"/>
 </p>
 
+<p align="center">
+  <img src="materials/evaluation/sus_score_comparison_first_five.png" width="500"/>
+</p>
+
 ### NASA-TLX Average Scores
 
 | Dimension | 10/3/2026 | 20/4/2026 |
@@ -317,34 +323,37 @@ Overall, the qualitative evaluation showed that the main problems did not lie in
   <img src="materials/evaluation/nasa-tlx-chart.png" width="500"/>
 </p>
 
-To complement the qualitative results, we used the System Usability Scale (SUS) to measure overall perceptions of ease of use, learnability, and confidence. Our game achieved an average SUS score of **77.0**, indicating a generally positive level of usability.
+<p align="center">
+  <img src="materials/evaluation/nasa_tlx_dimension_comparison_first_five.png" width="500"/>
+</p>
 
-A further comparison revealed that participants with experience of similar games achieved an average score of **83.3**, whereas those without relevant experience averaged **67.5**. This suggests that the game is relatively intuitive for experienced players, but that novice players still face barriers in the learning process and in building confidence.
+We had also done two quantitative evaluation to verify our thoughts. 
 
-Looking at the individual items, the lower scores were mainly related to players’ willingness to continue using the system, their comfort during operation, and their confidence in using it, rather than to system complexity, integration, or consistency. This suggests that the main issue is not that the system itself is structurally confusing, but that, for first-time players of this genre, the ship’s inertia, the pace of control, and the early-stage difficulty are still not sufficiently beginner-friendly. For example, two participants gave relatively low scores for Q1 and Q8, suggesting that the ship’s inertia made the controls feel less comfortable. Although inertia is a core part of the gameplay and should not be removed entirely, this result shows that players need better guidance, feedback, and difficulty adjustment in order to adapt more quickly.
+For the System Usability Scale (SUS), we had measured the overall perceptions of is to use liability, and confidence. Which our game achieved an average score of 77, a generally positive result of assessment. 
 
-We also used **NASA-TLX** because our game is fundamentally concerned with tension, effort, and loss of control. Stress-driven handling degradation changes how demanding the game feels, so a workload measure was more closely aligned with our design goals than a broad usability score alone. NASA-TLX allowed us to judge whether later gameplay created satisfying pressure or simply excessive workload caused by unclear feedback, visual overload, or control frustration. The results showed that **temporal demand** was the highest-rated dimension, suggesting that the game created a relatively high level of pacing pressure and tension.
+We had also compared those players who had similar game experience before, and who has no such experience. We got an average score of 83.3 for those players who had experience of similar games but only 67.5 given by those players who had no experience which enhance our conjecture. We had already made this game intuitive enough for those experienced players. We now need to improve the playing experience for the others. 
 
-We conducted a second round of testing with the first five players on **20/4/2026**. According to the **Wilcoxon signed-rank test**, NASA-TLX data showed decreases in both **mental demand** and **temporal demand**, suggesting that players experienced a lower cognitive burden and less pacing pressure in the later test. However, the statistical results for both SUS and NASA-TLX did not reach significance. For NASA-TLX, the result was approximately **p = 0.188**, indicating a downward trend but not a statistically significant difference with the current sample size. Similarly, the new SUS results also did not show a significant change.
+Looking at the individual questions there are some lower scores mainly related to the willingness to continue use our system, players comfort during operation, and players level of confidence on using the system. We are confident to say that our system is relatively good for the experience players, but it was not sufficiently beginner friendly. This appears in many aspects. For example, two participants gave low scores for Q1 and Q8, performing that the ships inertia made the controls, feeling  uncomfortable. These results reminded us that player needs more clear, guidance feedback, and the difficulty adjustment in order to adapt this game more quickly.
 
-Overall, the SUS and NASA-TLX findings support the issues identified in the qualitative evaluation. Future improvements should focus on onboarding for novice players, feedback clarity, and the early gameplay experience, so as to reduce operational burden and improve player confidence.
+We also used NASA-TLX as part of our quantitative evaluation. Lower physical demand and higher mental demand is more likely to be caused by our stress driven handling performance degrading. This allowed us to test how the pressure affected by our gameplay and workload. The results of the temporal demand was the highest-rated dimension, which proved that we need to lower the pressure and tension. 
+
+In order to compare how our changes performed in the new game version, we did another quantitative evaluation and produced new charts. There is a clear decrease in both mental and temporal demand which means we achieved part of our goals, players do experience lower pressure and tension in the later test. However, we tied to use same participants’ results in the two tests to do Wilcoxon Signed Rank Test, we didn’t get a significant difference from the current data size. For NASA-TLX, we only get p = 0.188. We tried to used different data source to do Mann-Whitney U Test but this didn’t work as well. 
 
 ### Code Testing
 
-In addition to user evaluation, we also tested the code itself. We adopted a black-box testing approach and drew on the idea of equivalence partitioning, classifying inputs into valid and invalid cases and then comparing expected outputs with actual outputs. Based on our three main challenges, the testing focused on the stress-value system, the score and level-progression logic, and the activation, cooldown, and enemy-related behaviour of weapons.
-
+In our final evaluation part, we need to test our code itself. We adopted a black-box test approach, according to our challenges, splitting our inputs into valid and invalid, then compare the expect and actual output. 
 ### Code Testing: Stress System and Feedback
 
 | Partition | Expected Output |
 |---|---|
-| Valid collision: player collides with an asteroid | Stress value increases correctly and HUD updates accordingly |
-| Valid hit: player is hit by an enemy projectile | Stress value increases correctly and HUD updates accordingly |
+| Valid collision: ship collides with an asteroid | Stress value increases correctly and HUD updates |
+| Valid hit: player is hit by an enemy projectile | None |
 | Valid recovery: player picks up a recovery item | Stress value decreases correctly |
-| Invalid recovery: no recovery item picked up | Stress value remains unchanged |
-| Valid cooldown end | Stress starts to recover naturally |
-| Invalid cooldown not finished | Stress does not recover naturally |
+| Invalid recovery: no recovery item picked up | None |
+| Valid self recovery cooldown finish | Stress starts to recover naturally |
+| Invalid self recovery cooldown not finished | None |
 | Valid tier change | Handling and colour feedback update correctly |
-| Valid upper limit reached | Player crashes and the game ends |
+| Valid upper limit reached | the game ends |
 
 ### Code Testing: Scoring and Level Progression
 
@@ -352,22 +361,22 @@ In addition to user evaluation, we also tested the code itself. We adopted a bla
 |---|---|
 | Valid asteroid destroyed | Score increases correctly according to radius × 100 |
 | Valid enemy destroyed | Score increases correctly according to fixed value |
-| Invalid scoring: no target destroyed | Score remains unchanged |
-| Valid progression condition: score ≥ 300000 | Enter Stage 2 |
-| Valid progression condition: score ≥ 700000 | Enter Stage 3 |
-| Invalid progression condition: score below threshold | Stage remains unchanged |
+| Invalid scoring: no target destroyed | None |
+| Valid progression condition: score ≥ 300000 | Enter Level 2 |
+| Valid progression condition: score ≥ 700000 | Enter Level 3 |
+| Invalid progression condition: score below threshold | None |
 
 ### Code Testing: Weapon Activation, Cooldown, and Enemy Behaviour
 
 | Partition | Expected Output |
 |---|---|
 | Valid weapon activation | Weapon is successfully triggered |
-| Invalid weapon activation: cooldown not finished | Weapon cannot be triggered |
-| Invalid weapon activation: not unlocked | Weapon cannot be triggered |
+| Invalid weapon activation: cooldown not finished | None |
+| Invalid weapon activation: not unlocked | None |
 | Valid homing missile locks onto enemy | Prioritises high-threat enemies |
 | Valid homing missile locks onto asteroid | Locks onto a valid asteroid target |
 | Valid mine placement | Mine is placed successfully |
-| Invalid mine placement: maximum reached | No new mine is generated |
+| Invalid mine placement: maximum reached | None |
 | Valid blue ship spawn | Spawns correctly in Stage 2 and above |
 | Invalid blue ship spawn | Does not spawn before Stage 2 |
 | Valid yellow ship spawn | Spawns correctly in Stage 3 |
@@ -377,41 +386,40 @@ In addition to user evaluation, we also tested the code itself. We adopted a bla
 
 ## Process
 
-In this project, our team consisted of five members who collaboratively developed a browser-based version of the classic game *Asteroids*. Throughout the development process, we adopted a combination of modular task allocation and collaborative development to ensure the completeness of the game, maintain code quality, and promote effective teamwork.
+In our project, the team consists of five people to jointly develop a classic game based on the browser Asteroide. During the whole game development process, we adopted a combination of modular division of labour and collaborative development to ensure the complete development of the whole game and the quality assurance of the code. The team has the close coorperation.
 
-To improve collaboration efficiency, we divided the overall system into several core modules, including the Game Loop, Collision System, Entities, UI/Menu, and Controls. Each team member was responsible for one core module, while also contributing to integration, testing, and optimization during the later stages. This approach ensured a balanced distribution of tasks as well as a cohesive and well-integrated system.
+In order to improve the efficiency of group collaboration, the five of us divided the whole game system into multiple core modules, including: Game Loop, Collision System, Entities, UI/Menu and Controls. It can ensure that each of the five people is responsible for a core module and participates in the overall testing and optimisation in the later assembly stage, so as to achieve the balance and integrity of task allocation.
 
 <p align="center">
   <b>Figure 11: Team Communication via WeChat</b><br>
   <img src="materials/process/wechat-chat.jpg" width="500"/>
 </p>
 
-In terms of communication, we held multiple discussion meetings at the early stage of the project. These discussions mainly focused on the selection of the game, the design of difficulty progression, and potential innovations and improvements.
-Our first group meeting was conducted online and lasted for over an hour. During this meeting, we focused on addressing existing bugs, planning subsequent level design, and allocating responsibilities for each core module among team members.
+In terms of communication, we held many seminars at the beginning of this project. The direction of the discussion was mainly aimed at the selected game, the improvement of the difficulty of the game, and the innovation and transformation of the game. The first meeting of five people in our group was held online. The meeting lasted for more than an hour. The content of the meeting focused on the repair of game bugs, the level design of the follow-up game, and the core module content that everyone was responsible for .
 
 <p align="center">
   <b>Figure 12: Team Members Collaboratively Testing the Game</b><br>
   <img src="materials/process/team-discussion.jpg" width="500"/>
 </p>
 
-We primarily used GitHub to support team development and collaboration, where our development activities and contributions were clearly recorded. Each team member worked on separate branches to implement features, and pull requests were used for code integration and review.
+During the development process, we have selected a series of tools to support our development and collaboration:
+
 <p align="center">
   <b>Figure 13: The Record of Pull Requests</b><br>
   <img src="materials/process/workflow.png" width="500"/>
 </p>
 
-Our team adopted a structured project management approach combining Kanban boards, GitHub workflows, and progress tracking tools to support efficient collaboration throughout the project.
-We used a Kanban-based system to organize tasks and monitor progress. Tasks were clearly divided into stages such as backlog, to-do, in progress, testing, and done, allowing all team members to have a clear overview of the project status. Responsibilities were well defined, and tasks were assigned on a weekly basis, ensuring a balanced workload and clear deadlines for each member.
+Our team adopted a structured project management approach, integrating Kanban, GitHub workflows, and progress tracking tools to support efficient collaboration throughout the project. 
 
-In addition, GitHub was used as the primary platform for development and collaboration. Each team member worked on separate branches and submitted their changes through pull requests. All pull requests required approval from at least two team members before merging, ensuring code quality, consistency, and traceability. This workflow also promoted knowledge sharing and collaborative problem-solving within the team.
+We use a kanban-based system to organize tasks and monitor progress. Tasks are clearly divided into stages such as backlog, to-do, in progress, testing, and completed, allowing all team members to have a clear understanding of the project status. Responsibilities are clearly defined, and tasks are assigned weekly to ensure a balanced workload for each member and clear deadlines.
 
 <p align="center">
   <b>Figure 14: Kanban Board for Project Management</b><br>
   <img src="materials/process/kanban%20project.png" width="500"/>
 </p>
 
-All pull requests required approval from at least two team members before being merged. This process ensured that code quality was maintained and that all changes were reviewed collaboratively before further development continued.
-During the development process, we selected a range of tools to support both development and team collaboration:
+We mainly realise team development and collaboration on GitHub, and the traces of our collaboration and development can be clearly seen on GitHub. Each of our members develops functions on an independent branch and uses pull request to review the code. The process of each pr requires at least two members to review and pass, and then the next code writing can be carried out.
+
 ### The Usage of Different Tools
 
 | Tool Name | Purpose | Usage |
@@ -422,68 +430,76 @@ During the development process, we selected a range of tools to support both dev
 | Kanban Board | Task management | Used to track task progress and allocate responsibilities |
 | Browser Developer Tools | Debugging tool | Used to identify runtime errors and performance issues |
 
-To support the implementation of the project, we allocated tasks in a balanced and structured manner. This ensured that each team member was responsible for work of similar complexity and difficulty, avoiding an uneven distribution of workload across the team. This approach improved overall efficiency and ensured that all team members contributed equally to the development process.
+To realise this project, we have made a reasonable distribution of tasks, so that each member can share the similar difficulty and complexity.
+
+Work allocation to ensure everybody pays an effort to the project, so that every one can have a contribution.
 
 ###  Content Introduction
 
-In the middle and later stages of the project, due to time constraints and geographical limitations, we gradually transitioned to online collaboration. We conducted Scrum-style stand-up meetings approximately twice a week using Microsoft Teams and WeChat voice calls. This short and frequent meeting format significantly improved communication efficiency.
-Compared to the earlier in-person meetings, which were more flexible and time-consuming, these online meetings were more structured and focused. They typically centered on current progress, existing issues, and the allocation of upcoming tasks, allowing the team to advance the development process in a more organized and efficient manner.
+| Members| Assigned Module | Contirbution |
+|--------|-----------------|--------------|
+| Lin      |  Game Loop           |  Implementing stable frame rates and game state management |
+| Benyu    | Collision Detection  | Accurately handling interactions between bullets and asteroids |
+| Zhaohang | Entity System        | Managing objects such as the spaceship, bullets, and asteroids |
+| Bo       | Input Controls       | Handling keyboard input and ensuring responsive control mechanisms |
+| Yutong   | User Interface (UI/Menu) | Implementing menu transitions and displaying game states |
+
+In the middle and late stages of the project, due to time schedule and geographical restrictions, we gradually turned to online collaboration and held Scrum-like meetings through Microsoft Teams and WeChat voice calls, about twice a week. This short-term and frequent meeting mode has significantly improved the efficiency of communication. Unlike the relatively free and long offline discussions in the early days, these online meetings are more structured and usually revolve around "current progress, problems and next task allocation", so that the team can promote the development progress more clearly.
 
 <p align="center">
   <b>Figure 15: Burndown / Progress Chart of the Project</b><br>
   <img src="materials/process/burndown-chart.png" width="500"/>
 </p>
 
-While this approach helped meet deadlines, it also introduced periods of increased pressure and reduced consistency in the development process. During the development process, we tracked overall progress using a burndown chart. From the chart, it can be observed that the team's progress was not evenly distributed over time. In particular, during the mid-stage of development, a noticeable concentration of completed tasks occurred, indicating that team members tended to engage in “burst development” as deadlines approached.
+During the project development process, we tracked the overall progress through the burnout diagram. It can be seen from the figure that the team's work progress is uneven in time, especially in the mid-term stage, where there is obvious centralised completion of tasks, which shows that members tend to carry out "sudden development" when the deadline is approaching.
 
 <p align="center">
   <b>Figure 16: Commit and Branch History Visualization</b><br>
   <img src="materials/process/network.png" width="600"/>
 </p>
 
-Although this approach ensured that key milestones were met to some extent, it also introduced considerable time pressure. Nevertheless, in the final stages of the project, we successfully completed all planned tasks while overcoming various challenges, including several technical difficulties encountered during development.
+Although this method ensures the completion of stage goals to a certain extent, it also brings greater time pressure. 
 
+However, in the final stage of the project, we successfully completed all the planned tasks and overcame various challenges, including several technical difficulties encountered during the development process.
 
 ## Sustainability, Technical, Social and Accessibility
 
 ### Sustainability
 
-In this project, we aim to develop a game that focuses on user interaction and engagement. According to Becker et al. (2015), design decisions can significantly influence the long-term impact of a system. Based on this perspective, the game is designed to have a simple yet positive influence on user behavior, aligning with the principles outlined in the Karlskrona Manifesto for sustainability design.  
+In our project, we want to develop a game that focusses on user interaction and participation. According to Becker et al. (2015), design decision-making will affect the long-term impact of the system. Based on this, this game aims to have a simple but positive impact on user behaviour.
 
-The game is not only intended for entertainment but also considers its broader impact on users. The Karlskrona Manifesto emphasizes that sustainability includes not only environmental aspects but also social and individual dimensions (Becker et al., 2015). Therefore, the game aims to provide a meaningful and engaging experience while taking these aspects into account.
+This game is not only for entertainment but also takes into account its broader impact on users. The Karls Kruner Declaration emphasises that sustainability includes not only environmental aspects, but also social and personal aspects. Therefore, this game aims to provide a meaningful experience while keeping these aspects in mind.
 
-From an environmental perspective, the game was primarily developed using p5.js and does not rely on large-scale graphical processing or heavy server infrastructure. As a result, it consumes relatively low computational resources, which helps reduce energy consumption and, to some extent, carbon emissions. This aligns with the principles of sustainable and green software development.
+Most of the games are developed using p5.js, do not rely on large-scale data graphics processing and large-scale server support, and reduce carbon emissions to a certain extent, combining the basic concept of green software development.
 
 ### Technical
 
-From a technical perspective, the game is designed with clear functionality and a simple structure. Duboc et al. (2019) emphasize the importance of understanding what we are building and how design decisions influence system behavior. Based on this principle, the game focuses on maintaining a design that is both understandable and purposeful.
+From a technical point of view, the design of this game has clear functionality and concise structure. Duboc et al. (2019) pointed out that we should have a clear understanding of what we have built and how our design decisions affect the whole system. Based on this, this game focusses on maintaining the understandability and purposefulness of the design.
 
-In addition, the implementation considers efficiency and resource usage. According to the Green Software Foundation (2023), green software patterns highlight the importance of reducing unnecessary computation, improving energy efficiency, and avoiding excessive complexity in system design. Therefore, the game is intentionally designed to remain lightweight and efficient, minimising resource consumption while maintaining functionality.
+The game will also consider efficiency and resource utilisation during the implementation process. The green software model emphasises the importance of reducing unnecessary calculations and making the system more efficient. Therefore, the game is designed to be simple to operate and avoid unnecessary complexity. 
 
-During the design and task allocation stages, the game was divided into multiple independent components that could be developed individually. This approach facilitated efficient debugging, improved the overall development process, and allowed the team to refine the game design more effectively.
-
-At the same time, we ensured the stability of the game during multi-user or continuous play scenarios. By adopting standard development tools and practices, such as GitHub and version control mechanisms, we maintained code consistency and traceability. This not only supported effective collaboration among team members but also significantly improved overall code quality.
+When we designed the game and arranged the tasks, we divided the game into multiple independent parts completed by one person, fixed the bugs of the game, and better developed the design of the game. While developing, it also ensures the stability of the game when multiplayer is online. We use standard development tools and game development processes (such as GitHub and version control mechanisms) to ensure the consistency and traceability of the code. It is not only conducive to teamwork but also improves the quality of the code.
 
 ### Social
 
-From a social perspective, the game is designed to provide a simple and engaging experience for users. Sommerville (2020) explains that software systems should consider how they affect people and their interactions. Based on this, the game focuses on being accessible and easy to use.    
+From a social perspective, this game aims to provide users with a simple and fascinating experience. Sommerville (2020) pointed out that software systems should consider their impact on people and the interaction between them. Based on this, this game focusses on ease of use and accessibility.
 
-As an entertainment application, the primary purpose of the game is to provide users with a means of relaxation and leisure, which can help reduce stress to some extent. In addition, the game is designed to be intuitive, allowing players to quickly understand the controls and gameplay. This significantly enhances the overall playability and user experience.
+As an entertainment application, the purpose of the game itself is to provide users with relaxation and pastime entertainment, which can relieve stress to a certain extent. The most important thing is that the design of our game is intuitive, and players can get started quickly, which greatly improves the playability of the game.
 
 ### Accessibility and Ethics
 
-From an ethical perspective, the game follows the basic principles of responsible software development. It does not collect or misuse user data and avoids violent or inappropriate content, thereby meeting fundamental ethical standards.
+In another sides, the game follows basic principles of responsible software use. It does not collect or misuse user data, and it avoids any violent or inappropriate content, meeting Fundamental ethical standards. The Green Software Practitioner highlights that software should minimise harm and respect users. In this context, the game provides a safe and appropriate environment for its audience.  
 
-According to the Green Software Foundation (2023), green software practitioner guidelines emphasize that software should minimize harm and respect users. In this context, the game provides a safe and appropriate environment for its audience.
-
-The game primarily relies on keyboard-based controls, which are relatively simple and accessible for most users. However, the control scheme is predominantly designed for right-hand operation, with movement and actions distributed in a way that may not be convenient for left-handed players. 
-
-To improve accessibility, future versions of the game could introduce customizable control settings, allowing users to adjust key mappings according to their preferences.
-
-These design choices align with multiple sustainability tags identified by the Green Software Foundation, demonstrating an awareness of the environmental impact of software systems.
+This game mainly relies on keyboard operation, and the operation method is relatively simple, which is favourable to most users. However, the movement mode we mainly use is concentrated in the right hand, and the left hand is used to release skills, which is a little unfriendly for players who are used to left-handed control. We will upgrade the game in the future to improve accessibility.
 
 
 ## Conclusion
+
+That's the project. It wasn't perfect — early playtests showed we needed better onboarding, clearer UI signals, and the progression felt too steep. We fixed what we could and learned a lot along the way: how to turn feedback into actual work, how to balance a system that's literally about losing control, and how to keep a team moving forward when things don't go to plan.
+
+If we had more time, we'd smooth out the difficulty curve, add more weapon variety, and maybe explore different stress interactions beyond just handling. But for what it is, we're happy with how it came together.
+
+Thanks for checking it out.
 
 - 10% ~500 words
 
@@ -508,7 +524,7 @@ All members also contributed to group discussions, iterative decision-making, an
 
 - We used chatGPT and codex in this project, and learned how to code and maintain the project with AI tools. I spend one day to learn how to code with codex in vscode, and share this with my teammates.
 
-- First, I helped my teammates configure Codex so that it could be used consistently in our workflow. I then used Codex to refactor parts of the codebase, making it more readable and making the structure easier for our team to understand and maintain. I also prepared a markdown file containing natural language prompts, which helped us generate supporting documentation, including a file explaining the overall project structure and the relationships between classes. We ask codex to run this file every time before push to GitHub, and this improved the communication efficiency of our team.
+- We used Codex to refactor parts of the codebase, making it more readable and making the structure easier for our team to understand and maintain. we also prepared a markdown file containing natural language prompts, which helped us generate supporting documentation, including a file explaining the overall project structure and the relationships between classes. We ask codex to run this file every time before push to GitHub, and this improved the communication efficiency of our team.
 
 - Next, Codex was used to produce the initial versions of some weapons and enemies. These early examples were not treated as final solutions, but as learning scaffolds: they gave us a starting point for understanding how these systems could be built in p5.js, after which we designed and implemented additional weapons and enemies ourselves.I wrote the ultrasonic wave weapon after reading the weapons wrote by Codex, and re-wrote the AI logic of the missile under the guidance of GPT.
 

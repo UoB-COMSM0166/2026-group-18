@@ -20,7 +20,7 @@ A browser-based Asteroids-style arcade shooter built in p5.js, centred on a Stre
 8. [Sustainability, Accessibility, and Ethics](#sustainability-accessibility-ethics)
 9. [Conclusion](#conclusion)
 10. [Contribution Statement](#contribution-statement)
-10. [AI statement](#references)
+10. [AI statement](#AI statement)
 12. [References](#references)
 
 
@@ -313,7 +313,7 @@ In future work, we would strengthen this area by adding support for alternative 
 
 - We used chatGPT and codex in this project, and learned how to code and maintain the project with AI tools. I spend one day to learn how to code with codex in vscode, and share this with my teammates.
 
-- First, I helped my teammates configure Codex so that it could be used consistently in our workflow. I then used Codex to refactor parts of the codebase, making it more readable and making the structure easier for our team to understand and maintain. I also prepared a markdown file containing natural language prompts, which helped us generate supporting documentation, including a file explaining the overall project structure and the relationships between classes. We ask codex to run this file every time before push to GitHub, and this improved the communication efficiency of our team.
+- We used Codex to refactor parts of the codebase, making it more readable and making the structure easier for our team to understand and maintain. we also prepared a markdown file containing natural language prompts, which helped us generate supporting documentation, including a file explaining the overall project structure and the relationships between classes. We ask codex to run this file every time before push to GitHub, and this improved the communication efficiency of our team.
 
 - Next, Codex was used to produce the initial versions of some weapons and enemies. These early examples were not treated as final solutions, but as learning scaffolds: they gave us a starting point for understanding how these systems could be built in p5.js, after which we designed and implemented additional weapons and enemies ourselves.I wrote the ultrasonic wave weapon after reading the weapons wrote by Codex, and re-wrote the AI logic of the missile under the guidance of GPT.
 

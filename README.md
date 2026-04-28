@@ -1,6 +1,8 @@
 # Keep Calm, Captain!
 
-A browser-based Asteroids-style arcade shooter built in p5.js, centred on a Stress mechanic that changes how the ship handles during play. Instead of treating damage as a simple health reduction, our game turns collisions into a controllability problem: taking hits raises the player’s Stress meter, and higher stress degrades ship handling in fixed, predictable tiers. This transforms the core loop from simple survival into risk management: play aggressively to score more, or play safely to preserve precision and control
+Here's our game. We built an Asteroids-style shooter with a twist — collisions don't just damage you, they mess with your controls. Get hit too much and your ship handles terribly. Collect pickups to calm down. Play it [here](https://uob-comsm0166.github.io/2026-group-18/) and see for yourself.
+
+Built in p5.js, the game centres on a **Stress mechanic** that degrades ship handling in fixed, predictable tiers as your stress meter rises. This transforms the core loop from simple survival into risk management: play aggressively to score more, or play safely to preserve precision and control.
 
 - [Play the game](https://uob-comsm0166.github.io/2026-group-18/)
 - Demo video: (link)
@@ -299,6 +301,12 @@ In future work, we would strengthen this area by adding support for alternative 
 
 
 ## Conclusion
+
+That's the project. It wasn't perfect — early playtests showed we needed better onboarding, clearer UI signals, and the progression felt too steep. We fixed what we could and learned a lot along the way: how to turn feedback into actual work, how to balance a system that's literally about losing control, and how to keep a team moving forward when things don't go to plan.
+
+If we had more time, we'd smooth out the difficulty curve, add more weapon variety, and maybe explore different stress interactions beyond just handling. But for what it is, we're happy with how it came together.
+
+Thanks for checking it out.
 
 - 10% ~500 words
 

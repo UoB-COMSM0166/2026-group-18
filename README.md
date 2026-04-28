@@ -302,15 +302,15 @@ In future work, we would strengthen this area by adding support for alternative 
 
 ## Conclusion
 
-That's the project. It wasn't perfect — early playtests showed we needed better onboarding, clearer UI signals, and the progression felt too steep. We fixed what we could and learned a lot along the way: how to turn feedback into actual work, how to balance a system that's literally about losing control, and how to keep a team moving forward when things don't go to plan.
+Finishing this project felt pretty good. The five of us started from scratch and built an Asteroids-style space shooter with a twist — the **Stress system**. Getting hit doesn't just damage you, it messes with your ship's handling. Players have to choose between playing aggressive to score higher or playing safe to keep controls tight. That's the core fun.
 
-If we had more time, we'd smooth out the difficulty curve, add more weapon variety, and maybe explore different stress interactions beyond just handling. But for what it is, we're happy with how it came together.
+It wasn't all smooth sailing though. Playtesting revealed problems: new players didn't know what to do, UI feedback was confusing, and later levels got way too hard too fast. We fixed what we could through repeated user testing and weekly iterations.
 
-Thanks for checking it out.
+Working as a team had its challenges — merging code was messy at first until we sorted out naming conventions and code reviews. We used GitHub Projects for task tracking and weekly meetings to set priorities. The biggest lesson? **Plans don't survive contact with reality.** We had to cut features we wanted, but prioritising MVP from the start made those calls easier.
 
-- 10% ~500 words
+Looking back, we learned how to turn a vague idea into something playable, how to use feedback to drive improvements, how to coordinate in a small team, and how to work with AI tools without relying on them too much.
 
-- Reflect on the project as a whole. Lessons learnt. Reflect on challenges. Future work, describe both immediate next steps for your current game and also what you would potentially do if you had chance to develop a sequel.
+This project wasn't perfect, but it's something we genuinely built together. Thanks for checking it out!
 
 
 ## Contribution Statement

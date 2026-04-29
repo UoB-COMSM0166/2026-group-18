@@ -1,4 +1,4 @@
-# Keep Calm, Captain!
+﻿# Keep Calm, Captain!
 
 Here's our game. We built an Asteroids-style shooter with a twist — collisions don't just damage you, they mess with your controls. Get hit too much and your ship handles terribly. Collect pickups to calm down. Play it [here](https://uob-comsm0166.github.io/2026-group-18/) and see for yourself.
 
@@ -54,9 +54,14 @@ A browser-based Asteroids-style arcade shooter built in p5.js, centred on a Stre
 
 ## Introduction
 
-Our game is a browser-based **Asteroids-style arcade shooter** developed in **p5.js**. It is based on the classic arcade formula of navigating a spaceship through an arena, avoiding hazards, and surviving while scoring points. However, rather than simply recreating *Asteroids*, we introduced a mechanic that changes the player’s relationship with control and risk. The central twist of our game is a **Stress system**: whenever the player collides with hazards or takes damage, their **Stress meter** increases, and higher stress reduces the ship’s handling in clear, predictable tiers. At low stress, the ship responds normally; at higher stress, turning, thrust, and drift control become noticeably worse. Players can partially recover by collecting **de-stress pickups**, creating a constant trade-off between aggressive play for a higher score and careful play to preserve precision and control.
+ We made this Asteroids-style shooter in p5.js. The basic idea is pretty familiar — you fly a spaceship around, dodge stuff, shoot things, and try to survive while getting the highest score possible. But we wanted to do something a bit different with the core mechanic.
 
-This makes the game novel because difficulty does not come only from faster enemies or more obstacles, but from the player’s own performance and state. The challenge becomes psychological as well as mechanical: mistakes do not just reduce survival chances, they directly affect how it feels to play. We designed this twist to create a more dynamic risk–reward loop while still keeping the game readable and fair through fixed thresholds and visible UI feedback. From a software engineering perspective, this mechanic also gave us a strong technical focus, particularly in implementing a **data-driven stress state machine** and balancing movement behaviour across different stress levels.
+The main twist is what we call the **Stress system**. Every time you crash into something or get hit, your stress goes up. And here's the thing — when you're stressed, your ship just doesn't handle as well. We're talking slower turning, clunkier thrust, that kind of thing. It's split into clear tiers so you always know what you're dealing with. There's also these pickup items that help you calm down a bit.
+
+This creates this interesting balance where you have to think about whether it's worth playing aggressively to rack up points, or playing it safe to keep your ship feeling nice and responsive. The difficulty doesn't just come from enemies getting faster or more obstacles appearing — it comes from how well you're doing. Mess up too much and the game literally feels harder to play.
+
+We also made sure the stress thresholds are fixed and the UI shows your stress level clearly, so it stays fair and readable. On the technical side, building the stress state machine and tuning how the ship moves at different stress levels was actually pretty challenging and gave us a solid focus for the development side of things.
+
 
 
 ## Requirements
@@ -482,15 +487,15 @@ This game mainly relies on keyboard operation, and the operation method is relat
 
 ## Conclusion
 
-That's the project. It wasn't perfect — early playtests showed we needed better onboarding, clearer UI signals, and the progression felt too steep. We fixed what we could and learned a lot along the way: how to turn feedback into actual work, how to balance a system that's literally about losing control, and how to keep a team moving forward when things don't go to plan.
+Finishing this project felt pretty good. The five of us started from scratch and built an Asteroids-style space shooter with a twist — the **Stress system**. Getting hit doesn't just damage you, it messes with your ship's handling. Players have to choose between playing aggressive to score higher or playing safe to keep controls tight. That's the core fun.
 
-If we had more time, we'd smooth out the difficulty curve, add more weapon variety, and maybe explore different stress interactions beyond just handling. But for what it is, we're happy with how it came together.
+It wasn't all smooth sailing though. Playtesting revealed problems: new players didn't know what to do, UI feedback was confusing, and later levels got way too hard too fast. We fixed what we could through repeated user testing and weekly iterations.
 
-Thanks for checking it out.
+Working as a team had its challenges — merging code was messy at first until we sorted out naming conventions and code reviews. We used GitHub Projects for task tracking and weekly meetings to set priorities. The biggest lesson? **Plans don't survive contact with reality.** We had to cut features we wanted, but prioritising MVP from the start made those calls easier.
 
-- 10% ~500 words
+Looking back, we learned how to turn a vague idea into something playable, how to use feedback to drive improvements, how to coordinate in a small team, and how to work with AI tools without relying on them too much.
 
-- Reflect on the project as a whole. Lessons learnt. Reflect on challenges. Future work, describe both immediate next steps for your current game and also what you would potentially do if you had chance to develop a sequel.
+This project wasn't perfect, but it's something we genuinely built together. Thanks for checking it out!
 
 
 ## Contribution Statement
@@ -549,3 +554,5 @@ You can delete this section in your own repo, it's just here for information. in
 - **Documentation** of code (5% of report grade)
   - Organise your code so that it could easily be picked up by another team in the future and developed further.
   - Is your repo clearly organised? Is code well commented throughout?
+
+

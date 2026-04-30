@@ -1,4 +1,4 @@
-﻿# Keep Calm, Captain!
+# Keep Calm, Captain!
 
 Here's our game. We built an Asteroids-style shooter with a twist — collisions don't just damage you, they mess with your controls. Get hit too much and your ship handles terribly. Collect pickups to calm down. Play it [here](https://uob-comsm0166.github.io/2026-group-18/) and see for yourself.
 
@@ -12,7 +12,8 @@ Built in p5.js, the game centres on a **Stress mechanic** that degrades ship han
 A browser-based Asteroids-style arcade shooter built in p5.js, centred on a Stress mechanic that changes how the ship handles during play. Instead of treating damage as a simple health reduction, our game turns collisions into a controllability problem: taking hits raises the player’s Stress meter, and higher stress degrades ship handling in fixed, predictable tiers. This transforms the core loop from simple survival into risk management: play aggressively to score more, or play safely to preserve precision and control
 
 - [Play the game](https://uob-comsm0166.github.io/2026-group-18/)
-- Demo video: (link)
+- Demo Video: [Watch me](https://youtu.be/KouKVKXn1Ak)
+- Introduce video: [Watch me](https://youtu.be/X5tYzrVyDQQ)
 - Final idea: [materials/requirements/final-idea.md](materials/requirements/final-idea.md)
 
 <p align="center">
@@ -40,7 +41,7 @@ A browser-based Asteroids-style arcade shooter built in p5.js, centred on a Stre
 
 <p align="center">
   <b>Figure 2: Group Photo</b><br>
-  <img src="https://github.com/user-attachments/assets/4f3012f3-9d78-4dff-8d98-3e032d17ac7d" width="500"/>
+  <img src="materials/game-documentation/groupmembers.PNG" width="500"/>
 </p>
 
 | Group member | Email | GitHub Username | Role |

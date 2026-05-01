@@ -1,68 +1,64 @@
 # Keep Calm, Captain!
 
-Here's our game. We built an Asteroids-style shooter with a twist — collisions don't just damage you, they mess with your controls. Get hit too much and your ship handles terribly. Collect pickups to calm down. Play it [here](https://uob-comsm0166.github.io/2026-group-18/) and see for yourself.
-
-Built in p5.js, the game centres on a **Stress mechanic** that degrades ship handling in fixed, predictable tiers as your stress meter rises. This transforms the core loop from simple survival into risk management: play aggressively to score more, or play safely to preserve precision and control.
 <p align="center">
   <img src="materials/game-documentation/keepcalm-captain.png" alt="header.jpg" style="width:100%"/>
     <br>
   </a>
 </p>
 
-A browser-based Asteroids-style arcade shooter built in p5.js, centred on a Stress mechanic that changes how the ship handles during play. Instead of treating damage as a simple health reduction, our game turns collisions into a controllability problem: taking hits raises the player’s Stress meter, and higher stress degrades ship handling in fixed, predictable tiers. This transforms the core loop from simple survival into risk management: play aggressively to score more, or play safely to preserve precision and control
+A browser-based Asteroids-style arcade shooter built in p5.js - Keep calm, captain ([Play it here](https://uob-comsm0166.github.io/2026-group-18/)), centred on a **Stress mechanic** that changes how the ship handles during play. Instead of treating damage as a simple health reduction, our game turns collisions into a controllability problem: taking hits raises the player’s Stress meter, and higher stress degrades ship handling in fixed, predictable tiers. This transforms the core loop from simple survival into risk management: play aggressively to score more, or play safely to preserve precision and control
 
-- [Play the game](https://uob-comsm0166.github.io/2026-group-18/)
-- Demo Video: [Watch me](https://youtu.be/KouKVKXn1Ak)
-- Introduce video: [Watch me](https://youtu.be/X5tYzrVyDQQ)
-- Final idea: [materials/requirements/final-idea.md](materials/requirements/final-idea.md)
+## Video Demonstration
 
 <p align="center">
-  <b>Figure 1: Gameplay Screenshot</b><br>
-  <img src="docs/asteroids.jpg" width="500"/>
+  <a href="https://youtu.be/X5tYzrVyDQQ">
+    <img src="materials/design/uml/game-gif.gif" alt="Game demonstration" width="80%"/>
+  </a><br>
+  <i>This video provides a clear walkthrough of our complete project workflow.</i>
 </p>
 
 
 ## Contents
-1. [Team](#our-group)
+1. [Our Group](#our-group)
 2. [Introduction](#introduction)
 3. [Requirements](#requirements)
 4. [Design](#design)
 5. [Implementation](#implementation)
 6. [Evaluation](#evaluation)
 7. [Process](#process)
-8. [Sustainability, Accessibility, and Ethics](#sustainability-accessibility-ethics)
+8. [Sustainability, Technical, Social and Accessibility](#sustainability-technical-social-and-accessibility)
 9. [Conclusion](#conclusion)
 10. [Contribution Statement](#contribution-statement)
-10. [AI statement](#AI statement)
-12. [References](#references)
+11. [AI Statement](#ai-statement)
+12. [Reference](#reference)
+13. [Additional Marks](#additional-marks)
 
 
 ## Our Group
 
 <p align="center">
-  <b>Figure 2: Group Photo</b><br>
-  <img src="materials/game-documentation/groupmembers.PNG" width="500"/>
+  <img src="materials/teams/team-photo.JPG" style="width:100%"/><br>
+  <i>Come and meet our astronauts!</i>
 </p>
 
-| Group member | Email | GitHub Username | Role |
-|---|---|---|---|
-|Benyu Zhu|benyuzhu@outlook.com|Josh-Zhu0326|Software Developer|
-|Yutong Liu|yutong11x@outlook.com|Volta0411|Graphics & Design|
-|Lin Zhu|zhulinuk2025@gmail.com|kath0925|Project Manager|
-|Zhaohang He|zhaohanghe89@gmail.com|Zhaohang89|Software Developer|
-|Bo Sun|bowillrich@gmail.com|bowillrich-cell|Software Developer|
+| Group member | Email | GitHub Username | Primary Responsibilities              |
+|---|---|---|---------------------------------------|
+|Lin Zhu|zhulinuk2025@gmail.com|kath0925| Project management, Game loop         |
+|Benyu Zhu|benyuzhu@outlook.com|Josh-Zhu0326| Testing and evaluation                |
+|Yutong Liu|yutong11x@outlook.com|Volta0411| Implement, UI，Presentation            |
+|Zhaohang He|zhaohanghe89@gmail.com|Zhaohang89| Gameplay implementation and debugging |
+|Bo Sun|bowillrich@gmail.com|bowillrich-cell| Architecture and implementation       |
 
 
 ## Introduction
 
- We made this Asteroids-style shooter in p5.js. The basic idea is pretty familiar — you fly a spaceship around, dodge stuff, shoot things, and try to survive while getting the highest score possible. But we wanted to do something a bit different with the core mechanic.
+We made this Asteroids-style shooter([Look game demo here](https://youtu.be/KouKVKXn1Ak)) in p5.js. The basic idea is pretty familiar - you fly a spaceship around, dodge stuff, shoot things, and try to survive while getting the highest score possible. But we wanted to do something a bit different with the core mechanic.
 
-The main twist is what we call the **Stress system**. Every time you crash into something or get hit, your stress goes up. And here's the thing — when you're stressed, your ship just doesn't handle as well. We're talking slower turning, clunkier thrust, that kind of thing. It's split into clear tiers so you always know what you're dealing with. There's also these pickup items that help you calm down a bit.
+The main twist is what we call the **Stress system**. Every time you crash into something or get hit, your stress goes up. And here's the thing - when you're stressed, your ship just doesn't handle as well. We're talking slower turning, clunkier thrust, that kind of thing. It's split into clear tiers so you always know what you're dealing with. There's also these pickup items that help you calm down a bit.
 
 This creates this interesting balance where you have to think about whether it's worth playing aggressively to rack up points, or playing it safe to keep your ship feeling nice and responsive. The difficulty doesn't just come from enemies getting faster or more obstacles appearing — it comes from how well you're doing. Mess up too much and the game literally feels harder to play.
 
 We also made sure the stress thresholds are fixed and the UI shows your stress level clearly, so it stays fair and readable. On the technical side, building the stress state machine and tuning how the ship moves at different stress levels was actually pretty challenging and gave us a solid focus for the development side of things.
-
 
 
 ## Requirements
@@ -76,9 +72,9 @@ During the ideation stage, we collected inspirations based on the types they are
 We did not merely compare "which game is more interesting", but focused on evaluating four dimensions: gameplay novelty, feasibility of p5.js implementation, controllability of the MVP range, and whether it can form a clear engineering challenge. This comparison process helps us avoid choosing solutions with excessive content or those that are difficult to evaluate from the very beginning.
 
 <p align="center">
-  <b>Figure 3</b><br>
-  <i>Candidate Idea Comparison</i><br>
-  <img src="materials/requirements/candidate-idea-comparison.png" style="width:80%"/>
+  <b>Figure 1: Candidate Idea Comparison</b><br>
+  <img src="materials/requirements/candidate-idea-comparison.png" style="width:80%"/><br>
+  <i>Candidate idea comparison used during early ideation.</i>
 </p>
 
 ### Feasibility Studies
@@ -101,20 +97,20 @@ The stakeholder onion model suggests that stakeholders should be identified arou
 From these stakeholders, we derived several top-level needs table which is summarized below.
 
 <p align="center">
-  <b>Table 1</b><br>
-  <i>Top-level Needs Based on Stakeholders</i>
-  <img src="materials/requirements/stakeholder-top-level-needs.png" style="width:80%"/>
+  <b>Table 1: Top-level Needs Based on Stakeholders</b><br>
+  <img src="materials/requirements/stakeholder-top-level-needs.png" style="width:80%"/><br>
+  <i>Top-level needs derived from the project stakeholder analysis.</i>
 </p>
 
 
 ### Epics and User Stories
 
-Around these needs, we organized the project into 6 epics, as shown in Figure 4, and then defined user stories under each epics.
+Around these needs, we organized the project into 6 epics, as shown in Figure 2, and then defined user stories under each epics.
 
 <p align="center">
-  <b>Figure 4</b><br>
-  <i>Six Implementable Epics</i><br>
-  <img src="materials/requirements/implementable-epics-relationship.png" style="width:80%"/>
+  <b>Figure 2: Six Implementable Epics</b><br>
+  <img src="materials/requirements/implementable-epics-relationship.png" style="width:80%"/><br>
+  <i>Six implementable epics showing how requirements were organised.</i>
 </p>
 
 The user stories were structured based on the player value. Some stories focus on ship control, collision consistency, and HUD readability, which made new players better understand the whole game and feel fair. Other stories define the core twist - stress system, which includes stress gain, stress recovery, and tier-based handling changes. We also defined stories for weapon cooldowns, enemy pressure, and level progression, which increased depth and motivation for experienced players. Overall, this means that **stress system** is a central design driver across the requirements layer.
@@ -124,9 +120,9 @@ The user stories were structured based on the player value. Some stories focus o
 Our team then use **Use-case modelling** to describe system behaviour from the perspective of players' interactions. The final model contains only one actor: **Player**. It keeps the system boundary focused on the single-player gameplay loop.
 
 <p align="center">
-  <b>Figure 5</b><br>
-  <i>The Use-case Diagram</i><br>
-  <img src="materials/requirements/use-case-diagram.png" style="width:80%"/>
+  <b>Figure 3: The Use-case Diagram</b><br>
+  <img src="materials/requirements/use-case-diagram.png" style="width:80%"/><br>
+  <i>Use-case diagram describing the player's main interactions with the game system.</i>
 </p>
 
 The reason why the use-case diagram only retains players as actors is that the goal of this diagram is to describe runtime system interactions between the player and the game system.
@@ -136,17 +132,17 @@ The reason why the use-case diagram only retains players as actors is that the g
 There are two core use-case specification tables: The first is **Start and Play a Standard Run**, which covers the full player journey from the main menu and level briefing, into active gameplay, then through movement, weapons, etc. and finally into the game-over state.
 
 <p align="center">
-  <b>Table x</b><br>
-  <i>Use Case A - Start and Play a Standard Run</i><br>
-  <img src="materials/requirements/use-case-standard-run-table.png" style="width:80%"/>
+  <b>Table 2: Use Case A - Start and Play a Standard Run</b><br>
+  <img src="materials/requirements/use-case-standard-run-table.png" style="width:80%"/><br>
+  <i>Use-case specification for starting and completing a standard game run.</i>
 </p>
 
 The second is **Handle Stress through Collision and Recovery**. This focuses on the core gameplay mechanic: collisions and hits increase stress, stress changes the HUD and ship handling, recovery pickups reduce stress, and passive decay helps the player regain control when they avoid further damage.
 
 <p align="center">
-  <b>Table x</b><br>
-  <i>Use Case B - Handle Stress through Collision and Recovery</i><br>
-  <img src="materials/requirements/use-case-stress-recovery-table.png" style="width:80%"/>
+  <b>Table 3: Use Case B - Handle Stress through Collision and Recovery</b><br>
+  <img src="materials/requirements/use-case-stress-recovery-table.png" style="width:80%"/><br>
+  <i>Use-case specification for stress gain, recovery, and handling changes.</i>
 </p>
 
 These use-case specifications informed the later sequence diagrams in the design section, especially the collision-to-stress path and the pickup-to-recovery path - both paths require coordinated behaviour across gameplay, HUD, and state-management subsystems.
@@ -156,17 +152,17 @@ These use-case specifications informed the later sequence diagrams in the design
 If the story is merely staying at the level of "user stories", all of the project would become uncheckable. That is the reason we further refined the requirements into "verifiable and testable rules" - [acceptance criteria](materials/requirements/acceptance-criteria.md) in a Given / When / Then format. For example:
 
 <p align="center">
-  <b>Figure 6</b><br>
-  <i>Acceptance Criteria Examples</i><br>
-  <img src="materials/requirements/acceptance-criteria-examples.png" style="width:80%"/>
+  <b>Figure 4: Acceptance Criteria Examples</b><br>
+  <img src="materials/requirements/acceptance-criteria-examples.png" style="width:80%"/><br>
+  <i>Examples of acceptance criteria written in a verifiable format.</i>
 </p>
 
-In this way, the most important behaviours of the project could be written as verifiable conditions. The requirements are modified through feedback from playtesting, Think Aloud sessions, [weekly feedback](materials/evaluation/weekly-feedback/2026-03-10-weekly-feedback-and-goals.md), etc. The table x below summarised the most important requirement changes.
+In this way, the most important behaviours of the project could be written as verifiable conditions. The requirements are modified through feedback from playtesting, Think Aloud sessions, [weekly feedback](materials/evaluation/weekly-feedback/2026-03-10-weekly-feedback-and-goals.md), etc. Table 4 below summarised the most important requirement changes.
 
 <p align="center">
-  <b>Figure 7</b><br>
-  <i>Requirement Refinement Evidence</i><br>
-  <img src="materials/requirements/refinement-evidence-table.png" style="width:80%"/>
+  <b>Table 4: Requirement Refinement Evidence</b><br>
+  <img src="materials/requirements/refinement-evidence-table.png" style="width:80%"/><br>
+  <i>Evidence showing how requirements were refined through feedback and testing.</i>
 </p>
 
 According to these evidence, we made several key adjustments:
@@ -176,7 +172,6 @@ According to these evidence, we made several key adjustments:
 - We changed enemy missiles so that they **increase stress** instead of **causing instant death**.
 
 These changes show that the requirements artefacts in this project were not static records, but guided development and supported ongoing design refinement.
-
 
 
 ## Design
@@ -197,8 +192,9 @@ In terms of more detailed class design, the Asteroid class represents objects wi
 The following picture shows the main functions in our game.
 
 <p align="center">
-  <b>Figure 6: All the Classes</b><br>
-  <img src="materials/design/uml/class.png" width="500"/>
+  <b>Figure 5: All the Classes</b><br>
+  <img src="materials/design/uml/class.png" style="width:80%"/><br>
+  <i>Class diagram showing the main object structure of the game.</i>
 </p>
 
 ### Behaviour
@@ -206,10 +202,10 @@ The following picture shows the main functions in our game.
 In the behavior design, the system is organized around the **main loop**, which performs update, collision detection, feedback processing and state judgment in turn during each frame. For example, when the player accidentally touches a meteorite, the system will directly affect the feel of player’s control, the meteorite split and other effects; When the player is hit by a meteorite or an enemy bullet, the system will increase the pressure value and determine whether the threshold has been reached. As the pressure gradually increases, the player needs to continue to play under high pressure (feedback is the operator's feel). We consider this design to be a core form of feedback for the game. The stress system, as our core system, acts as a **bridge** connecting different subsystems. Damage events increase stress, and items are picked up to decrease stress, which is then linked to operational parameters through thresholds to create a dynamic difficulty system based on the player's performance, so that the player is faced with a different game each time.
 
 <p align="center">
-  <b>Figure 7: Functions in the Game</b><br>
-  <img src="materials/design/uml/function.png" width="500"/>
+  <b>Figure 6: Functions in the Game</b><br>
+  <img src="materials/design/uml/function.png" width="500"/><br>
+  <i>Function-level diagram showing how gameplay logic is coordinated.</i>
 </p>
-
 
 
 ## Implementation
@@ -231,8 +227,9 @@ The other key design is on the handling performance degradation. As stress rise,
 We also improved the game UI after testing. In the earlier version, the stress bar rose when the ship crashed, in which some of the tester feels unintuitive. We then redesigned it into a HP-like bar. In addition, we also changed the shape of our ship to give a clearer ship facing view, and adding colors to both ship and bar in order to tell players the stress conditions more directly. 
 
 <p align="center">
-  <b>Figure 8: Annotated Game UI</b><br>
-  <img src="materials/implementation/challenge-1-ui.png" width="500"/>
+  <b>Figure 7: Annotated Game UI</b><br>
+  <img src="materials/implementation/challenge-1-ui.png" width="500"/><br>
+  <i>Annotated interface showing the stress system and key gameplay feedback.</i>
 </p>
 
 ### Challenge 2: Replacing time-based level upgrade system by score-based
@@ -266,7 +263,29 @@ In the third stage, we introduced mines and yellow ship enemies. The yellow ship
 
 ### Qualitative Evaluation: Think Aloud
 
-In the qualitative evaluation, since the original game has a relatively simple gameplay and a reliable code, we focused on all possible problems of our changes on the challenges. In other words, can players understand game rules and controls, would they correctly understand the stress system, whether they could judge the right timing to use skills, and will they accept the increase in difficulties in level upgrade system. 
+In the qualitative evaluation, since the original game has a relatively simple gameplay and a reliable code, we focused on all possible problems of our changes on the challenges. In other words, can players understand game rules and controls, would they correctly understand the stress system, whether they could judge the right timing to use skills, and will they accept the increase in difficulties in level upgrade system.
+As part of this evaluation, we invited players to try the game directly and observed their reactions while they played.
+
+<p align="center">
+  <b>Figure 8: Player Playtesting Sessions</b><br>
+</p>
+
+<table align="center">
+  <tr>
+    <td><img src="materials/evaluation/playtester-1.gif" width="260"/></td>
+    <td><img src="materials/evaluation/playtester-2.gif" width="260"/></td>
+    <td><img src="materials/evaluation/playtester-3.gif" width="260"/></td>
+  </tr>
+  <tr>
+    <td><img src="materials/evaluation/playtester-4.gif" width="260"/></td>
+    <td><img src="materials/evaluation/playtester-5.gif" width="260"/></td>
+    <td><img src="materials/evaluation/playtester-6.gif" width="260"/></td>
+  </tr>
+</table>
+
+<p align="center">
+  <i>Playtesting sessions used to collect feedback on gameplay, controls, UI clarity, and the stress mechanic.</i>
+</p>
 
 The results tells us there are several problems. The main one is the onboarding and controls. Some players cannot understand how to control our ship without additional guidance. Some even reported that the game was a fixed position shooter rather than dodging asteroids. This implies that, in the earlier version, our game didn’t have a clear tutorial on controls, which we had improved in the latest version. In addition, some testers told us that the ship’s facing direction is unclear during the fast paced game.
 
@@ -276,49 +295,68 @@ Overall, the qualitative evaluation has shown that the main problems were not th
 
 ### Quantitative Evaluation: SUS and NASA-TLX
 
-### SUS Final Scores
-
-| Participant | Played Before | Contribution Sum | Final SUS Score |
-|---|---|---:|---:|
-| P1 | Y | 32 | 80 |
-| P2 | Y | 30 | 75 |
-| P3 | N | 30 | 75 |
-| P4 | N | 27 | 67.5 |
-| P5 | Y | 36 | 90 |
-| P6 | Y | 36 | 90 |
-| P7 | N | 22 | 55 |
-| P8 | Y | 36 | 90 |
-| P9 | N | 29 | 72.5 |
-| P10 | Y | 30 | 75 |
-
-<p align="center">
-  <b>Figure 9: SUS Overall Chart</b><br>
-  <img src="materials/evaluation/SUS-Overall.png" width="500"/>
-</p>
-
-<p align="center">
-  <img src="materials/evaluation/sus_score_comparison_first_five.png" width="500"/>
-</p>
-
-### NASA-TLX Average Scores
-
-| Dimension | 10/3/2026 | 20/4/2026 |
-|---|---:|---:|
-| Mental | 60.5 | 34 |
-| Physical | 22 | 18 |
-| Temporal | 67.5 | 43 |
-| Performance | 56 | 42 |
-| Effort | 45 | 51 |
-| Frustration | 28 | 14 |
+<div align="center">
+  <b>Table 5: SUS Final Scores</b><br>
+    <table>
+      <thead>
+        <tr>
+          <th>Participant</th>
+          <th>Played Before</th>
+          <th>Contribution Sum</th>
+          <th>Final SUS Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>P1</td><td>Y</td><td align="right">32</td><td align="right">80</td></tr>
+        <tr><td>P2</td><td>Y</td><td align="right">30</td><td align="right">75</td></tr>
+        <tr><td>P3</td><td>N</td><td align="right">30</td><td align="right">75</td></tr>
+        <tr><td>P4</td><td>N</td><td align="right">27</td><td align="right">67.5</td></tr>
+        <tr><td>P5</td><td>Y</td><td align="right">36</td><td align="right">90</td></tr>
+        <tr><td>P6</td><td>Y</td><td align="right">36</td><td align="right">90</td></tr>
+        <tr><td>P7</td><td>N</td><td align="right">22</td><td align="right">55</td></tr>
+        <tr><td>P8</td><td>Y</td><td align="right">36</td><td align="right">90</td></tr>
+        <tr><td>P9</td><td>N</td><td align="right">29</td><td align="right">72.5</td></tr>
+        <tr><td>P10</td><td>Y</td><td align="right">30</td><td align="right">75</td></tr>
+      </tbody>
+    </table><br>
+</div>
 
 <p align="center">
-  <b>Figure 10: NASA-TLX Chart</b><br>
-  <img src="materials/evaluation/nasa-tlx-chart.png" width="500"/>
+  <b>Figure 9: SUS Score Comparison</b><br>
+  <img src="materials/evaluation/sus_score_comparison_first_five.png" style="width:80%"/><br>
+  <i>SUS score comparison between experienced and inexperienced players.</i>
 </p>
 
+[SUS Overall Chart](materials/evaluation/SUS-Overall.png) is also available as supporting evidence for the full usability evaluation results.
+
+<div align="center">
+  <b>Table 6: NASA-TLX Average Scores</b><br>
+    <table>
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>10/3/2026</th>
+          <th>20/4/2026</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Mental</td><td align="right">60.5</td><td align="right">34</td></tr>
+        <tr><td>Physical</td><td align="right">22</td><td align="right">18</td></tr>
+        <tr><td>Temporal</td><td align="right">67.5</td><td align="right">43</td></tr>
+        <tr><td>Performance</td><td align="right">56</td><td align="right">42</td></tr>
+        <tr><td>Effort</td><td align="right">45</td><td align="right">51</td></tr>
+        <tr><td>Frustration</td><td align="right">28</td><td align="right">14</td></tr>
+      </tbody>
+    </table><br>
+</div>
+
 <p align="center">
-  <img src="materials/evaluation/nasa_tlx_dimension_comparison_first_five.png" width="500"/>
+  <b>Figure 10: NASA-TLX Dimension Comparison</b><br>
+  <img src="materials/evaluation/nasa_tlx_dimension_comparison_first_five.png" width="500"/><br>
+  <i>Comparison of NASA-TLX dimensions across the two evaluation rounds.</i>
 </p>
+
+[NASA-TLX Chart](materials/evaluation/nasa-tlx-chart.png) is also available as supporting evidence for the full workload evaluation results.
 
 We had also done two quantitative evaluation to verify our thoughts. 
 
@@ -335,7 +373,8 @@ In order to compare how our changes performed in the new game version, we did an
 ### Code Testing
 
 In our final evaluation part, we need to test our code itself. We adopted a black-box test approach, according to our challenges, splitting our inputs into valid and invalid, then compare the expect and actual output. 
-### Code Testing: Stress System and Feedback
+
+#### Code Testing: Stress System and Feedback
 
 | Partition | Expected Output |
 |---|---|
@@ -348,7 +387,7 @@ In our final evaluation part, we need to test our code itself. We adopted a blac
 | Valid tier change | Handling and colour feedback update correctly |
 | Valid upper limit reached | the game ends |
 
-### Code Testing: Scoring and Level Progression
+#### Code Testing: Scoring and Level Progression
 
 | Partition | Expected Output |
 |---|---|
@@ -359,7 +398,7 @@ In our final evaluation part, we need to test our code itself. We adopted a blac
 | Valid progression condition: score ≥ 700000 | Enter Level 3 |
 | Invalid progression condition: score below threshold | None |
 
-### Code Testing: Weapon Activation, Cooldown, and Enemy Behaviour
+#### Code Testing: Weapon Activation, Cooldown, and Enemy Behaviour
 
 | Partition | Expected Output |
 |---|---|
@@ -385,21 +424,24 @@ In order to improve the efficiency of group collaboration, the five of us divide
 
 <p align="center">
   <b>Figure 11: Team Communication via WeChat</b><br>
-  <img src="materials/process/wechat-chat.jpg" width="500"/>
+  <img src="materials/process/wechat-chat.jpg" width="500"/><br>
+  <i>Team communication record showing coordination through WeChat.</i>
 </p>
 
 In terms of communication, we held many seminars at the beginning of this project. The direction of the discussion was mainly aimed at the selected game, the improvement of the difficulty of the game, and the innovation and transformation of the game. The first meeting of five people in our group was held online. The meeting lasted for more than an hour. The content of the meeting focused on the repair of game bugs, the level design of the follow-up game, and the core module content that everyone was responsible for .
 
 <p align="center">
   <b>Figure 12: Team Members Collaboratively Testing the Game</b><br>
-  <img src="materials/process/team-discussion.jpg" width="500"/>
+  <img src="materials/process/team-discussion.jpg" width="500"/><br>
+  <i>Team members testing and discussing the game together.</i>
 </p>
 
 During the development process, we have selected a series of tools to support our development and collaboration:
 
 <p align="center">
   <b>Figure 13: The Record of Pull Requests</b><br>
-  <img src="materials/process/workflow.png" width="500"/>
+  <img src="materials/process/workflow.png" width="500"/><br>
+  <i>Pull request record showing the team's GitHub collaboration workflow.</i>
 </p>
 
 Our team adopted a structured project management approach, integrating Kanban, GitHub workflows, and progress tracking tools to support efficient collaboration throughout the project. 
@@ -408,10 +450,11 @@ We use a kanban-based system to organize tasks and monitor progress. Tasks are c
 
 <p align="center">
   <b>Figure 14: Kanban Board for Project Management</b><br>
-  <img src="materials/process/kanban%20project.png" width="500"/>
+  <img src="materials/process/kanban%20project.png" width="500"/><br>
+  <i>Kanban board used to organise tasks and monitor project progress.</i>
 </p>
 
-We mainly realise team development and collaboration on GitHub, and the traces of our collaboration and development can be clearly seen on GitHub. Each of our members develops functions on an independent branch and uses pull request to review the code. The process of each pr requires at least two members to review and pass, and then the next code writing can be carried out.
+We mainly realise team development and collaboration on GitHub, and the traces of our collaboration and development can be clearly seen on branches, commits, and pull requests. Each of our members develops functions on an independent branch and uses pull request to review the code. The process of each pr requires at least two members to review and pass, and then the next code writing can be carried out.
 
 ### The Usage of Different Tools
 
@@ -429,31 +472,26 @@ Work allocation to ensure everybody pays an effort to the project, so that every
 
 ###  Content Introduction
 
-| Members| Assigned Module | Contirbution |
-|--------|-----------------|--------------|
-| Lin      |  Game Loop           |  Implementing stable frame rates and game state management |
-| Benyu    | Collision Detection  | Accurately handling interactions between bullets and asteroids |
-| Zhaohang | Entity System        | Managing objects such as the spaceship, bullets, and asteroids |
-| Bo       | Input Controls       | Handling keyboard input and ensuring responsive control mechanisms |
-| Yutong   | User Interface (UI/Menu) | Implementing menu transitions and displaying game states |
-
 In the middle and late stages of the project, due to time schedule and geographical restrictions, we gradually turned to online collaboration and held Scrum-like meetings through Microsoft Teams and WeChat voice calls, about twice a week. This short-term and frequent meeting mode has significantly improved the efficiency of communication. Unlike the relatively free and long offline discussions in the early days, these online meetings are more structured and usually revolve around "current progress, problems and next task allocation", so that the team can promote the development progress more clearly.
 
 <p align="center">
   <b>Figure 15: Burndown / Progress Chart of the Project</b><br>
-  <img src="materials/process/burndown-chart.png" width="500"/>
+  <img src="materials/process/burndown-chart.png" style="width:80%"/><br>
+  <i>Burndown chart showing the team's progress over the project timeline.</i>
 </p>
 
 During the project development process, we tracked the overall progress through the burnout diagram. It can be seen from the figure that the team's work progress is uneven in time, especially in the mid-term stage, where there is obvious centralised completion of tasks, which shows that members tend to carry out "sudden development" when the deadline is approaching.
 
 <p align="center">
   <b>Figure 16: Commit and Branch History Visualization</b><br>
-  <img src="materials/process/network.png" width="600"/>
+  <img src="materials/process/network.png" style="width:80%"/><br>
+  <i>Commit and branch history visualisation showing the development workflow.</i>
 </p>
 
 Although this method ensures the completion of stage goals to a certain extent, it also brings greater time pressure. 
 
 However, in the final stage of the project, we successfully completed all the planned tasks and overcame various challenges, including several technical difficulties encountered during the development process.
+
 
 ## Sustainability, Technical, Social and Accessibility
 
@@ -503,29 +541,29 @@ This project wasn't perfect, but it's something we genuinely built together. Tha
 
 The following table summarises the responsibilities and contributions of each team member:
 
-| **Member** | **Assigned Module** | **Key Contributions** | **Contribution %** |
-|---|---|---|---|---:|
-| Lin | Game Loop | Project management, Game state management, update flow, and runtime stability | 20% |
-| Bo | Collision Detection | Interaction handling between game objects | 20% |
-| Zhaohang | Entity System | Management of in-game objects and object structure | 20% |
-| Benyu | Input Controls | Player input handling and control responsiveness | 20% |
-| Yutong | User Interface (UI/Menu) | Menu flow, screen transitions, and game-state presentation | 20% |
+| **Member** | **Main Responsibility** | **Key Contributions** | **Contribution Rate** |
+|---|---|---|------------:|
+| Lin | Project Management and Game Loop | Project planning, task coordination, game state management, update flow, and runtime stability |         20% |
+| Benyu | Testing and Evaluation | Test planning, evaluation design, SUS/NASA-TLX analysis, and report evidence organisation |         20% |
+| Yutong | Implementation, UI, and Presentation | UI/menu implementation, screen transitions, presentation preparation, and game-state display |         20% |
+| Zhaohang | Gameplay Implementation and Debugging | Gameplay feature implementation, entity behaviour, debugging, and runtime issue fixing |         20% |
+| Bo | Architecture and Implementation | Architecture design, implementation support, interaction handling, and code structure refinement |         20% |
 
 All members also contributed to group discussions, iterative decision-making, and the overall refinement of the project deliverables.
 
 ## AI Statement
 
-- We used chatGPT and codex in this project, and learned how to code and maintain the project with AI tools. I spend one day to learn how to code with codex in vscode, and share this with my teammates.
+We used chatGPT and codex in this project, and learned how to code and maintain the project with AI tools. I spend one day to learn how to code with codex in vscode, and share this with my teammates.
 
-- We used Codex to refactor parts of the codebase, making it more readable and making the structure easier for our team to understand and maintain. we also prepared a markdown file containing natural language prompts, which helped us generate supporting documentation, including a file explaining the overall project structure and the relationships between classes. We ask codex to run this file every time before push to GitHub, and this improved the communication efficiency of our team.
+We used Codex to refactor parts of the codebase, making it more readable and making the structure easier for our team to understand and maintain. we also prepared a markdown file containing natural language prompts, which helped us generate supporting documentation, including a file explaining the overall project structure and the relationships between classes. We ask codex to run this file every time before push to GitHub, and this improved the communication efficiency of our team.
 
-- Next, Codex was used to produce the initial versions of some weapons and enemies. These early examples were not treated as final solutions, but as learning scaffolds: they gave us a starting point for understanding how these systems could be built in p5.js, after which we designed and implemented additional weapons and enemies ourselves.I wrote the ultrasonic wave weapon after reading the weapons wrote by Codex, and re-wrote the AI logic of the missile under the guidance of GPT.
+Next, Codex was used to produce the initial versions of some weapons and enemies. These early examples were not treated as final solutions, but as learning scaffolds: they gave us a starting point for understanding how these systems could be built in p5.js, after which we designed and implemented additional weapons and enemies ourselves.I wrote the ultrasonic wave weapon after reading the weapons wrote by Codex, and re-wrote the AI logic of the missile under the guidance of GPT.
 
-- AI image generation was also used to create a new spaceship asset for the game. In addition, ChatGPT was used throughout the project to explain code behaviour, clarify project-level design questions, and help us understand technical issues when we got stuck. It was especially useful when working with an older version of p5.js, where GPT helped us quickly identify the correct functions and older API usage that matched our version. For example, when I was writing the ultrasonic wave weapon, I need to draw a circle with p5.js, but the version of p5.js of the origin game was too old that the function on the web didn't work, GPT helped to find the correct circle draw function version.
+AI image generation was also used to create a new spaceship asset for the game. In addition, ChatGPT was used throughout the project to explain code behaviour, clarify project-level design questions, and help us understand technical issues when we got stuck. It was especially useful when working with an older version of p5.js, where GPT helped us quickly identify the correct functions and older API usage that matched our version. For example, when I was writing the ultrasonic wave weapon, I need to draw a circle with p5.js, but the version of p5.js of the origin game was too old that the function on the web didn't work, GPT helped to find the correct circle draw function version.
 
-- We also explored whether an embedded large language model could be used inside the project. In this experiment, I tested running a model through WebGPU in the browser and confirmed that this approach was technically possible. However, we decided not to continue with it because loading the online Qwen 0.5B model was too slow for practical use in our game context. As a result, this idea was investigated but not included in the final version of the project.
+We also explored whether an embedded large language model could be used inside the project. In this experiment, I tested running a model through WebGPU in the browser and confirmed that this approach was technically possible. However, we decided not to continue with it because loading the online Qwen 0.5B model was too slow for practical use in our game context. As a result, this idea was investigated but not included in the final version of the project.
 
-- Overall, we learned to how to use AI in our project, and it's a valuable knowledge. In the mean time, we still write and read the code ourselves to help us understand what a project should be like.
+Overall, we learned to how to use AI in our project, and it's a valuable knowledge. In the mean time, we still write and read the code ourselves to help us understand what a project should be like.
 
 ## Reference
 
@@ -544,16 +582,3 @@ Green Software Foundation (2023). Green Software Practitioner. Available at: htt
 Ludewig, J. (2003) ‘Models in software engineering – an introduction’, Software and Systems Modeling, 2, pp. 5–14. doi:10.1007/s10270-003-0020-3.
 
 Sommerville, I. (2020). Engineering Software Products. London: Pearson. Green Software Practitioner, from Green Software Foundation.
-
-
-## Additional Marks
-
-You can delete this section in your own repo, it's just here for information. in addition to the marks above, we will be marking you on the following two points:
-
-- **Quality** of report writing, presentation, use of figures and visual material (5% of report grade) 
-  - Please write in a clear concise manner suitable for an interested layperson. Write as if this repo was publicly available.
-- **Documentation** of code (5% of report grade)
-  - Organise your code so that it could easily be picked up by another team in the future and developed further.
-  - Is your repo clearly organised? Is code well commented throughout?
-
-

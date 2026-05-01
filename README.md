@@ -6,13 +6,13 @@
   </a>
 </p>
 
-A browser-based Asteroids-style arcade shooter built in p5.js - Keep calm, captain ([Play it here](https://uob-comsm0166.github.io/2026-group-18/)), centred on a **Stress mechanic** that changes how the ship handles during play. Instead of treating damage as a simple health reduction, our game turns collisions into a controllability problem: taking hits raises the player’s Stress meter, and higher stress degrades ship handling in fixed, predictable tiers. This transforms the core loop from simple survival into risk management: play aggressively to score more, or play safely to preserve precision and control
+A browser-based Asteroids-style arcade shooter built in p5.js - **Keep calm, captain!** ([Play it here](https://uob-comsm0166.github.io/2026-group-18/)), centred on a **Stress mechanic** that changes how the ship handles during play. Instead of treating damage as a simple health reduction, our game turns collisions into a controllability problem: taking hits raises the player’s Stress meter, and higher stress degrades ship handling in fixed, predictable tiers. This transforms the core loop from simple survival into risk management: play aggressively to score more, or play safely to preserve precision and control
 
 ## Video Demonstration
 
 <p align="center">
   <a href="https://youtu.be/X5tYzrVyDQQ">
-    <img src="materials/design/uml/game-gif.gif" alt="Game demonstration" width="80%"/>
+    <img src="materials/teams/demonstration-video.gif" alt="Game demonstration" width="80%"/>
   </a><br>
   <i>This video provides a clear walkthrough of our complete project workflow.</i>
 </p>
@@ -52,7 +52,7 @@ A browser-based Asteroids-style arcade shooter built in p5.js - Keep calm, capta
 
 ## Introduction
 
-We made this Asteroids-style shooter([Look game demo here](https://youtu.be/KouKVKXn1Ak)) in p5.js. The basic idea is pretty familiar - you fly a spaceship around, dodge stuff, shoot things, and try to survive while getting the highest score possible. But we wanted to do something a bit different with the core mechanic.
+We made this Asteroids-style shooter([look game demo here](https://youtu.be/KouKVKXn1Ak)) in p5.js. The basic idea is pretty familiar - you fly a spaceship around, dodge stuff, shoot things, and try to survive while getting the highest score possible. But we wanted to do something a bit different with the core mechanic.
 
 The main twist is what we call the **Stress system**. Every time you crash into something or get hit, your stress goes up. And here's the thing - when you're stressed, your ship just doesn't handle as well. We're talking slower turning, clunkier thrust, that kind of thing. It's split into clear tiers so you always know what you're dealing with. There's also these pickup items that help you calm down a bit.
 
@@ -69,7 +69,7 @@ According to Ludewig(2003)'s idea, software artefacts should be understood as mo
 
 During the ideation stage, we collected inspirations based on the types they are interested in respectively, and compared multiple directions through the [inspiration list](materials/requirements/inspiration.md).
 
-We did not merely compare "which game is more interesting", but focused on evaluating four dimensions: gameplay novelty, feasibility of p5.js implementation, controllability of the MVP range, and whether it can form a clear engineering challenge. This comparison process helps us avoid choosing solutions with excessive content or those that are difficult to evaluate from the very beginning.
+We did not merely compare "which game is more interesting", but focused on evaluating four dimensions: gameplay novelty, feasibility of p5.js implementation, controllability of the MVP range, and whether it can form a clear engineering challenge. This comparison process(Figure 1) helps us avoid choosing solutions with excessive content or those that are difficult to evaluate from the very beginning.
 
 <p align="center">
   <b>Figure 1: Candidate Idea Comparison</b><br>
@@ -327,7 +327,7 @@ Overall, the qualitative evaluation has shown that the main problems were not th
   <i>SUS score comparison between experienced and inexperienced players.</i>
 </p>
 
-[SUS Overall Chart](materials/evaluation/SUS-Overall.png) is also available as supporting evidence for the full usability evaluation results.
+Here is also available as supporting evidence for the full usability evaluation results ([SUS Overall Chart](materials/evaluation/SUS-Overall.png)).
 
 <div align="center">
   <b>Table 6: NASA-TLX Average Scores</b><br>
@@ -352,11 +352,11 @@ Overall, the qualitative evaluation has shown that the main problems were not th
 
 <p align="center">
   <b>Figure 10: NASA-TLX Dimension Comparison</b><br>
-  <img src="materials/evaluation/nasa_tlx_dimension_comparison_first_five.png" width="500"/><br>
+  <img src="materials/evaluation/nasa_tlx_dimension_comparison_first_five.png" style="width:80%"/><br>
   <i>Comparison of NASA-TLX dimensions across the two evaluation rounds.</i>
 </p>
 
-[NASA-TLX Chart](materials/evaluation/nasa-tlx-chart.png) is also available as supporting evidence for the full workload evaluation results.
+Here ([NASA-TLX Chart](materials/evaluation/nasa-tlx-chart.png)) is supporting evidence for the full workload evaluation results.
 
 We had also done two quantitative evaluation to verify our thoughts. 
 
@@ -377,7 +377,7 @@ In our final evaluation part, we need to test our code itself. We adopted a blac
 #### Code Testing: Stress System and Feedback
 
 | Partition | Expected Output |
-|---|---|
+|:---:|:---:|
 | Valid collision: ship collides with an asteroid | Stress value increases correctly and HUD updates |
 | Valid hit: player is hit by an enemy projectile | None |
 | Valid recovery: player picks up a recovery item | Stress value decreases correctly |
@@ -390,7 +390,7 @@ In our final evaluation part, we need to test our code itself. We adopted a blac
 #### Code Testing: Scoring and Level Progression
 
 | Partition | Expected Output |
-|---|---|
+|:---:|:---:|
 | Valid asteroid destroyed | Score increases correctly according to radius × 100 |
 | Valid enemy destroyed | Score increases correctly according to fixed value |
 | Invalid scoring: no target destroyed | None |
@@ -401,7 +401,7 @@ In our final evaluation part, we need to test our code itself. We adopted a blac
 #### Code Testing: Weapon Activation, Cooldown, and Enemy Behaviour
 
 | Partition | Expected Output |
-|---|---|
+|:---:|:---:|
 | Valid weapon activation | Weapon is successfully triggered |
 | Invalid weapon activation: cooldown not finished | None |
 | Invalid weapon activation: not unlocked | None |
